@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tensorflow," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="跟着Andrew Ng 在deeplearing.ai上的课程学习了一下tensorflow，搭建了一个简单的三层网络小模型，算是入门吧。  一些tensorflow基础知识点网上已经有很多一些tensorflow的教程了。这里并不打算提供重复的知识，只是整理一些对我自己来说比较重要的点。 数据结构常量常量要用tf.constant来声明, 带的参数可以是一个标量，也可以是一个向量或者一个矩阵。感">
+<meta name="keywords" content="tensorflow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小白写tensorflow(一)">
+<meta property="og:url" content="http://yoursite.com/2017/08/25/小白写tensorflow1/index.html">
+<meta property="og:site_name" content="Paul&#39;s Gardon">
+<meta property="og:description" content="跟着Andrew Ng 在deeplearing.ai上的课程学习了一下tensorflow，搭建了一个简单的三层网络小模型，算是入门吧。  一些tensorflow基础知识点网上已经有很多一些tensorflow的教程了。这里并不打算提供重复的知识，只是整理一些对我自己来说比较重要的点。 数据结构常量常量要用tf.constant来声明, 带的参数可以是一个标量，也可以是一个向量或者一个矩阵。感">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-29T18:05:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小白写tensorflow(一)">
+<meta name="twitter:description" content="跟着Andrew Ng 在deeplearing.ai上的课程学习了一下tensorflow，搭建了一个简单的三层网络小模型，算是入门吧。  一些tensorflow基础知识点网上已经有很多一些tensorflow的教程了。这里并不打算提供重复的知识，只是整理一些对我自己来说比较重要的点。 数据结构常量常量要用tf.constant来声明, 带的参数可以是一个标量，也可以是一个向量或者一个矩阵。感">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.2',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/25/小白写tensorflow1/"/>
+
+
+
+
+
+  <title>小白写tensorflow(一) | Paul's Gardon</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Paul's Gardon</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/25/小白写tensorflow1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ApostlePaul">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Paul's Gardon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">小白写tensorflow(一)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-25T16:00:18+08:00">
+                2017-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>跟着Andrew Ng 在deeplearing.ai上的课程学习了一下tensorflow，搭建了一个简单的三层网络小模型，算是入门吧。</p>
+<hr>
+<h2 id="一些tensorflow基础知识点"><a href="#一些tensorflow基础知识点" class="headerlink" title="一些tensorflow基础知识点"></a>一些tensorflow基础知识点</h2><p>网上已经有很多一些tensorflow的教程了。这里并不打算提供重复的知识，只是整理一些对我自己来说比较重要的点。</p>
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><h4 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h4><p>常量要用tf.constant来声明, 带的参数可以是一个标量，也可以是一个向量或者一个矩阵。<br><code>感觉可以初始化numpy array的都可以，但是还没有看源代码。不能确定，只是猜测。</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">a = tf.constant(<span class="number">2</span>) </div><div class="line">b = tf.constant(<span class="number">10</span>)</div></pre></td></tr></table></figure></p>
+<h4 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h4><p>变量要用tf.Variable来声明，tensor应该都可以用来声明它。<br>什么时候要声明成变量呢？就是需要变的，要算出来的。比如模型里的weight和bias。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">loss = tf.Variable((y - y_hat)**<span class="number">2</span>, name=<span class="string">'loss'</span>)</div></pre></td></tr></table></figure></p>
+<p>还有一种声明变量的方式是用get_variable()。第一个参数为变量名，第二个参数为变量的形状。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">W1 = tf.get_variable(<span class="string">"W1"</span>, [<span class="number">25</span>,<span class="number">12288</span>],initializer = tf.contrib.layers.xavier_initializer(seed = <span class="number">1</span>),regularizer=l2)</div></pre></td></tr></table></figure></p>
+<p>用tf.Variable跟用tf.get_variable的区别在于，前者声明的变量是在默认的variable_scope下的，遇到相同的变量名，会自动给一个新的名字。而get_variable是要指明variable_scope的。遇到相同的，如果没有打开共享开关(tf.get_variable_scope().reuse == False)，会报错。<br><code>我理解variable_scope跟c++里的变量作用域的概念类似。</code></p>
+<h4 id="placeholder"><a href="#placeholder" class="headerlink" title="placeholder"></a>placeholder</h4><p>placeholder就是一个占位符的意思，就是在tensor的图上，这个位置，先空着，后边再来填。这个占位符通常留给收入用。第一个参数是这个占位符的数据类型，都是tf.*. 第二个参数是占位符的shape，括号里几个数，这个placeholder的rank就是几。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">X = tf.placeholder(tf.float32, shape = (n_x,<span class="keyword">None</span>))</div></pre></td></tr></table></figure></p>
+<p><code>要注意placeholder的形状。</code></p>
+<h4 id="tensor"><a href="#tensor" class="headerlink" title="tensor"></a>tensor</h4><p>tensor就是张量。</p>
+<blockquote>
+<p>A tensor consists of a set of primitive values shaped into an array of any number of dimensions. A tensor’s rank is its number of dimensions.</p>
+</blockquote>
+<p>tensorflow就是用图把各种张量链接再一起，然后让数据和计算在图上流动。所以数据可以是tensor, 操作也可以是tensor。以上变量，常量，placeholder都是张量的一种。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">a = tf.constant([[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">1</span>,<span class="number">2</span>]])</div><div class="line">b = tf.constant(<span class="number">3</span>)</div><div class="line">c = tf.multiply(a,b)</div><div class="line">d = tf.Variable(a+b)</div><div class="line">X = tf.placeholder(tf.float32, shape = (n_x,<span class="keyword">None</span>))</div><div class="line">print(a)</div><div class="line">print(b)</div><div class="line">print(c)</div><div class="line">print(d)</div><div class="line">print(X)</div><div class="line"></div><div class="line">----output-----</div><div class="line"></div><div class="line">Tensor(<span class="string">"Const_10:0"</span>, shape=(<span class="number">2</span>, <span class="number">2</span>), dtype=int32)</div><div class="line">Tensor(<span class="string">"Const_11:0"</span>, shape=(), dtype=int32)</div><div class="line">Tensor(<span class="string">"Mul_5:0"</span>, shape=(<span class="number">2</span>, <span class="number">2</span>), dtype=int32)</div><div class="line">&lt;tf.Variable <span class="string">'Variable_1:0'</span> shape=(<span class="number">2</span>, <span class="number">2</span>) dtype=int32_ref&gt;</div><div class="line">Tensor("Placeholder_2:0", shape=(12288, ?), dtype=float32)</div></pre></td></tr></table></figure></p>
+<h4 id="object"><a href="#object" class="headerlink" title="object"></a>object</h4><p>还有一些是object, 比如optimizer = tf.train.GradientDescentOptimizer(0.01)</p>
+<h3 id="程序运行"><a href="#程序运行" class="headerlink" title="程序运行"></a>程序运行</h3><h4 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h4><p>Session就是一个对话。写tensorflow可以理解为分成两部分，一是描述图是什么样的，二十描述怎么去让计算在图上执行，一个执行的过程就是一个session。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sess = tf.Session()</div><div class="line">...</div><div class="line">sess.close()</div><div class="line"></div><div class="line">----<span class="keyword">or</span>----</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> session: </div><div class="line">    ...</div></pre></td></tr></table></figure></p>
+<p><code>据说eval跟run基本上是等价的。</code></p>
+<h4 id="init"><a href="#init" class="headerlink" title="init"></a>init</h4><p>要先初始化一下图。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ops.reset_default_graph()</div></pre></td></tr></table></figure></p>
+<p>再初始化一下变量，即用tf.Variable声明的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">init = tf.global_variables_initializer()</div><div class="line">sess.run(init)</div></pre></td></tr></table></figure></p>
+<h4 id="run"><a href="#run" class="headerlink" title="run"></a>run</h4><p>把图建好了之后，运行的时候需要在session里进行。执行的时候调用run()函数，其参数可以是好多种。如果参数是一个变量或者tensor, 那么“执行”可以被理解为“计算”。一个session里可以多次调用run()。run的时候可以把输入数据，就是用placeholder对应的数据，用feed_dict加进去。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_ , minibatch_cost = sess.run([optimizer, cost], feed_dict=&#123;X:minibatch_X, Y:minibatch_Y, keep_probs:[0.8,1,1]&#125;)</div></pre></td></tr></table></figure></p>
+<p>也可以用eval来开始运算，不过eval需要确认session，在with tf.Session() as sess:下，不需要显示传递session参数给eval函数<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sess = tf.Session()</div><div class="line">a.eval(session=sess)</div><div class="line">sess.close()</div><div class="line"></div><div class="line">----<span class="keyword">or</span>----</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    a.eval()</div></pre></td></tr></table></figure></p>
+<h3 id="一些有用的函数"><a href="#一些有用的函数" class="headerlink" title="一些有用的函数"></a>一些有用的函数</h3><p>以下这些函数，可能会经常用到，用起来会很方便</p>
+<ul>
+<li>tf.contrib.layers.xavier_initializer(seed = 1)</li>
+<li>tf.zeros_initializer()</li>
+<li>tf.constant_initializer(1)</li>
+<li>tf.contrib.layers.l2_regularizer(scale=0.1)</li>
+<li>tf.contrib.layers.apply_regularization(l2, [W3]) = tf.contrib.layers.l2_regularizer(0.1)(W3) 返回W3的l2均值</li>
+<li>tf.reduce_sum()</li>
+<li>tf.reduce_mean()</li>
+<li>tf.matmul()</li>
+<li>tf.transpose(Z3)</li>
+<li>tf.equal(tf.argmax(Z3_org), tf.argmax(Y))</li>
+<li>tf.cast(correct_prediction, “float”)</li>
+<li>tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels)</li>
+<li>tf.nn.dropout(X, keep_probs[0])</li>
+<li>tf.nn.relu(Z2)</li>
+<li>tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(cost)</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ApostlePaul" />
+          <p class="site-author-name" itemprop="name">ApostlePaul</p>
+           
+              <p class="site-description motion-element" itemprop="description">天地渺渺一尘子<br/>随风而起<br/>随雨而落<br/>随遇而安</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些tensorflow基础知识点"><span class="nav-text">一些tensorflow基础知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据结构"><span class="nav-text">数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常量"><span class="nav-text">常量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变量"><span class="nav-text">变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#placeholder"><span class="nav-text">placeholder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tensor"><span class="nav-text">tensor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#object"><span class="nav-text">object</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#程序运行"><span class="nav-text">程序运行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Session"><span class="nav-text">Session</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#init"><span class="nav-text">init</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#run"><span class="nav-text">run</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一些有用的函数"><span class="nav-text">一些有用的函数</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ApostlePaul</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
