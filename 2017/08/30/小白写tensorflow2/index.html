@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Paul&#39;s Gardon">
 <meta property="og:description" content="上文tensorflow的一些零碎知识点，接下来跟着andrew的课又搭了一个简单的DNN网络，并尝试了调优。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-31T02:25:53.000Z">
+<meta property="og:updated_time" content="2017-08-31T02:52:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="小白写tensorflow(二)">
 <meta name="twitter:description" content="上文tensorflow的一些零碎知识点，接下来跟着andrew的课又搭了一个简单的DNN网络，并尝试了调优。">
@@ -376,9 +376,9 @@
 <h4 id="L2-Regularization"><a href="#L2-Regularization" class="headerlink" title="L2 Regularization"></a>L2 Regularization</h4><p>在网上查了好多资料tensorflow要怎么加regularization, 都没有明确的回答“如何在tensorflow里给一个dnn网络添加regularization？”这个问题。经过我的尝试，这个问题的答案为：</p>
 <ol>
 <li>给相应的Variable添加regularizer项</li>
-<li>cost的计算中添加regularization项<br>因为tensorflow里bp的过程是包起来的（当然你可以自己实现，但是有必要重复造轮子么？把你的脑细胞用在一些更有价值的事上吧。），optimizer定义好之后，是自动进行BP的，所以，需要给Variable添加regularizer项，让optimizer知道计算这个Variable的梯度时，要加上正则项。<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">l2 = tf.contrib.layers.l2_regularizer(scale=<span class="number">0.01</span>)</div><div class="line">W1 = tf.get_variable(<span class="string">"W1"</span>, [<span class="number">25</span>,<span class="number">12288</span>],initializer = tf.contrib.layers.xavier_initializer(seed = <span class="number">1</span>),regularizer=l2)</div></pre></td></tr></table></figure>
-</li>
+<li>cost的计算中添加regularization项</li>
 </ol>
+<p>因为tensorflow里bp的过程是包起来的（当然你可以自己实现，但是有必要重复造轮子么？把你的脑细胞用在一些更有价值的事上吧。），optimizer定义好之后，是自动进行BP的，所以，需要给Variable添加regularizer项，让optimizer知道计算这个Variable的梯度时，要加上正则项。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">l2 = tf.contrib.layers.l2_regularizer(scale=<span class="number">0.01</span>)</div><div class="line">W1 = tf.get_variable(<span class="string">"W1"</span>, [<span class="number">25</span>,<span class="number">12288</span>],initializer = tf.contrib.layers.xavier_initializer(seed = <span class="number">1</span>),regularizer=l2)</div></pre></td></tr></table></figure></p>
 <p>给cost的计算添加regularization项，tensorflow中有好几种接口可以实现。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">###for some Varible</span></div><div class="line"><span class="comment">####scheme A</span></div><div class="line">reg_term = tf.contrib.layers.l2_regularizer(<span class="number">0.1</span>)(W3)</div><div class="line"></div><div class="line"><span class="comment">####scheme B</span></div><div class="line">l2 = tf.contrib.layers.l2_regularizer(scale=<span class="number">0.1</span>)</div><div class="line">reg_term = tf.contrib.layers.apply_regularization(l2, [W3])</div><div class="line"></div><div class="line"><span class="comment">###for all the Variables declared by regularizer</span></div><div class="line"><span class="comment">####scheme C</span></div><div class="line">reg_variables = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)</div><div class="line">reg_term = tf.reduce_sum(reg_variables)</div></pre></td></tr></table></figure></p>
 <p>L2的系数用的0.1, 模型的泛化性果然有提升。</p>
 <table>
