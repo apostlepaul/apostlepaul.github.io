@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tensorflow,machine learning,DNN," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="上文tensorflow的一些零碎知识点，接下来跟着andrew的课又搭了一个简单的DNN网络，并尝试了调优。">
+<meta name="keywords" content="tensorflow,machine learning,DNN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小白写tensorflow(二)">
+<meta property="og:url" content="http://yoursite.com/2017/08/30/小白写tensorflow2/index.html">
+<meta property="og:site_name" content="Paul&#39;s Gardon">
+<meta property="og:description" content="上文tensorflow的一些零碎知识点，接下来跟着andrew的课又搭了一个简单的DNN网络，并尝试了调优。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-31T02:25:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小白写tensorflow(二)">
+<meta name="twitter:description" content="上文tensorflow的一些零碎知识点，接下来跟着andrew的课又搭了一个简单的DNN网络，并尝试了调优。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.2',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/30/小白写tensorflow2/"/>
+
+
+
+
+
+  <title>小白写tensorflow(二) | Paul's Gardon</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Paul's Gardon</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/30/小白写tensorflow2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ApostlePaul">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Paul's Gardon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">小白写tensorflow(二)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-30T19:27:08+08:00">
+                2017-08-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上文tensorflow的一些零碎知识点，接下来跟着andrew的课又搭了一个简单的DNN网络，并尝试了调优。</p>
+<a id="more"></a>
+<hr>
+<h2 id="DNN网络的搭建及调优"><a href="#DNN网络的搭建及调优" class="headerlink" title="DNN网络的搭建及调优"></a>DNN网络的搭建及调优</h2><h3 id="搭建DNN网络"><a href="#搭建DNN网络" class="headerlink" title="搭建DNN网络"></a>搭建DNN网络</h3><p>首先搭建了一个非常基础的multi_task DNN网络，用来识别图片上比的手势是0-5中的那一个数字。只挑一些key point说说。</p>
+<h4 id="训练数据"><a href="#训练数据" class="headerlink" title="训练数据"></a>训练数据</h4><p>输入的X就是图片的RGB像素，一张图片12288维(64 <em> 64 </em> 3)。Y是0-5这5个label。<br>数据预处理的过程是:维度打平-&gt;normalize-&gt;convert_to_one_hot。<br>这里有个小技巧：对numpy的dataFrame,直接用reshape打平：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">X_train_flatten = X_train_orig.reshape(X_train_orig.shape[<span class="number">0</span>], <span class="number">-1</span>).T</div></pre></td></tr></table></figure></p>
+<p><code>对numpy的数据结构一直很晕菜。找个时间弄清楚。</code><br>训练的时候用的是minibatch，要注意最后一个batch的处理。</p>
+<h4 id="构建网络"><a href="#构建网络" class="headerlink" title="构建网络"></a>构建网络</h4><p>可以认为构建网络的过程其实是两步走，第一步是声明参数，就是网络各层的边和节点的权重；第二步是描述网络是怎么连接的。<br>第一步，直接用一个dict把各层网络的权重存下来了，key是name，例如“W2” ,value是用get_variable声明的变量。主要就是声明一下各参数的<strong>形状</strong>及<strong>初始化的方式</strong>。<br><code>其实不用dict存一下应该也ok，直接从variable_scope里通过变量的name取到应该是可以的，不过我还不知道具体的api该怎么写。</code><br>第二步，由于我们的网络是简单的全连接，所以等价于实现forward_propagation。需要注意的一点是，由于<em>tf.nn.softmax_cross_entropy_with_logits</em>的存在，这个forward_propagation只需要实现到softmax的输入。<br>两步走完我们就描述清楚了cost是怎么算出来的。</p>
+<h4 id="训练算法"><a href="#训练算法" class="headerlink" title="训练算法"></a>训练算法</h4><p>训练模型的过程，就是最优化cost的过程，所以理所当然的我们需要描述我们<strong>用什么优化算法</strong>来<strong>优化什么目标</strong>。tensorflow的已经封装好好多最优化算法的类，我们只需要简单声明一下就行了。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(cost)</div></pre></td></tr></table></figure></p>
+<h4 id="开始训练"><a href="#开始训练" class="headerlink" title="开始训练"></a>开始训练</h4><p>已经描述清楚了 <strong>在什么数据上</strong>，<strong>用什么训练算法</strong> 训练 <strong>什么样的网络</strong>，那么run一下就行了。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_ , minibatch_cost = sess.run([optimizer, cost], feed_dict=&#123;X:minibatch_X, Y:minibatch_Y, keep_probs:[<span class="number">0.8</span>,<span class="number">1</span>,<span class="number">1</span>]&#125;)</div></pre></td></tr></table></figure></p>
+<p>训练完，在训练集和测试集上的准确率如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:right">Train set</th>
+<th style="text-align:left">Test set</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">accuracy</td>
+<td style="text-align:right">0.999074</td>
+<td style="text-align:left">0.725</td>
+</tr>
+</tbody>
+</table>
+<h3 id="模型调优"><a href="#模型调优" class="headerlink" title="模型调优"></a>模型调优</h3><p>很明显，上面的简单模型，过拟合了。learing rate和网络结构当然可以调了，不过，主要是想拿这个小模型试试regulation，所以。。</p>
+<h4 id="L2-Regularization"><a href="#L2-Regularization" class="headerlink" title="L2 Regularization"></a>L2 Regularization</h4><p>在网上查了好多资料tensorflow要怎么加regularization, 都没有明确的回答“如何在tensorflow里给一个dnn网络添加regularization？”这个问题。经过我的尝试，这个问题的答案为：</p>
+<ol>
+<li>给相应的Variable添加regularizer项</li>
+<li>cost的计算中添加regularization项<br>因为tensorflow里bp的过程是包起来的（当然你可以自己实现，但是有必要重复造轮子么？把你的脑细胞用在一些更有价值的事上吧。），optimizer定义好之后，是自动进行BP的，所以，需要给Variable添加regularizer项，让optimizer知道计算这个Variable的梯度时，要加上正则项。<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">l2 = tf.contrib.layers.l2_regularizer(scale=<span class="number">0.01</span>)</div><div class="line">W1 = tf.get_variable(<span class="string">"W1"</span>, [<span class="number">25</span>,<span class="number">12288</span>],initializer = tf.contrib.layers.xavier_initializer(seed = <span class="number">1</span>),regularizer=l2)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>给cost的计算添加regularization项，tensorflow中有好几种接口可以实现。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">###for some Varible</span></div><div class="line"><span class="comment">####scheme A</span></div><div class="line">reg_term = tf.contrib.layers.l2_regularizer(<span class="number">0.1</span>)(W3)</div><div class="line"></div><div class="line"><span class="comment">####scheme B</span></div><div class="line">l2 = tf.contrib.layers.l2_regularizer(scale=<span class="number">0.1</span>)</div><div class="line">reg_term = tf.contrib.layers.apply_regularization(l2, [W3])</div><div class="line"></div><div class="line"><span class="comment">###for all the Variables declared by regularizer</span></div><div class="line"><span class="comment">####scheme C</span></div><div class="line">reg_variables = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)</div><div class="line">reg_term = tf.reduce_sum(reg_variables)</div></pre></td></tr></table></figure></p>
+<p>L2的系数用的0.1, 模型的泛化性果然有提升。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:right">Train set</th>
+<th style="text-align:left">Test set</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">accuracy</td>
+<td style="text-align:right">0.996296</td>
+<td style="text-align:left">0.791667</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h4><p>又试了一下用Dropout来正则。正tensorflow里直接用inverted dropout比较方便，tf.nn.dropout就集成了mask和weight按丢弃概率scale的功能。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">##without dropout</span></div><div class="line">A1 = tf.nn.relu(Z1) </div><div class="line">Z2 = tf.add(tf.matmul(W2,A1), b2)</div><div class="line"></div><div class="line">----&gt;</div><div class="line"><span class="comment">##with dropout</span></div><div class="line">A1 = tf.nn.relu(Z1)</div><div class="line">A1_hat = tf.nn.dropout(A1, keep_probs[<span class="number">1</span>])</div><div class="line">Z2 = tf.add(tf.matmul(W2,A1_hat), b2)</div></pre></td></tr></table></figure></p>
+<p>网络太小，丢节点效果都不好。最后尝试的最优的方案是，以0.2的概率丢输入，正则的结果还是很不错的。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:right">Train set</th>
+<th style="text-align:left">Test set</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">accuracy</td>
+<td style="text-align:right">0.968518</td>
+<td style="text-align:left">0.858333</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Dropout-L2"><a href="#Dropout-L2" class="headerlink" title="Dropout + L2"></a>Dropout + L2</h4><p>那么把这两个叠加在一起效果怎么样怎？<br>如果不调参直接加（0.2丢输入+系数为0.1的L2）,效果不好。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:right">Train set</th>
+<th style="text-align:left">Test set</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">accuracy</td>
+<td style="text-align:right">0.936111</td>
+<td style="text-align:left">0.725</td>
+</tr>
+</tbody>
+</table>
+<p>这看起来是正则得太厉害了。所以调小点L2的系数，调为0.01，效果变得更好了，上了0.9，可以了，不玩了。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:right">Train set</th>
+<th style="text-align:left">Test set</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">accuracy</td>
+<td style="text-align:right">0.991667</td>
+<td style="text-align:left">0.908333</td>
+</tr>
+</tbody>
+</table>
+<p><code>有一点还没弄明白的是，在给dropout加L2的时候，每次FF和BP，是只算保留下来的node的L2, 还是算全部的Node的L2。两者似乎都有可解释的道理。以上是图省事，直接给全部的都加L2，看起来效果也不错。</code></p>
+<h2 id="用tensorflow再干点什么"><a href="#用tensorflow再干点什么" class="headerlink" title="用tensorflow再干点什么"></a>用tensorflow再干点什么</h2><p>平时工作用不到啊，长期不用肯定会忘的。所以要想办法用起来。<br>怎么用呢？大概想了想，先mark下。</p>
+<ul>
+<li>尝试一些流行的模型和算法</li>
+<li>进行一些新算法的尝试</li>
+<li>解决一些实际问题，比如股票预测？</li>
+<li>参与到tensorflow的开发</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
+          
+            <a href="/tags/DNN/" rel="tag"># DNN</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/25/小白写tensorflow1/" rel="next" title="小白写tensorflow(一)">
+                <i class="fa fa-chevron-left"></i> 小白写tensorflow(一)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ApostlePaul" />
+          <p class="site-author-name" itemprop="name">ApostlePaul</p>
+           
+              <p class="site-description motion-element" itemprop="description">天地渺渺一尘子<br/>随风而起<br/>随雨而落<br/>随遇而安</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DNN网络的搭建及调优"><span class="nav-text">DNN网络的搭建及调优</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建DNN网络"><span class="nav-text">搭建DNN网络</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#训练数据"><span class="nav-text">训练数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构建网络"><span class="nav-text">构建网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#训练算法"><span class="nav-text">训练算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开始训练"><span class="nav-text">开始训练</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模型调优"><span class="nav-text">模型调优</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#L2-Regularization"><span class="nav-text">L2 Regularization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dropout"><span class="nav-text">Dropout</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dropout-L2"><span class="nav-text">Dropout + L2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用tensorflow再干点什么"><span class="nav-text">用tensorflow再干点什么</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ApostlePaul</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
