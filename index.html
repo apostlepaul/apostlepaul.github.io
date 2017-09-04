@@ -297,7 +297,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/31/notes-for-ML-strategy/" itemprop="url">notes for ML strategy</a></h1>
+                <a class="post-title-link" href="/2017/08/31/notes-for-ML-strategy/" itemprop="url">Tips for ML strategy</a></h1>
         
 
         <div class="post-meta">
@@ -348,41 +348,14 @@
 
       
         
-          
-            <h3 id="orthogonalization"><a href="#orthogonalization" class="headerlink" title="orthogonalization"></a>orthogonalization</h3><blockquote>
-<ol>
-<li>fit training set well on cost function</li>
-<li>fit dev set well on cost function</li>
-<li>fit test set well on cost function</li>
-<li>performs well in real word</li>
-</ol>
-<p>主要的思想是，在不同的阶段，调整不同的<strong>knob</strong>。<br><code>一个Knob是一个正交的调整项</code></p>
-</blockquote>
-<h3 id="single-number-evaluation"><a href="#single-number-evaluation" class="headerlink" title="single number evaluation"></a>single number evaluation</h3><blockquote>
-<p>在建模初期，设定一个单一的指标，能够加速迭代。</p>
-</blockquote>
-<h3 id="satisfying-and-optimizing"><a href="#satisfying-and-optimizing" class="headerlink" title="satisfying and optimizing"></a>satisfying and optimizing</h3><blockquote>
-<p>区分要优化的指标和限定指标</p>
-</blockquote>
-<h3 id="Train-dev-test-distributions"><a href="#Train-dev-test-distributions" class="headerlink" title="Train/dev/test distributions"></a>Train/dev/test distributions</h3><blockquote>
-<p>dev set要和test set同分布。<br>在工作的一开始就明确目标很重要。</p>
-</blockquote>
-<h3 id="comparing-to-human-level-performance"><a href="#comparing-to-human-level-performance" class="headerlink" title="comparing to human-level performance"></a>comparing to human-level performance</h3><blockquote>
-<p>training error和bayes error直接的差别叫avoidable bias。training error和dev error的差别叫variance。先优化avoidable bias, 再优化variance。<br>优化avoidable bias的方法：</p>
-<ul>
-<li>train bigger model</li>
-<li>train longer/better optimization algorithms(momentum, RMSprop Adam)</li>
-<li>NN architecture/hyperparamerters search（RNN，CNN)</li>
-</ul>
-<p>优化variance的方法：</p>
-<ul>
-<li>more data</li>
-<li>regularization</li>
-<li>NN architecture/hyperparamerters search</li>
-</ul>
-</blockquote>
-
-          
+          <p>听deeplearning.ai的ml strategy course记录下来的一些点，常看常新。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/31/notes-for-ML-strategy/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
