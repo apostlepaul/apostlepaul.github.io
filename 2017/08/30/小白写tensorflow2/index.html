@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="tensorflow,machine learning,DNN," />
+  <meta name="keywords" content="machine learning,tensorflow,DNN," />
 
 
 
@@ -96,7 +96,7 @@
 
 
 <meta name="description" content="上文tensorflow的一些零碎知识点，接下来跟着andrew的课又搭了一个简单的DNN网络，并尝试了调优。">
-<meta name="keywords" content="tensorflow,machine learning,DNN">
+<meta name="keywords" content="machine learning,tensorflow,DNN">
 <meta property="og:type" content="article">
 <meta property="og:title" content="小白写tensorflow(二)">
 <meta property="og:url" content="http://yoursite.com/2017/08/30/小白写tensorflow2/index.html">
@@ -383,6 +383,7 @@
 <h4 id="训练算法"><a href="#训练算法" class="headerlink" title="训练算法"></a>训练算法</h4><p>训练模型的过程，就是最优化cost的过程，所以理所当然的我们需要描述我们<strong>用什么优化算法</strong>来<strong>优化什么目标</strong>。tensorflow的已经封装好好多最优化算法的类，我们只需要简单声明一下就行了。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(cost)</div></pre></td></tr></table></figure></p>
 <h4 id="开始训练"><a href="#开始训练" class="headerlink" title="开始训练"></a>开始训练</h4><p>已经描述清楚了 <strong>在什么数据上</strong>，<strong>用什么训练算法</strong> 训练 <strong>什么样的网络</strong>，那么run一下就行了。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_ , minibatch_cost = sess.run([optimizer, cost], feed_dict=&#123;X:minibatch_X, Y:minibatch_Y, keep_probs:[<span class="number">0.8</span>,<span class="number">1</span>,<span class="number">1</span>]&#125;)</div></pre></td></tr></table></figure></p>
 <p>训练完，在训练集和测试集上的准确率如下：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -399,6 +400,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <h3 id="模型调优"><a href="#模型调优" class="headerlink" title="模型调优"></a>模型调优</h3><p>很明显，上面的简单模型，过拟合了。learing rate和网络结构当然可以调了，不过，主要是想拿这个小模型试试regulation，所以。。</p>
 <h4 id="L2-Regularization"><a href="#L2-Regularization" class="headerlink" title="L2 Regularization"></a>L2 Regularization</h4><p>在网上查了好多资料tensorflow要怎么加regularization, 都没有明确的回答“如何在tensorflow里给一个dnn网络添加regularization？”这个问题。经过我的尝试，这个问题的答案为：</p>
 <ol>
@@ -408,6 +410,7 @@
 <p>因为tensorflow里bp的过程是包起来的（当然你可以自己实现，但是有必要重复造轮子么？把你的脑细胞用在一些更有价值的事上吧。），optimizer定义好之后，是自动进行BP的，所以，需要给Variable添加regularizer项，让optimizer知道计算这个Variable的梯度时，要加上正则项。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">l2 = tf.contrib.layers.l2_regularizer(scale=<span class="number">0.01</span>)</div><div class="line">W1 = tf.get_variable(<span class="string">"W1"</span>, [<span class="number">25</span>,<span class="number">12288</span>],initializer = tf.contrib.layers.xavier_initializer(seed = <span class="number">1</span>),regularizer=l2)</div></pre></td></tr></table></figure></p>
 <p>给cost的计算添加regularization项，tensorflow中有好几种接口可以实现。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">###for some Varible</span></div><div class="line"><span class="comment">####scheme A</span></div><div class="line">reg_term = tf.contrib.layers.l2_regularizer(<span class="number">0.1</span>)(W3)</div><div class="line"></div><div class="line"><span class="comment">####scheme B</span></div><div class="line">l2 = tf.contrib.layers.l2_regularizer(scale=<span class="number">0.1</span>)</div><div class="line">reg_term = tf.contrib.layers.apply_regularization(l2, [W3])</div><div class="line"></div><div class="line"><span class="comment">###for all the Variables declared by regularizer</span></div><div class="line"><span class="comment">####scheme C</span></div><div class="line">reg_variables = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)</div><div class="line">reg_term = tf.reduce_sum(reg_variables)</div></pre></td></tr></table></figure></p>
 <p>L2的系数用的0.1, 模型的泛化性果然有提升。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -424,8 +427,10 @@
 </tr>
 </tbody>
 </table>
+</div>
 <h4 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h4><p>又试了一下用Dropout来正则。正tensorflow里直接用inverted dropout比较方便，tf.nn.dropout就集成了mask和weight按丢弃概率scale的功能。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">##without dropout</span></div><div class="line">A1 = tf.nn.relu(Z1) </div><div class="line">Z2 = tf.add(tf.matmul(W2,A1), b2)</div><div class="line"></div><div class="line">----&gt;</div><div class="line"><span class="comment">##with dropout</span></div><div class="line">A1 = tf.nn.relu(Z1)</div><div class="line">A1_hat = tf.nn.dropout(A1, keep_probs[<span class="number">1</span>])</div><div class="line">Z2 = tf.add(tf.matmul(W2,A1_hat), b2)</div></pre></td></tr></table></figure></p>
 <p>网络太小，丢节点效果都不好。最后尝试的最优的方案是，以0.2的概率丢输入，正则的结果还是很不错的。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -442,7 +447,9 @@
 </tr>
 </tbody>
 </table>
+</div>
 <h4 id="Dropout-L2"><a href="#Dropout-L2" class="headerlink" title="Dropout + L2"></a>Dropout + L2</h4><p>那么把这两个叠加在一起效果怎么样怎？<br>如果不调参直接加（0.2丢输入+系数为0.1的L2）,效果不好。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -459,7 +466,9 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p>这看起来是正则得太厉害了。所以调小点L2的系数，调为0.01，效果变得更好了，上了0.9，可以了，不玩了。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -476,6 +485,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p><code>有一点还没弄明白的是，在给dropout加L2的时候，每次FF和BP，是只算保留下来的node的L2, 还是算全部的Node的L2。两者似乎都有可解释的道理。以上是图省事，直接给全部的都加L2，看起来效果也不错。</code></p>
 <h2 id="用tensorflow再干点什么"><a href="#用tensorflow再干点什么" class="headerlink" title="用tensorflow再干点什么"></a>用tensorflow再干点什么</h2><p>平时工作用不到啊，长期不用肯定会忘的。所以要想办法用起来。<br>怎么用呢？大概想了想，先mark下。</p>
 <ul>
@@ -501,9 +511,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
-          
             <a href="/tags/machine-learning/" rel="tag"># machine learning</a>
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
           
             <a href="/tags/DNN/" rel="tag"># DNN</a>
           
@@ -616,7 +626,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -638,7 +648,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
