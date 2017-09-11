@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Paul&#39;s Gardon">
 <meta property="og:description" content="当年找工作的时候就没有把动态规划搞得很透彻。看了今年阿里笔试的编程题，觉得是个背包问题，不会做（后来了解到是个三维装箱问题，搞了一天搞不定，不搞了）。工作中也遇到了背包，索性把这个问题研究研究。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-11T06:22:00.000Z">
+<meta property="og:updated_time" content="2017-09-11T12:14:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tips for 背包问题">
 <meta name="twitter:description" content="当年找工作的时候就没有把动态规划搞得很透彻。看了今年阿里笔试的编程题，觉得是个背包问题，不会做（后来了解到是个三维装箱问题，搞了一天搞不定，不搞了）。工作中也遇到了背包，索性把这个问题研究研究。">
@@ -396,25 +396,44 @@
 </ol>
 <p>第一步是最重要的。子问题要求所谓的“<strong>无后效性</strong>”<br>可以认为动态规划是对搜索算法的规则化优化。</p>
 <h3 id="背包问题"><a href="#背包问题" class="headerlink" title="背包问题"></a>背包问题</h3><p>一下子搞不定那么多的问题，所以先只针对背包问题进行研究。</p>
-<h4 id="01背包问题"><a href="#01背包问题" class="headerlink" title="01背包问题"></a>01背包问题</h4><h5 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h5><blockquote>
+<h4 id="01背包问题"><a href="#01背包问题" class="headerlink" title="01背包问题"></a>01背包问题</h4><h5 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h5><blockquote>
 <p>有N件物品和一个容量为V的背包。第i件物品的费用是$c_i$，价值是$w_i$。求解将哪些物品装入背包可使价值总和最大。</p>
 </blockquote>
 <h5 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h5><p>计容量为V时，前i件物品，能装入背包的最大价值为$f^V_i$。那么将问题分解为子问题：</p>
 <script type="math/tex; mode=display">
-f^{V}_{i} = max(f^{V}_{i-1}, f^{V-c_i}_{i-1}+w_i)</script><p>前i件物品装入容量为V的背包这个问题被分解为两种情况：<br>A. 第i件物品不装入，剩下的前i-1件物品装入容量为V的背包;<br>B. 第i件物品装入(从V中使用了$c_i$的费用，带来$w_i$的收益），剩下的前i-1件物品装入容量为$V-w_i$的背包。<br>在这两种情况中选出较大的，就是当前对第i件物品的最优决策了。从而迭代公式。</p>
+f^{V}_{i} = max(f^{V}_{i-1}, f^{V-c_i}_{i-1}+w_i)...[1]</script><p>前i件物品装入容量为V的背包这个问题被分解为两种情况：<br>A. 第i件物品不装入，剩下的前i-1件物品装入容量为V的背包;<br>B. 第i件物品装入(从V中使用了$c_i$的费用，带来$w_i$的收益），剩下的前i-1件物品装入容量为$V-w_i$的背包。<br>在这两种情况中选出较大的，就是当前对第i件物品的最优决策了。从而迭代公式。</p>
 <p>得到这个思路的关键点：</p>
 <ol>
-<li>把容量V看成是可变量，这个思路类似于辅助的隐含变量。我认为V是状态量，i是阶段量。</li>
+<li>把容量V看成是可变量，这个思路类似于辅助的隐含变量。我认为<strong>V是状态量</strong>，i是阶段量。</li>
 <li>把决策i个物品简化为只决策第i个物品，我假设i-1的情况已知了，在这个已知条件下，去决策i，改怎么决策。</li>
-<li>说到底是归纳的思维。</li>
+<li>说到底是<strong>归纳</strong>的思维。</li>
 </ol>
 <h5 id="i方向上的优化优化"><a href="#i方向上的优化优化" class="headerlink" title="i方向上的优化优化"></a>i方向上的优化优化</h5><p>直接对递推公式进行编码的话，需要一个二维数组。<br>由于有先后顺序，最终是要求得$f^V_i$，第i轮只依赖第i-1轮的结果，所以前面的都可以丢掉了，所以可以把这个二维数组优化成一维数组。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(N):</div><div class="line">    <span class="keyword">for</span> v <span class="keyword">in</span> range(V):</div><div class="line">        f[i][v] = max(f[i<span class="number">-1</span>][v], f[i<span class="number">-1</span>][v-c[i]] + w[i])</div><div class="line">---&gt;</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(N):</div><div class="line">    <span class="keyword">for</span> v <span class="keyword">in</span> reverse(range(V)):</div><div class="line">        f[v] = max(f[v], f[v-c[i]] + w[i])</div></pre></td></tr></table></figure></p>
 <p>其中有一个比较绕的问题是，为什么内层的迭代要反着进行。<br>因为f[i][v]依赖的是f[i-1][v], f[i-1][v-c[i]], 压缩成一维的时候，要倒着循环，才能保证这一轮的f[v]依赖的是上一轮求得的f[v], f[v-c[i]]，如果实在想不明白，就把二维的数组画出了，看看正着循环和倒着循环会发生什么。</p>
-<h5 id="V方向上的优化"><a href="#V方向上的优化" class="headerlink" title="V方向上的优化"></a>V方向上的优化</h5><p>在第j轮，不需要把整个一维数f[v]或者二维数组f[j][v]的一整行全部重新算一遍，只需要更新从V-sum(c[j]..c[N])(<a href="http://love-oriented.com/pack/" target="_blank" rel="external">1</a>的原文似乎是写错了，把C写成了W)。这个可以倒着推：为了得到f[v], 倒推前一个物品，只需要知道f[v-c[N]], 再倒推一个物品，需要知道f[v-(c[N-1]+c[N])]。而背包状态0~v-(c[N-1]+c[N])不需要知道。所以一个常数优化是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(N):</div><div class="line">    <span class="keyword">for</span> v <span class="keyword">in</span> reverse(range(V)):</div><div class="line">        f[v] = max(f[v], f[v-c[i]] + w[i])</div><div class="line">----&gt;</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(N):</div><div class="line">    bound = max((V-sum(C[i:]), C[i]&#125;</div><div class="line">    <span class="keyword">for</span> v <span class="keyword">in</span> reverse(range(bound:V)):</div><div class="line">        f[v] = max(f[v], f[v-c[i]] + w[i])</div></pre></td></tr></table></figure></p>
+<h5 id="V方向上的优化"><a href="#V方向上的优化" class="headerlink" title="V方向上的优化"></a>V方向上的优化</h5><p>在第j轮，不需要把整个一维数f[v]或者二维数组f[j][v]的一整行全部重新算一遍，只需要更新从V-sum(c[j]..c[N])(<a href="http://love-oriented.com/pack/" target="_blank" rel="external">1</a>的原文似乎是写错了，把C写成了W)。这个可以倒着推：为了得到f[v], 倒推前一个物品，只需要知道f[v-c[N]], 再倒推一个物品，需要知道f[v-(c[N-1]+c[N])]。而背包状态0~v-(c[N-1]+c[N])不需要知道。所以一个常数优化是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(N):</div><div class="line">    <span class="keyword">for</span> v <span class="keyword">in</span> reverse(range(V)):</div><div class="line">        f[v] = max(f[v], f[v-c[i]] + w[i])</div><div class="line">----&gt;</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(N):</div><div class="line">    bound = max(V-sum(C[i:]), C[i])</div><div class="line">    <span class="keyword">for</span> v <span class="keyword">in</span> reverse(range(bound:V)):</div><div class="line">        f[v] = max(f[v], f[v-c[i]] + w[i])</div></pre></td></tr></table></figure>
 <h5 id="怎么初始化"><a href="#怎么初始化" class="headerlink" title="怎么初始化"></a>怎么初始化</h5><p>其实在描述状态之后，在得到决策递推式之前，就应该考虑初始化的问题。<br>很自然地会把选第1件物品到背包里当做是初始化状态，但是这里的一个trick是：<strong>把“选0件物（w也是0）装入背包”作为初始化的状态。</strong><br>如果用两位数组描述状态转移，那么需要知道第一行和第一列分别是多少，既f[0]和f[:][0]中所有的值。<br>这时候要再次明确f[i][v]的意义：挑选第i件物品，且背包容量为v时，能装进去的最大价值。所以第一列，相当于v=0,背包容量为0，f[:][0]也都是0。第一行，不管v变成多少，只考虑放0件物品，所以第一行也都是0。<br>考虑题目的另外一种问法“恰好背包装满”，那么第一列不变（不管有几件物品，都选0件，可以恰好装满），第一行，除了f[0][0]，其他的都填-inf，因为不能满足恰好装满。</p>
 <p>二维压缩成一维，按二维的第一行去初始化就行了。</p>
-<h4 id="完全背包问题"><a href="#完全背包问题" class="headerlink" title="完全背包问题"></a>完全背包问题</h4><hr>
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3>
+<h4 id="完全背包问题"><a href="#完全背包问题" class="headerlink" title="完全背包问题"></a>完全背包问题</h4><h5 id="问题-1"><a href="#问题-1" class="headerlink" title="问题"></a>问题</h5><blockquote>
+<p>有N种物品和一个容量为V的背包，每种物品都有无限件可用。第i种物品的费用是c[i]，价值是w[i]。求解将哪些物品装入背包可使这些物品的费用总和不超过背包容量，且价值总和最大。</p>
+</blockquote>
+<h5 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h5><p>跟01背包问题的区别在于每种物品有无限件可用。依照动态规划的思路去拆分出来子问题，仍然是对每种物品i进行决策。<br><code>注意在01背包中，一种就是一件，对一种或一件进行决策没有区别，但是在完全背包中，一种和一件是有区别的。</code><br>明确一下状态表示：<strong>$f^{V}_{i}$表示背包容量为V时，从前i种物品中随意选择，能填充的最大价值</strong>。把从第i种物品中选出k件作为一个阶段的决策，那么递推公式是：</p>
+<script type="math/tex; mode=display">
+f^{V}_{i} = \max_{k=0}^{\infty}(f^{V-kc_i}_{i-1} + kw_i)...[2]</script><p>这里有一个显然的优化是上限可以用$V/c_i$来替换$\infty$。替换之后就可以写代码实现了。<br>并且替换之后，可以转化为01背包问题：将第i种物品看做是$V/c_i$种物品。<br>复杂度还是有点高。</p>
+<h5 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h5><p>换一种思路，要决策的不再是第i种物品要选择几个出来放到包里，而是在当前状态下，<strong>要不要再增加一件第i种物品。</strong>那么递推公式是：</p>
+<script type="math/tex; mode=display">
+f^{v}_{i} = \max (f^{V}_{i-1}, f^{V-c_i}_i+w_i)...[3]</script><p>对比着01背包的递推公式来理解这个思路：区别在于第二项，公式<a href="http://love-oriented.com/pack/" target="_blank" rel="external">1</a>的第二项对应的情况是，选了第i种物品之后，就只能去前i-1种物品中选了，因为物品i只有一件。而公式[3],由于物品i有无限多件，选了第i种物品之后，还能继续从第i件物品中选。<br>从公式[2]可以推导出来公式[3],把$f^{V-c_i}_i$带入公式[2]就行：</p>
+<script type="math/tex; mode=display">
+f^{V}_i =\max_{k=0}^{\infty}(f^{V-kc_i}_{i-1} + kw_i)...[2] \\
+    = \max(f^V_{i-1}, \max_{k=1}^{\infty}(f^{V-kc_i}_{i-1} + kw_i)) \\
+    = \max(f^V_{i-1}, \max_{k=1}^{\infty}(f^{V-kc_i}_{i-1} + kw_i)) \\
+    = \max(f^V_{i-1}, \max_{k=1}^{\infty}(f^{V-(k-1)c_i-c_i}_{i-1} + (k-1)w_i) + w_i) \\
+    = \max(f^V_{i-1}, \max_{l=0}^{\infty}(f^{V-c_j-jc_i}_{i-1} + jw_i)+w_i) \\
+    = \max(f^V_{i-1}, f^{V-c_i}_i+w_i)...[3]</script><p>这个二维的数组同样可以压缩成一维数组。思路跟01背包问题相似，区别在于：01背包问题为了保证第i轮迭代依赖的“前面项（比V小的项）”是第i-1轮结果，内层的循环（V的循环）用的是倒序的。而完全背包问题，依赖的就是第i轮的结果，所以内层循环用正序就行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(N):</div><div class="line">    bound = max(V-sum(C[i:]), C[i])</div><div class="line">    <span class="keyword">for</span> v <span class="keyword">in</span> range(bound:V):</div><div class="line">        f[v] = max(f[v], f[v-c[i]] + w[i])</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1]<a href="http://love-oriented.com/pack/" target="_blank" rel="external">背包九讲</a><br>[2]<a href="https://baike.baidu.com/item/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/529408?fr=aladdin" target="_blank" rel="external">百度百科：动态规划</a></p>
+
       
     </div>
     
@@ -597,7 +616,7 @@ f^{V}_{i} = max(f^{V}_{i-1}, f^{V-c_i}_{i-1}+w_i)</script><p>前i件物品装入
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#动态规划"><span class="nav-text">动态规划</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概念"><span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分类"><span class="nav-text">分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#过程"><span class="nav-text">过程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#背包问题"><span class="nav-text">背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01背包问题"><span class="nav-text">01背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#题目"><span class="nav-text">题目</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#思路"><span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#i方向上的优化优化"><span class="nav-text">i方向上的优化优化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#V方向上的优化"><span class="nav-text">V方向上的优化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#怎么初始化"><span class="nav-text">怎么初始化</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完全背包问题"><span class="nav-text">完全背包问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#动态规划"><span class="nav-text">动态规划</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概念"><span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分类"><span class="nav-text">分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#过程"><span class="nav-text">过程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#背包问题"><span class="nav-text">背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01背包问题"><span class="nav-text">01背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#问题"><span class="nav-text">问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#思路"><span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#i方向上的优化优化"><span class="nav-text">i方向上的优化优化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#V方向上的优化"><span class="nav-text">V方向上的优化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#怎么初始化"><span class="nav-text">怎么初始化</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完全背包问题"><span class="nav-text">完全背包问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#问题-1"><span class="nav-text">问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#思路-1"><span class="nav-text">思路</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#优化"><span class="nav-text">优化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
