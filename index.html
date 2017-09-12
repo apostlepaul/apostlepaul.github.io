@@ -380,7 +380,18 @@
 </code></pre><p>按能否被修改来分</p>
 <pre><code>- 可变序列：list/bytearray, array.array/collections.deque/memoryview
 - 不可变序列：tuple/str/bytes
-</code></pre><h2 id="列表推导和生成器表达式"><a href="#列表推导和生成器表达式" class="headerlink" title="列表推导和生成器表达式"></a>列表推导和生成器表达式</h2><h2 id="元组不仅仅是不可变的列表"><a href="#元组不仅仅是不可变的列表" class="headerlink" title="元组不仅仅是不可变的列表"></a>元组不仅仅是不可变的列表</h2><h2 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h2><h2 id="对序列使用-和"><a href="#对序列使用-和" class="headerlink" title="对序列使用+和*"></a>对序列使用+和*</h2><h2 id="序列的增量赋值"><a href="#序列的增量赋值" class="headerlink" title="序列的增量赋值"></a>序列的增量赋值</h2><h2 id="list-sort方法和内置函数sorted"><a href="#list-sort方法和内置函数sorted" class="headerlink" title="list, sort方法和内置函数sorted"></a>list, sort方法和内置函数sorted</h2><h2 id="用bisect来管理已排序的序列"><a href="#用bisect来管理已排序的序列" class="headerlink" title="用bisect来管理已排序的序列"></a>用bisect来管理已排序的序列</h2><h2 id="当列表不是首选时"><a href="#当列表不是首选时" class="headerlink" title="当列表不是首选时"></a>当列表不是首选时</h2><h2 id="本章小结"><a href="#本章小结" class="headerlink" title="本章小结"></a>本章小结</h2>
+</code></pre><h2 id="列表推导和生成器表达式"><a href="#列表推导和生成器表达式" class="headerlink" title="列表推导和生成器表达式"></a>列表推导和生成器表达式</h2><h4 id="列表推导"><a href="#列表推导" class="headerlink" title="列表推导"></a>列表推导</h4><p>使用列表推导的原则：只用列表推导来创建新的列表，并尽可能简短。<br>python2中列表推导会有上下文同名变量冲突的问题，python3中没有。<br>列表推导中for循环的顺序也是由外层到内层。</p>
+<h4 id="生成器表达式"><a href="#生成器表达式" class="headerlink" title="生成器表达式"></a>生成器表达式</h4><p>用于初始化列表之外的其他类型的序列比较好。<br>生成器表达式遵守了迭代器协议，逐个产生元素，而不像列表推导那样先建立完整的列表再填内容。<br>只要把列表推导中的方括号改成圆括号。</p>
+<h2 id="元组不仅仅是不可变的列表"><a href="#元组不仅仅是不可变的列表" class="headerlink" title="元组不仅仅是不可变的列表"></a>元组不仅仅是不可变的列表</h2><p>元组是对数据的记录，元组的数量和位置信息非常重要。<br>元组拆包最简单的用法是平行赋值。<br>可以用*号把元组拆包作为函数的参数<br>python3里*加一个变量可以用在平行赋值中<br>元组可以嵌套使用，如（a,b,(c,d))</p>
+<h4 id="具名元组"><a href="#具名元组" class="headerlink" title="具名元组"></a>具名元组</h4><p>创建一个具名元组要两个参数：类名和各个字段的名字，字段名可以是一个可迭代对象或者以空格分割的字符串。<br>具名元组的_fields属性返回一个字段名字的元组<br>具名元组的_make()方法接收一个可迭代对象来生成实例<br>具名元组的_asdict()方法返回一个collections.OrderedDict</p>
+<h2 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h2><p>可以用slice(a,b,c)来定义一个切片对象，list[slice(a,b,c)]等价于list[a:b:c]<br>python内置的对象都是一维的，只接收单一索引。外部定义的对象，可以接收以逗号分割的多个索引，只要将对象的特殊方法<strong>getitem</strong>定义为以元组接收。a.__getitem__((a,b))<br>切片可以放在赋值语句的左边，或者作为del的操作对象，就可以对序列进行嫁接，切除，或就地修改。</p>
+<h2 id="对序列使用-和"><a href="#对序列使用-和" class="headerlink" title="对序列使用+和*"></a>对序列使用+和*</h2><p>+和*都不修改原有的操作对象，而是新建一个对象。<br>用*建立列表的列表的时候要注意，最好用列表推导。</p>
+<h2 id="序列的增量赋值"><a href="#序列的增量赋值" class="headerlink" title="序列的增量赋值"></a>序列的增量赋值</h2><p>对象使用+=的时候，如果对象实现了__iadd__(),会就地加，没有的话，会调用__add__()创建一个新的对象，再赋值过去。</p>
+<h2 id="list-sort方法和内置函数sorted"><a href="#list-sort方法和内置函数sorted" class="headerlink" title="list.sort方法和内置函数sorted"></a>list.sort方法和内置函数sorted</h2><p>list.sort()方法就地排序，不返回新的对象，返回的是None。<br>如果不返回新的对象就返回None，是python中函数的一个惯用写法。<br>内置方法sorted会返回新的对象。<br>list.sort和sorted都接收两个可选参数，reverse和key。<br>reverse=True的时候降序。<br>key接收的是用在每一个元素上的函数，如key=len。注意，是函数名，所以不带括号。</p>
+<h2 id="用bisect来管理已排序的序列"><a href="#用bisect来管理已排序的序列" class="headerlink" title="用bisect来管理已排序的序列"></a>用bisect来管理已排序的序列</h2><p><code>这个模块专门用一节来讲，是不是很牛逼啊？但是从来没用过。</code><br>bisect模块主要包括两个函数，bisect, insort。<br>bisect用二分查找从有序序列中查到要找的值，返回index。<br>insort讲值插入有序序列中。</p>
+<h2 id="当列表不是首选时"><a href="#当列表不是首选时" class="headerlink" title="当列表不是首选时"></a>当列表不是首选时</h2><h4 id="数组-array-array"><a href="#数组-array-array" class="headerlink" title="数组 array.array"></a>数组 array.array</h4><p>专门处理数据，会很快，很方便。</p>
+<h4 id="内存视图memoryview"><a href="#内存视图memoryview" class="headerlink" title="内存视图memoryview"></a>内存视图memoryview</h4><p>类型转换方便，省内存。</p>
+<h4 id="numpy和Scipy"><a href="#numpy和Scipy" class="headerlink" title="numpy和Scipy"></a>numpy和Scipy</h4><h4 id="双向队列和其他队列"><a href="#双向队列和其他队列" class="headerlink" title="双向队列和其他队列"></a>双向队列和其他队列</h4>
           
         
       
