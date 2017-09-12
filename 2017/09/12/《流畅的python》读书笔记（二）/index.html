@@ -95,20 +95,18 @@
 
 
 
-<meta name="description" content="没错，我要成为python的专业使用者，不能再用if else糊弄事了。">
+<meta name="description" content="第2章 序列构成的数组了解序列类型的目的： - 避免重复造轮子 - 让自己定义的API跟原生的一样 内置序列类型概览按存放的数据类型分： - 容器序列：list/tuple和collections.deque这些，能存放不同类型的数据，存放的对象的引用 - 扁平序列：str/bytes/bytearray/memoryview/array.array，只能容纳一种类型，存放的是某种类型的值 按能否">
 <meta name="keywords" content="python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《流畅的python》读书笔记（一）">
-<meta property="og:url" content="http://yoursite.com/2017/09/08/《流畅的python》读书笔记/index.html">
+<meta property="og:title" content="《流畅的python》读书笔记（二）">
+<meta property="og:url" content="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/index.html">
 <meta property="og:site_name" content="Paul&#39;s Gardon">
-<meta property="og:description" content="没错，我要成为python的专业使用者，不能再用if else糊弄事了。">
+<meta property="og:description" content="第2章 序列构成的数组了解序列类型的目的： - 避免重复造轮子 - 让自己定义的API跟原生的一样 内置序列类型概览按存放的数据类型分： - 容器序列：list/tuple和collections.deque这些，能存放不同类型的数据，存放的对象的引用 - 扁平序列：str/bytes/bytearray/memoryview/array.array，只能容纳一种类型，存放的是某种类型的值 按能否">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/流畅的python.jpg">
-<meta property="og:updated_time" content="2017-09-08T07:33:38.000Z">
+<meta property="og:updated_time" content="2017-09-12T09:36:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《流畅的python》读书笔记（一）">
-<meta name="twitter:description" content="没错，我要成为python的专业使用者，不能再用if else糊弄事了。">
-<meta name="twitter:image" content="http://yoursite.com/images/流畅的python.jpg">
+<meta name="twitter:title" content="《流畅的python》读书笔记（二）">
+<meta name="twitter:description" content="第2章 序列构成的数组了解序列类型的目的： - 避免重复造轮子 - 让自己定义的API跟原生的一样 内置序列类型概览按存放的数据类型分： - 容器序列：list/tuple和collections.deque这些，能存放不同类型的数据，存放的对象的引用 - 扁平序列：str/bytes/bytearray/memoryview/array.array，只能容纳一种类型，存放的是某种类型的值 按能否">
 
 
 
@@ -138,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/08/《流畅的python》读书笔记/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/"/>
 
 
 
 
 
-  <title>《流畅的python》读书笔记（一） | Paul's Gardon</title>
+  <title>《流畅的python》读书笔记（二） | Paul's Gardon</title>
   
 
 
@@ -281,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/08/《流畅的python》读书笔记/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ApostlePaul">
@@ -298,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">《流畅的python》读书笔记（一）</h1>
+          <h1 class="post-title" itemprop="name headline">《流畅的python》读书笔记（二）</h1>
         
 
         <div class="post-meta">
@@ -310,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-08T14:15:39+08:00">
-                2017-09-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-12T14:04:20+08:00">
+                2017-09-12
               </time>
             
 
@@ -375,8 +373,16 @@
       
 
       
-        <p>没错，我要成为python的专业使用者，不能再用if else糊弄事了。<br><a id="more"></a><br>开始阅读《流畅的python》。<br>按照《如何阅读一本书》里的知道，先弄清楚架构再细读。<br>这本书的目录已经是很好的架构了。我弄了个图整理了一下。读这本书的时候会对这这个图来进行。<br><img src="/images/流畅的python.jpg" alt="《流畅的python》大纲"></p>
-
+        <h1 id="第2章-序列构成的数组"><a href="#第2章-序列构成的数组" class="headerlink" title="第2章 序列构成的数组"></a>第2章 序列构成的数组</h1><p>了解序列类型的目的：</p>
+<pre><code>- 避免重复造轮子
+- 让自己定义的API跟原生的一样
+</code></pre><h2 id="内置序列类型概览"><a href="#内置序列类型概览" class="headerlink" title="内置序列类型概览"></a>内置序列类型概览</h2><p>按存放的数据类型分：</p>
+<pre><code>- 容器序列：list/tuple和collections.deque这些，能存放不同类型的数据，存放的对象的引用
+- 扁平序列：str/bytes/bytearray/memoryview/array.array，只能容纳一种类型，存放的是某种类型的值
+</code></pre><p>按能否被修改来分</p>
+<pre><code>- 可变序列：list/bytearray, array.array/collections.deque/memoryview
+- 不可变序列：tuple/str/bytes
+</code></pre><h2 id="列表推导和生成器表达式"><a href="#列表推导和生成器表达式" class="headerlink" title="列表推导和生成器表达式"></a>列表推导和生成器表达式</h2><h2 id="元组不仅仅是不可变的列表"><a href="#元组不仅仅是不可变的列表" class="headerlink" title="元组不仅仅是不可变的列表"></a>元组不仅仅是不可变的列表</h2><h2 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h2><h2 id="对序列使用-和"><a href="#对序列使用-和" class="headerlink" title="对序列使用+和*"></a>对序列使用+和*</h2><h2 id="序列的增量赋值"><a href="#序列的增量赋值" class="headerlink" title="序列的增量赋值"></a>序列的增量赋值</h2><h2 id="list-sort方法和内置函数sorted"><a href="#list-sort方法和内置函数sorted" class="headerlink" title="list, sort方法和内置函数sorted"></a>list, sort方法和内置函数sorted</h2><h2 id="用bisect来管理已排序的序列"><a href="#用bisect来管理已排序的序列" class="headerlink" title="用bisect来管理已排序的序列"></a>用bisect来管理已排序的序列</h2><h2 id="当列表不是首选时"><a href="#当列表不是首选时" class="headerlink" title="当列表不是首选时"></a>当列表不是首选时</h2><h2 id="本章小结"><a href="#本章小结" class="headerlink" title="本章小结"></a>本章小结</h2>
       
     </div>
     
@@ -406,8 +412,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/31/notes-for-ML-strategy/" rel="next" title="Tips for ML strategy">
-                <i class="fa fa-chevron-left"></i> Tips for ML strategy
+              <a href="/2017/09/09/背包问题/" rel="next" title="Tips for 背包问题">
+                <i class="fa fa-chevron-left"></i> Tips for 背包问题
               </a>
             
           </div>
@@ -415,10 +421,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/09/背包问题/" rel="prev" title="Tips for 背包问题">
-                Tips for 背包问题 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -477,8 +479,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -542,6 +553,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第2章-序列构成的数组"><span class="nav-text">第2章 序列构成的数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内置序列类型概览"><span class="nav-text">内置序列类型概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列表推导和生成器表达式"><span class="nav-text">列表推导和生成器表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#元组不仅仅是不可变的列表"><span class="nav-text">元组不仅仅是不可变的列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切片"><span class="nav-text">切片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对序列使用-和"><span class="nav-text">对序列使用+和*</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列的增量赋值"><span class="nav-text">序列的增量赋值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#list-sort方法和内置函数sorted"><span class="nav-text">list, sort方法和内置函数sorted</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用bisect来管理已排序的序列"><span class="nav-text">用bisect来管理已排序的序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#当列表不是首选时"><span class="nav-text">当列表不是首选时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本章小结"><span class="nav-text">本章小结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -712,9 +739,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/09/08/《流畅的python》读书笔记/';
-          this.page.identifier = '2017/09/08/《流畅的python》读书笔记/';
-          this.page.title = '《流畅的python》读书笔记（一）';
+          this.page.url = 'http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/';
+          this.page.identifier = '2017/09/12/《流畅的python》读书笔记（二）/';
+          this.page.title = '《流畅的python》读书笔记（二）';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://paul.disqus.com/embed.js';
