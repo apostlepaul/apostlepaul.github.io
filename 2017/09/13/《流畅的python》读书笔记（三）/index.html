@@ -95,18 +95,18 @@
 
 
 
-<meta name="description" content="第2章主要讲python中序列相关的数据结构">
+<meta name="description" content="第三章讲字典和集合">
 <meta name="keywords" content="python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《流畅的python》读书笔记（二）">
-<meta property="og:url" content="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/index.html">
+<meta property="og:title" content="《流畅的python》读书笔记（三）">
+<meta property="og:url" content="http://yoursite.com/2017/09/13/《流畅的python》读书笔记（三）/index.html">
 <meta property="og:site_name" content="Paul&#39;s Gardon">
-<meta property="og:description" content="第2章主要讲python中序列相关的数据结构">
+<meta property="og:description" content="第三章讲字典和集合">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-13T05:55:54.000Z">
+<meta property="og:updated_time" content="2017-09-13T16:32:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《流畅的python》读书笔记（二）">
-<meta name="twitter:description" content="第2章主要讲python中序列相关的数据结构">
+<meta name="twitter:title" content="《流畅的python》读书笔记（三）">
+<meta name="twitter:description" content="第三章讲字典和集合">
 
 
 
@@ -136,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/13/《流畅的python》读书笔记（三）/"/>
 
 
 
 
 
-  <title>《流畅的python》读书笔记（二） | Paul's Gardon</title>
+  <title>《流畅的python》读书笔记（三） | Paul's Gardon</title>
   
 
 
@@ -279,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/13/《流畅的python》读书笔记（三）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ApostlePaul">
@@ -296,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">《流畅的python》读书笔记（二）</h1>
+          <h1 class="post-title" itemprop="name headline">《流畅的python》读书笔记（三）</h1>
         
 
         <div class="post-meta">
@@ -308,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-12T14:04:20+08:00">
-                2017-09-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-13T14:09:09+08:00">
+                2017-09-13
               </time>
             
 
@@ -373,34 +373,39 @@
       
 
       
-        <p>第2章主要讲python中序列相关的数据结构<br><a id="more"></a></p>
-<h1 id="第2章-序列构成的数组"><a href="#第2章-序列构成的数组" class="headerlink" title="第2章 序列构成的数组"></a>第2章 序列构成的数组</h1><p>了解序列类型的目的：</p>
+        <p>第三章讲字典和集合<br><a id="more"></a></p>
+<h1 id="第3章-字典和集合"><a href="#第3章-字典和集合" class="headerlink" title="第3章 字典和集合"></a>第3章 字典和集合</h1><h3 id="泛映射类型"><a href="#泛映射类型" class="headerlink" title="泛映射类型"></a>泛映射类型</h3><p>标准库里所有映射类型都是利用dict来实现的。<br>只有可散列的数据类型才能用作这些映射里的键。<br>可散列对象：</p>
 <ul>
-<li>避免重复造轮子</li>
-<li>让自己定义的API跟原生的一样</li>
+<li>生命周期内散列值不变</li>
+<li>实现__hash__()方法</li>
+<li>实现__qe__()方法</li>
 </ul>
-<h3 id="内置序列类型概览"><a href="#内置序列类型概览" class="headerlink" title="内置序列类型概览"></a>内置序列类型概览</h3><p>按存放的数据类型分：</p>
+<p>通常情况下id()返回的值就是对象的散列值。</p>
+<h3 id="字典推导"><a href="#字典推导" class="headerlink" title="字典推导"></a>字典推导</h3><p>列表推导把中括号换成大括号，冒号区分key和value。</p>
+<h3 id="常见的映射方法"><a href="#常见的映射方法" class="headerlink" title="常见的映射方法"></a>常见的映射方法</h3><p>有很多，具体见书上的表吧。</p>
+<p>update()里的参数可以是映射或者键值对迭代器。</p>
+<p>setdefault有妙用：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">my_dict.setdefault(key, []).append(new_value)</div><div class="line"></div><div class="line"><span class="comment">###——————&gt;等价于</span></div><div class="line"><span class="keyword">if</span> key <span class="keyword">not</span> <span class="keyword">in</span> my_dict:</div><div class="line">    my_dict[key] = []</div><div class="line">my_dict[key].append(new_value)</div></pre></td></tr></table></figure></p>
+<p><code>其实也可以用defaultdict吧，比如</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">words = [<span class="string">'hello'</span>, <span class="string">'world'</span>, <span class="string">'nice'</span>, <span class="string">'world'</span>]</div><div class="line">counter = dict()</div><div class="line"><span class="keyword">for</span> kw <span class="keyword">in</span> words:</div><div class="line">    counter[kw] = counter.setdefault(kw, <span class="number">0</span>) + <span class="number">1</span></div><div class="line"></div><div class="line"><span class="comment">###-----&gt;等价于</span></div><div class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</div><div class="line">words = [<span class="string">'hello'</span>, <span class="string">'world'</span>, <span class="string">'nice'</span>, <span class="string">'world'</span>]</div><div class="line"><span class="comment">#使用lambda来定义简单的函数</span></div><div class="line">counts = defaultdict(<span class="keyword">lambda</span>: <span class="number">0</span>) </div><div class="line"><span class="keyword">for</span> kw <span class="keyword">in</span> words:</div><div class="line">    counts[s] += <span class="number">1</span></div></pre></td></tr></table></figure></p>
+<p>好吧下一节课里有讲。</p>
+<h3 id="映射的弹性键查询"><a href="#映射的弹性键查询" class="headerlink" title="映射的弹性键查询"></a>映射的弹性键查询</h3><h4 id="defaultdict"><a href="#defaultdict" class="headerlink" title="defaultdict"></a>defaultdict</h4><p>如果在创建defaultdict的时候没有指定defatul<em>factory, 查询不存在的键会触发KeyError。<br>default_factory只会在\</em>_getitem__里被调用。在其他方法，如dd.get(k)时会返回None。<br>其背后是__missing__的功劳</p>
+<h4 id="特殊方法-missing"><a href="#特殊方法-missing" class="headerlink" title="特殊方法__missing__"></a>特殊方法__missing__</h4><p>__missing__方法只会被__getitem__调用。</p>
+<h3 id="字典的变种"><a href="#字典的变种" class="headerlink" title="字典的变种"></a>字典的变种</h3><ul>
+<li>collections.OrderedDict: 保持添加键的顺序，popitem会删除并返回最后一个，popitem(last=False)会从头pop</li>
+<li>collections.ChainMap: 可以容纳数个不同的映射对象</li>
+<li>collections.Counter: 给键准备了一个计数器。most_common(n)会返回出现次数最多的n个键。</li>
+<li>collections.UserDict: 把标准dict用纯python又实现了一遍。让用户继承写子类的。</li>
+</ul>
+<h3 id="子类化UserDict"><a href="#子类化UserDict" class="headerlink" title="子类化UserDict"></a>子类化UserDict</h3><p>UserDict有一个叫做data的属性，是dict的实例，是最终存储数据的地方。<br>python3.3在types模块引入了一个封装类，叫MappingProxyType, 它返回的是一个只读的映射视图。如d={}可以改变，d_proxy=MappingProxyType(d)，d_proxy是不能改变的。</p>
+<h3 id="集合论"><a href="#集合论" class="headerlink" title="集合论"></a>集合论</h3><p>也有集合推导。<br>操作很丰富，基本跟数学符号一致。</p>
+<h3 id="dict和set的背后"><a href="#dict和set的背后" class="headerlink" title="dict和set的背后"></a>dict和set的背后</h3><p>set和dict的核心就是Key的散列。<br>由此导致的特点：</p>
 <ul>
-<li>容器序列：list/tuple和collections.deque这些，能存放不同类型的数据，存放的对象的引用</li>
-<li>扁平序列：str/bytes/bytearray/memoryview/array.array，只能容纳一种类型，存放的是某种类型的值</li>
+<li>键必须是可散列的。</li>
+<li>字典在内存上的开销巨大。</li>
+<li>键查询很快。</li>
+<li>键的次序取决于添加顺序。</li>
+<li>往字典里添加新键可能会导致键的顺序改变，所以不要对字典同时进行迭代和修改。</li>
 </ul>
-<p>按能否被修改来分</p>
-<ul>
-<li>可变序列：list/bytearray, array.array/collections.deque/memoryview</li>
-<li>不可变序列：tuple/str/bytes</li>
-</ul>
-<h3 id="列表推导和生成器表达式"><a href="#列表推导和生成器表达式" class="headerlink" title="列表推导和生成器表达式"></a>列表推导和生成器表达式</h3><h4 id="列表推导"><a href="#列表推导" class="headerlink" title="列表推导"></a>列表推导</h4><p>使用列表推导的原则：只用列表推导来创建新的列表，并尽可能简短。<br>python2中列表推导会有上下文同名变量冲突的问题，python3中没有。<br>列表推导中for循环的顺序也是由外层到内层。</p>
-<h4 id="生成器表达式"><a href="#生成器表达式" class="headerlink" title="生成器表达式"></a>生成器表达式</h4><p>用于初始化列表之外的其他类型的序列比较好。<br>生成器表达式遵守了迭代器协议，逐个产生元素，而不像列表推导那样先建立完整的列表再填内容。<br>只要把列表推导中的方括号改成圆括号。</p>
-<h3 id="元组不仅仅是不可变的列表"><a href="#元组不仅仅是不可变的列表" class="headerlink" title="元组不仅仅是不可变的列表"></a>元组不仅仅是不可变的列表</h3><p>元组是对数据的记录，元组的数量和位置信息非常重要。<br>元组拆包最简单的用法是平行赋值。<br>可以用号把元组拆包作为函数的参数<br>python3里加一个变量可以用在平行赋值中<br>元组可以嵌套使用，如(a,b,(c,d))</p>
-<h4 id="具名元组"><a href="#具名元组" class="headerlink" title="具名元组"></a>具名元组</h4><p>创建一个具名元组要两个参数：类名和各个字段的名字，字段名可以是一个可迭代对象或者以空格分割的字符串。<br>具名元组的_fields属性返回一个字段名字的元组<br>具名元组的_make()方法接收一个可迭代对象来生成实例<br>具名元组的_asdict()方法返回一个collections.OrderedDict</p>
-<h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>可以用slice(a,b,c)来定义一个切片对象，list[slice(a,b,c)]等价于list[a:b:c]<br>python内置的对象都是一维的，只接收单一索引。外部定义的对象，可以接收以逗号分割的多个索引，只要将对象的特殊方法__getitem__定义为以元组接收。a.__getitem__((a,b))<br>切片可以放在赋值语句的左边，或者作为del的操作对象，就可以对序列进行嫁接，切除，或就地修改。</p>
-<h3 id="对序列使用-和"><a href="#对序列使用-和" class="headerlink" title="对序列使用+和*"></a>对序列使用+和*</h3><p>+和*都不修改原有的操作对象，而是新建一个对象。<br>用*建立列表的列表的时候要注意，最好用列表推导。</p>
-<h3 id="序列的增量赋值"><a href="#序列的增量赋值" class="headerlink" title="序列的增量赋值"></a>序列的增量赋值</h3><p>对象使用+=的时候，如果对象实现了__iadd__(),会就地加，没有的话，会调用__add__()创建一个新的对象，再赋值过去。</p>
-<h3 id="list-sort方法和内置函数sorted"><a href="#list-sort方法和内置函数sorted" class="headerlink" title="list.sort方法和内置函数sorted"></a>list.sort方法和内置函数sorted</h3><p>list.sort()方法就地排序，不返回新的对象，返回的是None。<br>如果不返回新的对象就返回None，是python中函数的一个惯用写法。<br>内置方法sorted会返回新的对象。<br>list.sort和sorted都接收两个可选参数，reverse和key。<br>reverse=True的时候降序。<br>key接收的是用在每一个元素上的函数，如key=len。注意，是函数名，所以不带括号。</p>
-<h3 id="用bisect来管理已排序的序列"><a href="#用bisect来管理已排序的序列" class="headerlink" title="用bisect来管理已排序的序列"></a>用bisect来管理已排序的序列</h3><p><code>这个模块专门用一节来讲，是不是很牛逼啊？但是从来没用过。</code><br>bisect模块主要包括两个函数，bisect, insort。<br>bisect用二分查找从有序序列中查到要找的值，返回index。<br>insort讲值插入有序序列中。</p>
-<h3 id="当列表不是首选时"><a href="#当列表不是首选时" class="headerlink" title="当列表不是首选时"></a>当列表不是首选时</h3><h4 id="数组-array-array"><a href="#数组-array-array" class="headerlink" title="数组 array.array"></a>数组 array.array</h4><p>专门处理数据，会很快，很方便。</p>
-<h4 id="内存视图memoryview"><a href="#内存视图memoryview" class="headerlink" title="内存视图memoryview"></a>内存视图memoryview</h4><p>类型转换方便，省内存。</p>
-<h4 id="numpy和Scipy"><a href="#numpy和Scipy" class="headerlink" title="numpy和Scipy"></a>numpy和Scipy</h4><h4 id="双向队列和其他队列"><a href="#双向队列和其他队列" class="headerlink" title="双向队列和其他队列"></a>双向队列和其他队列</h4>
+
       
     </div>
     
@@ -430,8 +435,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/09/背包问题/" rel="next" title="Tips for 背包问题">
-                <i class="fa fa-chevron-left"></i> Tips for 背包问题
+              <a href="/2017/09/12/《流畅的python》读书笔记（二）/" rel="next" title="《流畅的python》读书笔记（二）">
+                <i class="fa fa-chevron-left"></i> 《流畅的python》读书笔记（二）
               </a>
             
           </div>
@@ -439,10 +444,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/13/《流畅的python》读书笔记（三）/" rel="prev" title="《流畅的python》读书笔记（三）">
-                《流畅的python》读书笔记（三） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -585,7 +586,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第2章-序列构成的数组"><span class="nav-text">第2章 序列构成的数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内置序列类型概览"><span class="nav-text">内置序列类型概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表推导和生成器表达式"><span class="nav-text">列表推导和生成器表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#列表推导"><span class="nav-text">列表推导</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成器表达式"><span class="nav-text">生成器表达式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元组不仅仅是不可变的列表"><span class="nav-text">元组不仅仅是不可变的列表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#具名元组"><span class="nav-text">具名元组</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切片"><span class="nav-text">切片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对序列使用-和"><span class="nav-text">对序列使用+和*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序列的增量赋值"><span class="nav-text">序列的增量赋值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list-sort方法和内置函数sorted"><span class="nav-text">list.sort方法和内置函数sorted</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用bisect来管理已排序的序列"><span class="nav-text">用bisect来管理已排序的序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#当列表不是首选时"><span class="nav-text">当列表不是首选时</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数组-array-array"><span class="nav-text">数组 array.array</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存视图memoryview"><span class="nav-text">内存视图memoryview</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#numpy和Scipy"><span class="nav-text">numpy和Scipy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#双向队列和其他队列"><span class="nav-text">双向队列和其他队列</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第3章-字典和集合"><span class="nav-text">第3章 字典和集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#泛映射类型"><span class="nav-text">泛映射类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字典推导"><span class="nav-text">字典推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的映射方法"><span class="nav-text">常见的映射方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#映射的弹性键查询"><span class="nav-text">映射的弹性键查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#defaultdict"><span class="nav-text">defaultdict</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特殊方法-missing"><span class="nav-text">特殊方法__missing__</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字典的变种"><span class="nav-text">字典的变种</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#子类化UserDict"><span class="nav-text">子类化UserDict</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集合论"><span class="nav-text">集合论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dict和set的背后"><span class="nav-text">dict和set的背后</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -761,9 +762,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/';
-          this.page.identifier = '2017/09/12/《流畅的python》读书笔记（二）/';
-          this.page.title = '《流畅的python》读书笔记（二）';
+          this.page.url = 'http://yoursite.com/2017/09/13/《流畅的python》读书笔记（三）/';
+          this.page.identifier = '2017/09/13/《流畅的python》读书笔记（三）/';
+          this.page.title = '《流畅的python》读书笔记（三）';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://paul.disqus.com/embed.js';
