@@ -95,18 +95,18 @@
 
 
 
-<meta name="description" content="第2章主要讲python中序列相关的数据结构">
+<meta name="description" content="第4章文本和字节序列，读完这一章数据结构就算弄完了。看目录这一章的内容都不太熟悉，估计需要比较长的时间来读。">
 <meta name="keywords" content="python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《流畅的python》读书笔记（二）">
-<meta property="og:url" content="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/index.html">
+<meta property="og:title" content="《流畅的python》读书笔记（四）">
+<meta property="og:url" content="http://yoursite.com/2017/09/17/《流畅的python》读书笔记（四）/index.html">
 <meta property="og:site_name" content="Paul&#39;s Gardon">
-<meta property="og:description" content="第2章主要讲python中序列相关的数据结构">
+<meta property="og:description" content="第4章文本和字节序列，读完这一章数据结构就算弄完了。看目录这一章的内容都不太熟悉，估计需要比较长的时间来读。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-13T05:55:54.000Z">
+<meta property="og:updated_time" content="2017-09-20T02:19:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《流畅的python》读书笔记（二）">
-<meta name="twitter:description" content="第2章主要讲python中序列相关的数据结构">
+<meta name="twitter:title" content="《流畅的python》读书笔记（四）">
+<meta name="twitter:description" content="第4章文本和字节序列，读完这一章数据结构就算弄完了。看目录这一章的内容都不太熟悉，估计需要比较长的时间来读。">
 
 
 
@@ -136,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/17/《流畅的python》读书笔记（四）/"/>
 
 
 
 
 
-  <title>《流畅的python》读书笔记（二） | Paul's Gardon</title>
+  <title>《流畅的python》读书笔记（四） | Paul's Gardon</title>
   
 
 
@@ -279,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/17/《流畅的python》读书笔记（四）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ApostlePaul">
@@ -296,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">《流畅的python》读书笔记（二）</h1>
+          <h1 class="post-title" itemprop="name headline">《流畅的python》读书笔记（四）</h1>
         
 
         <div class="post-meta">
@@ -308,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-12T14:04:20+08:00">
-                2017-09-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-17T14:30:18+08:00">
+                2017-09-17
               </time>
             
 
@@ -373,34 +373,22 @@
       
 
       
-        <p>第2章主要讲python中序列相关的数据结构<br><a id="more"></a></p>
-<h1 id="第2章-序列构成的数组"><a href="#第2章-序列构成的数组" class="headerlink" title="第2章 序列构成的数组"></a>第2章 序列构成的数组</h1><p>了解序列类型的目的：</p>
-<ul>
-<li>避免重复造轮子</li>
-<li>让自己定义的API跟原生的一样</li>
-</ul>
-<h3 id="内置序列类型概览"><a href="#内置序列类型概览" class="headerlink" title="内置序列类型概览"></a>内置序列类型概览</h3><p>按存放的数据类型分：</p>
-<ul>
-<li>容器序列：list/tuple和collections.deque这些，能存放不同类型的数据，存放的对象的引用</li>
-<li>扁平序列：str/bytes/bytearray/memoryview/array.array，只能容纳一种类型，存放的是某种类型的值</li>
-</ul>
-<p>按能否被修改来分</p>
-<ul>
-<li>可变序列：list/bytearray, array.array/collections.deque/memoryview</li>
-<li>不可变序列：tuple/str/bytes</li>
-</ul>
-<h3 id="列表推导和生成器表达式"><a href="#列表推导和生成器表达式" class="headerlink" title="列表推导和生成器表达式"></a>列表推导和生成器表达式</h3><h4 id="列表推导"><a href="#列表推导" class="headerlink" title="列表推导"></a>列表推导</h4><p>使用列表推导的原则：只用列表推导来创建新的列表，并尽可能简短。<br>python2中列表推导会有上下文同名变量冲突的问题，python3中没有。<br>列表推导中for循环的顺序也是由外层到内层。</p>
-<h4 id="生成器表达式"><a href="#生成器表达式" class="headerlink" title="生成器表达式"></a>生成器表达式</h4><p>用于初始化列表之外的其他类型的序列比较好。<br>生成器表达式遵守了迭代器协议，逐个产生元素，而不像列表推导那样先建立完整的列表再填内容。<br>只要把列表推导中的方括号改成圆括号。</p>
-<h3 id="元组不仅仅是不可变的列表"><a href="#元组不仅仅是不可变的列表" class="headerlink" title="元组不仅仅是不可变的列表"></a>元组不仅仅是不可变的列表</h3><p>元组是对数据的记录，元组的数量和位置信息非常重要。<br>元组拆包最简单的用法是平行赋值。<br>可以用号把元组拆包作为函数的参数<br>python3里加一个变量可以用在平行赋值中<br>元组可以嵌套使用，如(a,b,(c,d))</p>
-<h4 id="具名元组"><a href="#具名元组" class="headerlink" title="具名元组"></a>具名元组</h4><p>创建一个具名元组要两个参数：类名和各个字段的名字，字段名可以是一个可迭代对象或者以空格分割的字符串。<br>具名元组的_fields属性返回一个字段名字的元组<br>具名元组的_make()方法接收一个可迭代对象来生成实例<br>具名元组的_asdict()方法返回一个collections.OrderedDict</p>
-<h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>可以用slice(a,b,c)来定义一个切片对象，list[slice(a,b,c)]等价于list[a:b:c]<br>python内置的对象都是一维的，只接收单一索引。外部定义的对象，可以接收以逗号分割的多个索引，只要将对象的特殊方法__getitem__定义为以元组接收。a.__getitem__((a,b))<br>切片可以放在赋值语句的左边，或者作为del的操作对象，就可以对序列进行嫁接，切除，或就地修改。</p>
-<h3 id="对序列使用-和"><a href="#对序列使用-和" class="headerlink" title="对序列使用+和*"></a>对序列使用+和*</h3><p>+和*都不修改原有的操作对象，而是新建一个对象。<br>用*建立列表的列表的时候要注意，最好用列表推导。</p>
-<h3 id="序列的增量赋值"><a href="#序列的增量赋值" class="headerlink" title="序列的增量赋值"></a>序列的增量赋值</h3><p>对象使用+=的时候，如果对象实现了__iadd__(),会就地加，没有的话，会调用__add__()创建一个新的对象，再赋值过去。</p>
-<h3 id="list-sort方法和内置函数sorted"><a href="#list-sort方法和内置函数sorted" class="headerlink" title="list.sort方法和内置函数sorted"></a>list.sort方法和内置函数sorted</h3><p>list.sort()方法就地排序，不返回新的对象，返回的是None。<br>如果不返回新的对象就返回None，是python中函数的一个惯用写法。<br>内置方法sorted会返回新的对象。<br>list.sort和sorted都接收两个可选参数，reverse和key。<br>reverse=True的时候降序。<br>key接收的是用在每一个元素上的函数，如key=len。注意，是函数名，所以不带括号。</p>
-<h3 id="用bisect来管理已排序的序列"><a href="#用bisect来管理已排序的序列" class="headerlink" title="用bisect来管理已排序的序列"></a>用bisect来管理已排序的序列</h3><p><code>这个模块专门用一节来讲，是不是很牛逼啊？但是从来没用过。</code><br>bisect模块主要包括两个函数，bisect, insort。<br>bisect用二分查找从有序序列中查到要找的值，返回index。<br>insort讲值插入有序序列中。</p>
-<h3 id="当列表不是首选时"><a href="#当列表不是首选时" class="headerlink" title="当列表不是首选时"></a>当列表不是首选时</h3><h4 id="数组-array-array"><a href="#数组-array-array" class="headerlink" title="数组 array.array"></a>数组 array.array</h4><p>专门处理数据，会很快，很方便。</p>
-<h4 id="内存视图memoryview"><a href="#内存视图memoryview" class="headerlink" title="内存视图memoryview"></a>内存视图memoryview</h4><p>类型转换方便，省内存。</p>
-<h4 id="numpy和Scipy"><a href="#numpy和Scipy" class="headerlink" title="numpy和Scipy"></a>numpy和Scipy</h4><h4 id="双向队列和其他队列"><a href="#双向队列和其他队列" class="headerlink" title="双向队列和其他队列"></a>双向队列和其他队列</h4>
+        <p>第4章文本和字节序列，读完这一章数据结构就算弄完了。看目录这一章的内容都不太熟悉，估计需要比较长的时间来读。</p>
+<a id="more"></a>
+<h1 id="第4章-文本和字节序列"><a href="#第4章-文本和字节序列" class="headerlink" title="第4章 文本和字节序列"></a>第4章 文本和字节序列</h1><p>python3明确区分了人类可读的文本字符串和原始的字节序列。</p>
+<h3 id="字符问题"><a href="#字符问题" class="headerlink" title="字符问题"></a>字符问题</h3><p>unicode中把字符的标识和字节表述进行了区分。<br>字符的标识，既码位，是0~1114111的数字，在unicode中以4-6个16进制的数字表示。<br>字符的具体表述取决于所用的编码，编码是码位和字节序列之间转换用的算法。<br>关于“<strong>编码</strong>”，有两种理解，一种是把码位转化成字节序列，另一种是把字符串转换成计算机存储的字节序列。输出都是字节序列，两者的术语场景不用。</p>
+<h3 id="字节概要"><a href="#字节概要" class="headerlink" title="字节概要"></a>字节概要</h3><p>python内置了两种不同的二进制序列类型，python3里的不可变的bytes类型和python2.6引进的可变的bytearray类型。<br>bytes和bytearray对象的各个元素是介于0-255之间的整数，但是其切片还是二进制序列。<br>所以这一节主要是在讲二进制序列类型。</p>
+<h3 id="基本的编解码器"><a href="#基本的编解码器" class="headerlink" title="基本的编解码器"></a>基本的编解码器</h3><p>python内置了上百种编解码器。<br>读到这里我才明白所谓的编码就是把文本（字符串）转换成码表中各编码方式对应的码位。</p>
+<h3 id="了解编码问题"><a href="#了解编码问题" class="headerlink" title="了解编码问题"></a>了解编码问题</h3><p>把文本转换成字节序列时，如果目标编码中没有的定义某个字符，那就会抛出UnicodeEncoderError异常，除非把errors参数传给编码方法或函数。</p>
+<p>把字节序列（二进制序列）转换成文本时，遇到无法转换的字节序列，会抛出UnicodeDecodeError。</p>
+<p>python3默认使用UTF-8编码源码，python2默认使用ASCII。<br>如何找出字节序列用的那种编码？简单地说，不能，必须有人告诉你。<br>可以用chardet来检测，命令行工具是chardetect。<br>UTF-16LE是小字节序，UTF-16BE是大字节序。</p>
+<h3 id="处理文本文件"><a href="#处理文本文件" class="headerlink" title="处理文本文件"></a>处理文本文件</h3><p>要理解unicode三明治模型。<br>locale.getpreferredencoding()返回的是最重要的，是打开文件的默认编码，也是重定向到stdin/stdout/stderr。<br>最好别依赖默认编码。<br>sys.getfilesystemencoding()用于编解码文件名。</p>
+<h3 id="为了正确比较而规范化Unicode字符串"><a href="#为了正确比较而规范化Unicode字符串" class="headerlink" title="为了正确比较而规范化Unicode字符串"></a>为了正确比较而规范化Unicode字符串</h3><p>因为unicode有组合字符（变音符号和附加到前一个字符上的记号），所以字符串比较起来很复杂。<br>例如e\u0301和e’(不知道那个符号要怎么打，cafe的最后一个字符)是一样的，但是他们的unicode不一样，所以要用某种方法进行规范化，例如,normalize(‘NFC’,s1)。<br>规范化的形式包括NFC, NFD， NFKC, NFKD。（不常用，用的时候再查吧。）</p>
+<h3 id="Unicode文本排序"><a href="#Unicode文本排序" class="headerlink" title="Unicode文本排序"></a>Unicode文本排序</h3><p>讲的是比较非ascii码时会遇到的问题。我暂时还用不到。</p>
+<h3 id="Unicode数据库"><a href="#Unicode数据库" class="headerlink" title="Unicode数据库"></a>Unicode数据库</h3><p>unicode数据库记录了字符是否可答应、是不是字母、是不是数字等，有isidentifier/isprintable/isdecimal/isnumeric。<br>分数也是isnumerica,但不是isdigit。</p>
+<h3 id="支持字符字符串和字节序列的双模式API"><a href="#支持字符字符串和字节序列的双模式API" class="headerlink" title="支持字符字符串和字节序列的双模式API"></a>支持字符字符串和字节序列的双模式API</h3><p>正则表达式中，字符串类型的pattern，前面加r,如r’\d+’，字节序列类型的pattern，前面加rb，如rb’\d+’。<br>可以使用正则表达式搜索字符串和字节序列，但是在后一种情况总，ascii范围外的字节不会当成数字和组成单词的字母。<br>os模块中的所有函数、文件名或路径名参数既能使用字符串，也能使用字节序列。<br>fsencode(filename)和fsdecode(filename)是os模块提供的特殊编解码函数，依赖sys.getfilesystemencoding()。</p>
+<p>这一章很多内容暂时用不到，用到的时候再来细看。</p>
+
       
     </div>
     
@@ -430,8 +418,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/09/背包问题/" rel="next" title="Tips for 背包问题">
-                <i class="fa fa-chevron-left"></i> Tips for 背包问题
+              <a href="/2017/09/13/《流畅的python》读书笔记（三）/" rel="next" title="《流畅的python》读书笔记（三）">
+                <i class="fa fa-chevron-left"></i> 《流畅的python》读书笔记（三）
               </a>
             
           </div>
@@ -440,8 +428,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/13/《流畅的python》读书笔记（三）/" rel="prev" title="《流畅的python》读书笔记（三）">
-                《流畅的python》读书笔记（三） <i class="fa fa-chevron-right"></i>
+              <a href="/2017/09/18/numpy常用函数/" rel="prev" title="numpy常用函数">
+                numpy常用函数 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -585,7 +573,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第2章-序列构成的数组"><span class="nav-text">第2章 序列构成的数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内置序列类型概览"><span class="nav-text">内置序列类型概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表推导和生成器表达式"><span class="nav-text">列表推导和生成器表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#列表推导"><span class="nav-text">列表推导</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成器表达式"><span class="nav-text">生成器表达式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元组不仅仅是不可变的列表"><span class="nav-text">元组不仅仅是不可变的列表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#具名元组"><span class="nav-text">具名元组</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切片"><span class="nav-text">切片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对序列使用-和"><span class="nav-text">对序列使用+和*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序列的增量赋值"><span class="nav-text">序列的增量赋值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list-sort方法和内置函数sorted"><span class="nav-text">list.sort方法和内置函数sorted</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用bisect来管理已排序的序列"><span class="nav-text">用bisect来管理已排序的序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#当列表不是首选时"><span class="nav-text">当列表不是首选时</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数组-array-array"><span class="nav-text">数组 array.array</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存视图memoryview"><span class="nav-text">内存视图memoryview</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#numpy和Scipy"><span class="nav-text">numpy和Scipy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#双向队列和其他队列"><span class="nav-text">双向队列和其他队列</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第4章-文本和字节序列"><span class="nav-text">第4章 文本和字节序列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字符问题"><span class="nav-text">字符问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字节概要"><span class="nav-text">字节概要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本的编解码器"><span class="nav-text">基本的编解码器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#了解编码问题"><span class="nav-text">了解编码问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理文本文件"><span class="nav-text">处理文本文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为了正确比较而规范化Unicode字符串"><span class="nav-text">为了正确比较而规范化Unicode字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Unicode文本排序"><span class="nav-text">Unicode文本排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Unicode数据库"><span class="nav-text">Unicode数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持字符字符串和字节序列的双模式API"><span class="nav-text">支持字符字符串和字节序列的双模式API</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -761,9 +749,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/';
-          this.page.identifier = '2017/09/12/《流畅的python》读书笔记（二）/';
-          this.page.title = '《流畅的python》读书笔记（二）';
+          this.page.url = 'http://yoursite.com/2017/09/17/《流畅的python》读书笔记（四）/';
+          this.page.identifier = '2017/09/17/《流畅的python》读书笔记（四）/';
+          this.page.title = '《流畅的python》读书笔记（四）';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://paul.disqus.com/embed.js';
