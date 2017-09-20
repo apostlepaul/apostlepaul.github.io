@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="python," />
 
 
 
@@ -95,17 +95,18 @@
 
 
 
-<meta name="description" content="天地渺渺一尘子随风而起随雨而落随遇而安">
+<meta name="description" content="python之所以强大，不就是因为有各种各样的库？所以不要傻乎乎地重复造轮子。以后再进行一些数据上的统计的时候，就用numpy嘛。">
+<meta name="keywords" content="python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="numpy常用函数">
 <meta property="og:url" content="http://yoursite.com/2017/09/18/numpy常用函数/index.html">
 <meta property="og:site_name" content="Paul&#39;s Gardon">
-<meta property="og:description" content="天地渺渺一尘子随风而起随雨而落随遇而安">
+<meta property="og:description" content="python之所以强大，不就是因为有各种各样的库？所以不要傻乎乎地重复造轮子。以后再进行一些数据上的统计的时候，就用numpy嘛。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-18T15:19:10.000Z">
+<meta property="og:updated_time" content="2017-09-20T13:26:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="numpy常用函数">
-<meta name="twitter:description" content="天地渺渺一尘子随风而起随雨而落随遇而安">
+<meta name="twitter:description" content="python之所以强大，不就是因为有各种各样的库？所以不要傻乎乎地重复造轮子。以后再进行一些数据上的统计的时候，就用numpy嘛。">
 
 
 
@@ -318,6 +319,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tech-notes/" itemprop="url" rel="index">
+                    <span itemprop="name">tech notes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -350,7 +373,52 @@
       
 
       
-        
+        <p>python之所以强大，不就是因为有各种各样的库？所以不要傻乎乎地重复造轮子。以后再进行一些数据上的统计的时候，就用numpy嘛。<br><a id="more"></a></p>
+<h4 id="ndarray的创建"><a href="#ndarray的创建" class="headerlink" title="ndarray的创建"></a>ndarray的创建</h4><ul>
+<li>np.array()</li>
+<li>np.arange()</li>
+<li>np.zeros()</li>
+<li>np.ones()</li>
+<li>np.empty()</li>
+<li>np.linspace()</li>
+</ul>
+<h4 id="基础函数"><a href="#基础函数" class="headerlink" title="基础函数"></a>基础函数</h4><ul>
+<li>a.shape: array形状</li>
+<li>a.ndim: 维数</li>
+<li>a.size: 元素个数</li>
+<li>a.dtype</li>
+<li>a.T</li>
+<li>a.ravel(): 拉平，返回的是视图</li>
+<li>a.flatten(): 拉平，返回的是新数据</li>
+<li>np.hstack()/np.column_stack()</li>
+<li>np.vstack()/np.row_stack()</li>
+<li>a.resize(): 对a自己改变。</li>
+<li>a.reshape(): 返回一个改变后的，a自己不变。</li>
+<li>a.tolist()</li>
+<li>a.astype()</li>
+<li>np.ix<em>():索引行和列。对比区别a[[1,2],[3,4]]和a[np.ix</em>([1,2],[3,4])]</li>
+</ul>
+<h4 id="统计相关"><a href="#统计相关" class="headerlink" title="统计相关"></a>统计相关</h4><ul>
+<li>a.sum()</li>
+<li>a.mean()</li>
+<li>a.min()</li>
+<li>a.max()</li>
+<li>a.cumsum(): 从上到下，从左到右</li>
+<li>a.median(): 中位数</li>
+<li>a.std(): 标准差</li>
+<li>a.var(): 方差</li>
+<li>unique():</li>
+<li>intersect():</li>
+<li>union1d():</li>
+<li>setdiff1d(x,y)</li>
+<li>setxor1d(x,y)</li>
+<li>in1d(x,y)</li>
+</ul>
+<h4 id="axis是什么"><a href="#axis是什么" class="headerlink" title="axis是什么"></a>axis是什么</h4><p>在进行统计的时候，如果是多维的数组，可以沿着某一个axis进行统计，例如sum。我认为把axis=0解释为按列，axis=1解释为按行有点不太妥，到三维的时候没法解释了。其实这个axis是shape的index。例如，shape=[2,3],axis=0就是要对shape<a href="=2">0</a>进行统计，sum or mean，统计完之后，这个维度就小时了，只剩下3了。</p>
+<h4 id="where函数"><a href="#where函数" class="headerlink" title="where函数"></a>where函数</h4><p>类似于三目函数，并且能嵌套使用。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = np.arange(<span class="number">6</span>).reshape(<span class="number">2</span>,<span class="number">3</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>np.where(a &gt; <span class="number">2</span>)</div><div class="line">(array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]), array([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]))</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>np.where(a &gt; <span class="number">2</span>, <span class="string">"A"</span>, <span class="string">"B"</span>)</div><div class="line">array([[<span class="string">'B'</span>, <span class="string">'B'</span>, <span class="string">'B'</span>],</div><div class="line">       [<span class="string">'A'</span>, <span class="string">'A'</span>, <span class="string">'A'</span>]],</div><div class="line">      dtype=<span class="string">'&lt;U1'</span>)</div></pre></td></tr></table></figure></p>
+<h4 id="histgram函数"><a href="#histgram函数" class="headerlink" title="histgram函数"></a>histgram函数</h4><p>用这个做分桶很方便啊，算个分布啥的。<del>不过花了一晚上的时间差怎么做qqplot都没有查到，后来决定不折腾了。</del><br>找到了。histgram有一个参数是weights，可以把要count的num作为weight传过去。<br>bins是要分的组，如果是一个array，array里是各bin的edge,左闭右开。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = np.linspace(<span class="number">0.1</span>, <span class="number">1</span>, <span class="number">10</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>np.histogram(a, bins=[<span class="number">0.1</span>,<span class="number">0.3</span>,<span class="number">0.5</span>,<span class="number">1.1</span>])</div><div class="line">(array([<span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>]), array([ <span class="number">0.1</span>,  <span class="number">0.3</span>,  <span class="number">0.5</span>,  <span class="number">1.1</span>]))</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>b = np.linspace(<span class="number">1</span>,<span class="number">10</span>,<span class="number">10</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>np.histogram(a, bins-[<span class="number">0.1</span>,<span class="number">0.3</span>,<span class="number">0.5</span>,<span class="number">1.1</span>], weights=b)</div><div class="line">(array([  <span class="number">3.</span>,   <span class="number">7.</span>,  <span class="number">45.</span>]), array([ <span class="number">0.1</span>,  <span class="number">0.3</span>,  <span class="number">0.5</span>,  <span class="number">1.1</span>]))</div></pre></td></tr></table></figure></p>
+<p>那个density还没有搞清楚是怎么回事。</p>
+
       
     </div>
     
@@ -364,6 +432,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
       
 
       
@@ -441,8 +515,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -506,6 +589,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#ndarray的创建"><span class="nav-text">ndarray的创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基础函数"><span class="nav-text">基础函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#统计相关"><span class="nav-text">统计相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#axis是什么"><span class="nav-text">axis是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#where函数"><span class="nav-text">where函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#histgram函数"><span class="nav-text">histgram函数</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
