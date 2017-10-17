@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="python," />
 
 
 
@@ -95,17 +95,18 @@
 
 
 
-<meta name="description" content="天地渺渺一尘子随风而起随雨而落随遇而安">
-<meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://yoursite.com/categories/index.html">
+<meta name="description" content="实现一个与python中标准的不可变扁平序列一样的vector类。">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《流畅的python》读书笔记（十）">
+<meta property="og:url" content="http://yoursite.com/2017/10/13/《流畅的python》读书笔记（十）/index.html">
 <meta property="og:site_name" content="Paul&#39;s Gardon">
-<meta property="og:description" content="天地渺渺一尘子随风而起随雨而落随遇而安">
+<meta property="og:description" content="实现一个与python中标准的不可变扁平序列一样的vector类。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-08T06:20:37.000Z">
+<meta property="og:updated_time" content="2017-10-17T04:15:09.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="categories">
-<meta name="twitter:description" content="天地渺渺一尘子随风而起随雨而落随遇而安">
+<meta name="twitter:title" content="《流畅的python》读书笔记（十）">
+<meta name="twitter:description" content="实现一个与python中标准的不可变扁平序列一样的vector类。">
 
 
 
@@ -135,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/categories/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/13/《流畅的python》读书笔记（十）/"/>
 
 
 
 
 
-  <title>categories | Paul's Gardon</title>
+  <title>《流畅的python》读书笔记（十） | Paul's Gardon</title>
   
 
 
@@ -266,40 +267,194 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/13/《流畅的python》读书笔记（十）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ApostlePaul">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Paul's Gardon">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">categories</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="category-all-page">
-            <div class="category-all-title">
-                目前共计 2 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/reading-notes/">reading notes</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/tech-notes/">tech notes</a><span class="category-list-count">5</span></li></ul>
-            </div>
-          </div>
+          <h1 class="post-title" itemprop="name headline">《流畅的python》读书笔记（十）</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-13T21:23:13+08:00">
+                2017-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reading-notes/" itemprop="url" rel="index">
+                    <span itemprop="name">reading notes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o">本文总阅读量</i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p>实现一个与python中标准的不可变扁平序列一样的vector类。<br><a id="more"></a></p>
+<h1 id="第10章-序列的修改、散列和切片"><a href="#第10章-序列的修改、散列和切片" class="headerlink" title="第10章 序列的修改、散列和切片"></a>第10章 序列的修改、散列和切片</h1><h3 id="1-自定义一个vector类"><a href="#1-自定义一个vector类" class="headerlink" title="1. 自定义一个vector类"></a>1. 自定义一个vector类</h3><p>序列类型的构造方法要接受可迭代的对象为参数，因为所有内置的序列类型都是这样的。<br>reprlib.repr()可以用于生成大型结构活递归结构的安全表示形式。</p>
+<h3 id="2-协议和鸭子类型"><a href="#2-协议和鸭子类型" class="headerlink" title="2. 协议和鸭子类型"></a>2. 协议和鸭子类型</h3><p>鸭子类型，是说对象并不是由自哪个类实例化来定义的，而是由对象所具有的属性集合来定义的，简单来说就是：“一只鸟，走路像鸭子，叫声像鸭子，长得像鸭子，那它就是鸭子。”<br>所以在python里，实现了__len__()和__getitem__()，那么可以认为它就是序列了。</p>
+<h3 id="3-实现切片"><a href="#3-实现切片" class="headerlink" title="3. 实现切片"></a>3. 实现切片</h3><p>内置的序列类型，切片得到的都是各自类型的新实例。所以需要了解切片原理。<br>切片的特性（其实就是中括号的特性）：</p>
+<ul>
+<li>单个索引，返回的是单个的值</li>
+<li>用一个冒号分割，传给序列的是slice，例如s[1:4] -&gt; slice(1,4,none)。slice的三个参数分别是start, stop, step。</li>
+<li>两个冒号分割，传给序列的也是slice， 例如s[1:4:2] -&gt; slice(1,4,2)</li>
+<li>逗号分割，传给序列的是slice元组，例如s[1:4:2, 7:9] -&gt; (slice(1,4,2), slice(7,9,none))</li>
+</ul>
+<p>slice是内置类型，有一个重要的属性，叫<strong>indice</strong>，可以优雅地处理确实所有和负数索引，以及长度超过目标序列的切片。可以好好利用。</p>
+<p>实现__getitem__()的要点：</p>
+<ul>
+<li>用cls = type(self)获取自身的类型</li>
+<li>判断传进来的index是slice类型还是number.Integral，分别进行处理</li>
+<li>这两种之外，要抛出TypeError</li>
+<li>多维切片的话，还要加一个判断：index是不是slice的tuple，然后进行处理</li>
+</ul>
+<h3 id="4-动态存取属性"><a href="#4-动态存取属性" class="headerlink" title="4. 动态存取属性"></a>4. 动态存取属性</h3><p>对于Vector类型v，我们想用x, y, z来代替v[0] v[1] v[2]。编写四个属性太麻烦了，可以用特殊方法__getattr__。因为<strong>属性查找失败后，解释器会调用__getattr__方法</strong>。<br>多数情况下，如果实现了__getattr__，也要定义__setattr__方法，以防对象的行为不一致。</p>
+<ul>
+<li>__getattr__里实现的是，如果要返回的实例的属性，如果在属性里找不到，要怎么办。</li>
+<li>__setattr__里实现的是，如果要设置的实例的属性，如果在属性里不存在，要怎么办。</li>
+</ul>
+<h3 id="5-散列和快速等值测试"><a href="#5-散列和快速等值测试" class="headerlink" title="5. 散列和快速等值测试"></a>5. 散列和快速等值测试</h3><p>示例给的__hash__把实例中各个元素的hash值进行异或。使用了functools.reduce和operator.xor来实现。<br>示例给的__eq__进行了优化，先比较长度，再比较各个值。用了all和zip两个内置函数。</p>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/07/《流畅的python》读书笔记（九）/" rel="next" title="《流畅的python》读书笔记（九）">
+                <i class="fa fa-chevron-left"></i> 《流畅的python》读书笔记（九）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -339,8 +494,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -404,6 +568,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第10章-序列的修改、散列和切片"><span class="nav-text">第10章 序列的修改、散列和切片</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-自定义一个vector类"><span class="nav-text">1. 自定义一个vector类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-协议和鸭子类型"><span class="nav-text">2. 协议和鸭子类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-实现切片"><span class="nav-text">3. 实现切片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-动态存取属性"><span class="nav-text">4. 动态存取属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-散列和快速等值测试"><span class="nav-text">5. 散列和快速等值测试</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -552,10 +732,10 @@
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 
@@ -574,9 +754,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/categories/index.html';
-          this.page.identifier = 'categories/index.html';
-          this.page.title = 'categories';
+          this.page.url = 'http://yoursite.com/2017/10/13/《流畅的python》读书笔记（十）/';
+          this.page.identifier = '2017/10/13/《流畅的python》读书笔记（十）/';
+          this.page.title = '《流畅的python》读书笔记（十）';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://paul.disqus.com/embed.js';
