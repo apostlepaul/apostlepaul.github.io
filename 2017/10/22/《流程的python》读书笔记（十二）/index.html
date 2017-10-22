@@ -95,18 +95,18 @@
 
 
 
-<meta name="description" content="第12章讲继承，主要的一点是不要子类化内置类型，如list。要继承就继承UserList。多重继承的机制没有仔细读，我不做工程，目前还用不了那么深。第13章讲重载运算符，感觉笔记简单，对于一个类，实现运算符对应的特殊函数就行了，像__eq__()，__add__()。用到的时候再参考吧。 第14章 可迭代的对象、迭代器和生成器1. 可迭代对象和迭代器 可迭代对象：使用iter()内置函数可以获取迭">
+<meta name="description" content="第12章讲继承，主要的一点是不要子类化内置类型，如list。要继承就继承UserList。多重继承的机制没有仔细读，我不做工程，目前还用不了那么深。第13章讲重载运算符，感觉笔记简单，对于一个类，实现运算符对应的特殊函数就行了，像__eq__()，__add__()。用到的时候再参考吧。">
 <meta name="keywords" content="python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《流程的python》读书笔记（十二）">
 <meta property="og:url" content="http://yoursite.com/2017/10/22/《流程的python》读书笔记（十二）/index.html">
 <meta property="og:site_name" content="Paul&#39;s Gardon">
-<meta property="og:description" content="第12章讲继承，主要的一点是不要子类化内置类型，如list。要继承就继承UserList。多重继承的机制没有仔细读，我不做工程，目前还用不了那么深。第13章讲重载运算符，感觉笔记简单，对于一个类，实现运算符对应的特殊函数就行了，像__eq__()，__add__()。用到的时候再参考吧。 第14章 可迭代的对象、迭代器和生成器1. 可迭代对象和迭代器 可迭代对象：使用iter()内置函数可以获取迭">
+<meta property="og:description" content="第12章讲继承，主要的一点是不要子类化内置类型，如list。要继承就继承UserList。多重继承的机制没有仔细读，我不做工程，目前还用不了那么深。第13章讲重载运算符，感觉笔记简单，对于一个类，实现运算符对应的特殊函数就行了，像__eq__()，__add__()。用到的时候再参考吧。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-22T12:28:09.000Z">
+<meta property="og:updated_time" content="2017-10-22T12:38:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《流程的python》读书笔记（十二）">
-<meta name="twitter:description" content="第12章讲继承，主要的一点是不要子类化内置类型，如list。要继承就继承UserList。多重继承的机制没有仔细读，我不做工程，目前还用不了那么深。第13章讲重载运算符，感觉笔记简单，对于一个类，实现运算符对应的特殊函数就行了，像__eq__()，__add__()。用到的时候再参考吧。 第14章 可迭代的对象、迭代器和生成器1. 可迭代对象和迭代器 可迭代对象：使用iter()内置函数可以获取迭">
+<meta name="twitter:description" content="第12章讲继承，主要的一点是不要子类化内置类型，如list。要继承就继承UserList。多重继承的机制没有仔细读，我不做工程，目前还用不了那么深。第13章讲重载运算符，感觉笔记简单，对于一个类，实现运算符对应的特殊函数就行了，像__eq__()，__add__()。用到的时候再参考吧。">
 
 
 
@@ -373,7 +373,7 @@
       
 
       
-        <p>第12章讲继承，主要的一点是不要子类化内置类型，如list。要继承就继承UserList。多重继承的机制没有仔细读，我不做工程，目前还用不了那么深。第13章讲重载运算符，感觉笔记简单，对于一个类，实现运算符对应的特殊函数就行了，像__eq__()，__add__()。用到的时候再参考吧。</p>
+        <p>第12章讲继承，主要的一点是不要子类化内置类型，如list。要继承就继承UserList。多重继承的机制没有仔细读，我不做工程，目前还用不了那么深。第13章讲重载运算符，感觉笔记简单，对于一个类，实现运算符对应的特殊函数就行了，像__eq__()，__add__()。用到的时候再参考吧。<br><a id="more"></a></p>
 <h1 id="第14章-可迭代的对象、迭代器和生成器"><a href="#第14章-可迭代的对象、迭代器和生成器" class="headerlink" title="第14章 可迭代的对象、迭代器和生成器"></a>第14章 可迭代的对象、迭代器和生成器</h1><h3 id="1-可迭代对象和迭代器"><a href="#1-可迭代对象和迭代器" class="headerlink" title="1. 可迭代对象和迭代器"></a>1. 可迭代对象和迭代器</h3><blockquote>
 <p>可迭代对象：使用iter()内置函数可以获取迭代器的对象，如果对象实现了能返回迭代器的__iter__()方法，那么对象就是迭代的。序列都可以迭代;实现了__getitem__()的方法也是可迭代对象。</p>
 <p>迭代器：实现了无参数的__next__()方法，返回序列中的下一个元素，如果没有元素了，抛出StopIteration异常。实现了__iter__()方法。</p>
