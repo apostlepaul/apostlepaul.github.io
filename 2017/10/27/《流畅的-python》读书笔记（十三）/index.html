@@ -95,18 +95,18 @@
 
 
 
-<meta name="description" content="第2章主要讲python中序列相关的数据结构">
+<meta name="description" content="平时用到上下文管理器的机会并不多，但是这里也有一些挺有趣的特性。">
 <meta name="keywords" content="python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《流畅的python》读书笔记（二）">
-<meta property="og:url" content="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/index.html">
+<meta property="og:title" content="《流畅的 python》读书笔记（十三）">
+<meta property="og:url" content="http://yoursite.com/2017/10/27/《流畅的-python》读书笔记（十三）/index.html">
 <meta property="og:site_name" content="Paul&#39;s Gardon">
-<meta property="og:description" content="第2章主要讲python中序列相关的数据结构">
+<meta property="og:description" content="平时用到上下文管理器的机会并不多，但是这里也有一些挺有趣的特性。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-13T05:55:54.000Z">
+<meta property="og:updated_time" content="2017-10-27T13:30:17.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《流畅的python》读书笔记（二）">
-<meta name="twitter:description" content="第2章主要讲python中序列相关的数据结构">
+<meta name="twitter:title" content="《流畅的 python》读书笔记（十三）">
+<meta name="twitter:description" content="平时用到上下文管理器的机会并不多，但是这里也有一些挺有趣的特性。">
 
 
 
@@ -136,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/27/《流畅的-python》读书笔记（十三）/"/>
 
 
 
 
 
-  <title>《流畅的python》读书笔记（二） | Paul's Gardon</title>
+  <title>《流畅的 python》读书笔记（十三） | Paul's Gardon</title>
   
 
 
@@ -279,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/27/《流畅的-python》读书笔记（十三）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ApostlePaul">
@@ -296,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">《流畅的python》读书笔记（二）</h1>
+          <h1 class="post-title" itemprop="name headline">《流畅的 python》读书笔记（十三）</h1>
         
 
         <div class="post-meta">
@@ -308,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-12T14:04:20+08:00">
-                2017-09-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-27T20:02:07+08:00">
+                2017-10-27
               </time>
             
 
@@ -373,34 +373,34 @@
       
 
       
-        <p>第2章主要讲python中序列相关的数据结构<br><a id="more"></a></p>
-<h1 id="第2章-序列构成的数组"><a href="#第2章-序列构成的数组" class="headerlink" title="第2章 序列构成的数组"></a>第2章 序列构成的数组</h1><p>了解序列类型的目的：</p>
+        <p>平时用到上下文管理器的机会并不多，但是这里也有一些挺有趣的特性。<br><a id="more"></a></p>
+<h1 id="第15章-上下文管理器和else块"><a href="#第15章-上下文管理器和else块" class="headerlink" title="第15章 上下文管理器和else块"></a>第15章 上下文管理器和else块</h1><h3 id="1-else块"><a href="#1-else块" class="headerlink" title="1. else块"></a>1. else块</h3><p>else子句不仅能在if语句中使用，还能在for、while和try语句中使用。</p>
 <ul>
-<li>避免重复造轮子</li>
-<li>让自己定义的API跟原生的一样</li>
+<li>for/else: 仅当for循环没有被break语句终止，运行完毕后，才运行else块。</li>
+<li>while/else: 仅当循环条件为假值而退出，没有被break打断，才运行else块。</li>
+<li>try/else: try中没有异常抛出时，运行else。<blockquote>
+<p>如果异常或者return、break或coutinue语句导致控制权跳到了符合语句的主块之外，else也会被跳过。</p>
+</blockquote>
+</li>
 </ul>
-<h3 id="内置序列类型概览"><a href="#内置序列类型概览" class="headerlink" title="内置序列类型概览"></a>内置序列类型概览</h3><p>按存放的数据类型分：</p>
+<h3 id="2-上下文管理器和with块"><a href="#2-上下文管理器和with块" class="headerlink" title="2. 上下文管理器和with块"></a>2. 上下文管理器和with块</h3><p>上下文管理器对象存在的目的是管理with语句。<br>with语句的目的是简化try/finally模式。<br>上下文管理器协议包括__enter__和__exit__两个方法。在一个类上实现了这两个方法，那么这个类就是上下文管理器类。<br>而且这两个方法也可以手动调用。<br><code>其实也没那么神秘，就是在with了管理器类之后，其\_\_enter\_\_方法会被调用，离开with块的时候，\_\_exit\_\_方法会被调用。跟手动调用的效果一样的。</code></p>
+<h3 id="3-contextlib模块"><a href="#3-contextlib模块" class="headerlink" title="3. contextlib模块"></a>3. contextlib模块</h3><p>标准库中的contextlib模块，有</p>
 <ul>
-<li>容器序列：list/tuple和collections.deque这些，能存放不同类型的数据，存放的对象的引用</li>
-<li>扁平序列：str/bytes/bytearray/memoryview/array.array，只能容纳一种类型，存放的是某种类型的值</li>
+<li>closing</li>
+<li>suppress</li>
+<li>@contextmanager</li>
+<li>ContextDecorator</li>
+<li>ExitStack</li>
 </ul>
-<p>按能否被修改来分</p>
-<ul>
-<li>可变序列：list/bytearray, array.array/collections.deque/memoryview</li>
-<li>不可变序列：tuple/str/bytes</li>
-</ul>
-<h3 id="列表推导和生成器表达式"><a href="#列表推导和生成器表达式" class="headerlink" title="列表推导和生成器表达式"></a>列表推导和生成器表达式</h3><h4 id="列表推导"><a href="#列表推导" class="headerlink" title="列表推导"></a>列表推导</h4><p>使用列表推导的原则：只用列表推导来创建新的列表，并尽可能简短。<br>python2中列表推导会有上下文同名变量冲突的问题，python3中没有。<br>列表推导中for循环的顺序也是由外层到内层。</p>
-<h4 id="生成器表达式"><a href="#生成器表达式" class="headerlink" title="生成器表达式"></a>生成器表达式</h4><p>用于初始化列表之外的其他类型的序列比较好。<br>生成器表达式遵守了迭代器协议，逐个产生元素，而不像列表推导那样先建立完整的列表再填内容。<br>只要把列表推导中的方括号改成圆括号。</p>
-<h3 id="元组不仅仅是不可变的列表"><a href="#元组不仅仅是不可变的列表" class="headerlink" title="元组不仅仅是不可变的列表"></a>元组不仅仅是不可变的列表</h3><p>元组是对数据的记录，元组的数量和位置信息非常重要。<br>元组拆包最简单的用法是平行赋值。<br>可以用号把元组拆包作为函数的参数<br>python3里加一个变量可以用在平行赋值中<br>元组可以嵌套使用，如(a,b,(c,d))</p>
-<h4 id="具名元组"><a href="#具名元组" class="headerlink" title="具名元组"></a>具名元组</h4><p>创建一个具名元组要两个参数：类名和各个字段的名字，字段名可以是一个可迭代对象或者以空格分割的字符串。<br>具名元组的_fields属性返回一个字段名字的元组<br>具名元组的_make()方法接收一个可迭代对象来生成实例<br>具名元组的_asdict()方法返回一个collections.OrderedDict</p>
-<h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>可以用slice(a,b,c)来定义一个切片对象，list[slice(a,b,c)]等价于list[a:b:c]<br>python内置的对象都是一维的，只接收单一索引。外部定义的对象，可以接收以逗号分割的多个索引，只要将对象的特殊方法__getitem__定义为以元组接收。a.__getitem__((a,b))<br>切片可以放在赋值语句的左边，或者作为del的操作对象，就可以对序列进行嫁接，切除，或就地修改。</p>
-<h3 id="对序列使用-和"><a href="#对序列使用-和" class="headerlink" title="对序列使用+和*"></a>对序列使用+和*</h3><p>+和*都不修改原有的操作对象，而是新建一个对象。<br>用*建立列表的列表的时候要注意，最好用列表推导。</p>
-<h3 id="序列的增量赋值"><a href="#序列的增量赋值" class="headerlink" title="序列的增量赋值"></a>序列的增量赋值</h3><p>对象使用+=的时候，如果对象实现了__iadd__(),会就地加，没有的话，会调用__add__()创建一个新的对象，再赋值过去。</p>
-<h3 id="list-sort方法和内置函数sorted"><a href="#list-sort方法和内置函数sorted" class="headerlink" title="list.sort方法和内置函数sorted"></a>list.sort方法和内置函数sorted</h3><p>list.sort()方法就地排序，不返回新的对象，返回的是None。<br>如果不返回新的对象就返回None，是python中函数的一个惯用写法。<br>内置方法sorted会返回新的对象。<br>list.sort和sorted都接收两个可选参数，reverse和key。<br>reverse=True的时候降序。<br>key接收的是用在每一个元素上的函数，如key=len。注意，是函数名，所以不带括号。</p>
-<h3 id="用bisect来管理已排序的序列"><a href="#用bisect来管理已排序的序列" class="headerlink" title="用bisect来管理已排序的序列"></a>用bisect来管理已排序的序列</h3><p><code>这个模块专门用一节来讲，是不是很牛逼啊？但是从来没用过。</code><br>bisect模块主要包括两个函数，bisect, insort。<br>bisect用二分查找从有序序列中查到要找的值，返回index。<br>insort讲值插入有序序列中。</p>
-<h3 id="当列表不是首选时"><a href="#当列表不是首选时" class="headerlink" title="当列表不是首选时"></a>当列表不是首选时</h3><h4 id="数组-array-array"><a href="#数组-array-array" class="headerlink" title="数组 array.array"></a>数组 array.array</h4><p>专门处理数据，会很快，很方便。</p>
-<h4 id="内存视图memoryview"><a href="#内存视图memoryview" class="headerlink" title="内存视图memoryview"></a>内存视图memoryview</h4><p>类型转换方便，省内存。</p>
-<h4 id="numpy和Scipy"><a href="#numpy和Scipy" class="headerlink" title="numpy和Scipy"></a>numpy和Scipy</h4><h4 id="双向队列和其他队列"><a href="#双向队列和其他队列" class="headerlink" title="双向队列和其他队列"></a>双向队列和其他队列</h4>
+<p>是干什么用的都不知道。感觉也用不到。<br>@contextmanager是比较常用的，可以直接把一个函数变成上下文管理器的对象。其特点是：</p>
+<ol>
+<li>用一个yield语句把代码分成两部分；</li>
+<li>yield之前的相当于__enter__的内容；</li>
+<li>yield之后的相当于__exit__的内容；</li>
+<li>要把yield语句放在try/finally语句中。</li>
+</ol>
+<p>一个有用的上下文管理器，是<a href="http://www.zopatista.com/python/2013/11/26/inplace-file-rewriting/" target="_blank" rel="external">inplace</a>，原地替换文件中的内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">#python3版本</div><div class="line">import csv</div><div class="line"></div><div class="line">with inplace(csvfilename, &apos;r&apos;, newline=&apos;&apos;) as (infh, outfh):</div><div class="line">    reader = csv.reader(infh)</div><div class="line">    writer = csv.writer(outfh)</div><div class="line"></div><div class="line">    for row in reader:</div><div class="line">        row += [&apos;new&apos;, &apos;columns&apos;]</div><div class="line">        writer.writerow(row)</div><div class="line">import csv</div><div class="line"></div><div class="line">with inplace(csvfilename, &apos;r&apos;, newline=&apos;&apos;) as (infh, outfh):</div><div class="line">    reader = csv.reader(infh)</div><div class="line">    writer = csv.writer(outfh)</div><div class="line"></div><div class="line">    for row in reader:</div><div class="line">        row += [&apos;new&apos;, &apos;columns&apos;]</div><div class="line">        writer.writerow(row)</div><div class="line"></div><div class="line">#python2版本</div><div class="line">import csv</div><div class="line"></div><div class="line">with inplace(csvfilename, &apos;rb&apos;) as (infh, outfh):</div><div class="line">    reader = csv.reader(infh)</div><div class="line">    writer = csv.writer(outfh)</div><div class="line"></div><div class="line">    for row in reader:</div><div class="line">        row += [&apos;new&apos;, &apos;columns&apos;]</div><div class="line">        writer.writerow(row)</div></pre></td></tr></table></figure></p>
+
       
     </div>
     
@@ -430,8 +430,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/09/背包问题/" rel="next" title="Tips for 背包问题">
-                <i class="fa fa-chevron-left"></i> Tips for 背包问题
+              <a href="/2017/10/22/《流程的python》读书笔记（十二）/" rel="next" title="《流程的python》读书笔记（十二）">
+                <i class="fa fa-chevron-left"></i> 《流程的python》读书笔记（十二）
               </a>
             
           </div>
@@ -439,10 +439,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/13/《流畅的python》读书笔记（三）/" rel="prev" title="《流畅的python》读书笔记（三）">
-                《流畅的python》读书笔记（三） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -585,7 +581,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第2章-序列构成的数组"><span class="nav-text">第2章 序列构成的数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内置序列类型概览"><span class="nav-text">内置序列类型概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表推导和生成器表达式"><span class="nav-text">列表推导和生成器表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#列表推导"><span class="nav-text">列表推导</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成器表达式"><span class="nav-text">生成器表达式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元组不仅仅是不可变的列表"><span class="nav-text">元组不仅仅是不可变的列表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#具名元组"><span class="nav-text">具名元组</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切片"><span class="nav-text">切片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对序列使用-和"><span class="nav-text">对序列使用+和*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序列的增量赋值"><span class="nav-text">序列的增量赋值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list-sort方法和内置函数sorted"><span class="nav-text">list.sort方法和内置函数sorted</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用bisect来管理已排序的序列"><span class="nav-text">用bisect来管理已排序的序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#当列表不是首选时"><span class="nav-text">当列表不是首选时</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数组-array-array"><span class="nav-text">数组 array.array</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存视图memoryview"><span class="nav-text">内存视图memoryview</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#numpy和Scipy"><span class="nav-text">numpy和Scipy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#双向队列和其他队列"><span class="nav-text">双向队列和其他队列</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第15章-上下文管理器和else块"><span class="nav-text">第15章 上下文管理器和else块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-else块"><span class="nav-text">1. else块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-上下文管理器和with块"><span class="nav-text">2. 上下文管理器和with块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-contextlib模块"><span class="nav-text">3. contextlib模块</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -761,9 +757,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/09/12/《流畅的python》读书笔记（二）/';
-          this.page.identifier = '2017/09/12/《流畅的python》读书笔记（二）/';
-          this.page.title = '《流畅的python》读书笔记（二）';
+          this.page.url = 'http://yoursite.com/2017/10/27/《流畅的-python》读书笔记（十三）/';
+          this.page.identifier = '2017/10/27/《流畅的-python》读书笔记（十三）/';
+          this.page.title = '《流畅的 python》读书笔记（十三）';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://paul.disqus.com/embed.js';
