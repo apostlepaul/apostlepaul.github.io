@@ -278,6 +278,171 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/19/《流畅的python》读书笔记（十五）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ApostlePaul">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Paul's Gardon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/19/《流畅的python》读书笔记（十五）/" itemprop="url">《流畅的python》读书笔记（十五）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-19T21:18:43+08:00">
+                2017-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reading-notes/" itemprop="url" rel="index">
+                    <span itemprop="name">reading notes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>第十七章讲期物第十八章讲并发，这两章读的比较艰辛，因为没有相关的基础，并且平时的工作也不涉及。所以，就先把能理解的东西记下来吧。</p>
+<h1 id="第17章-使用期物处理并发"><a href="#第17章-使用期物处理并发" class="headerlink" title="第17章 使用期物处理并发"></a>第17章 使用期物处理并发</h1><blockquote>
+<p>期物指一种对象，表示异步执行的操作。</p>
+</blockquote>
+<h3 id="1-使用concurrent-futures实现并发"><a href="#1-使用concurrent-futures实现并发" class="headerlink" title="1.使用concurrent.futures实现并发"></a>1.使用concurrent.futures实现并发</h3><p>最简单的用法，实例化futures.ThreadPoolExecutor类，然后用TreadPoolExecutor.map让每个executor取执行相关的函数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_many</span><span class="params">(cc_list)</span>:</span></div><div class="line">    workers = min(MAX_WORKERS, len(cc_list))  <span class="comment"># &lt;4&gt;</span></div><div class="line">    <span class="keyword">with</span> futures.ThreadPoolExecutor(workers) <span class="keyword">as</span> executor:  <span class="comment"># &lt;5&gt;</span></div><div class="line">        res = executor.map(download_one, sorted(cc_list))  <span class="comment"># &lt;6&gt;</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> len(list(res))  <span class="comment"># &lt;7&gt;</span></div></pre></td></tr></table></figure></p>
+<p>如果要在并发过程中实现更复杂的逻辑，可以将ThreadPoolExecutor.map展开成exectuor.submit()、futures.as_completed()、futrue.result()三个过程：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_many</span><span class="params">(cc_list)</span>:</span></div><div class="line">    cc_list = cc_list[:<span class="number">5</span>]  <span class="comment"># &lt;1&gt;</span></div><div class="line">    <span class="keyword">with</span> futures.ThreadPoolExecutor(max_workers=<span class="number">3</span>) <span class="keyword">as</span> executor:  <span class="comment"># &lt;2&gt;</span></div><div class="line">        to_do = []</div><div class="line">        <span class="keyword">for</span> cc <span class="keyword">in</span> sorted(cc_list):  <span class="comment"># &lt;3&gt;</span></div><div class="line">            future = executor.submit(download_one, cc)  <span class="comment"># &lt;4&gt;</span></div><div class="line">            to_do.append(future)  <span class="comment"># &lt;5&gt;</span></div><div class="line">            msg = <span class="string">'Scheduled for &#123;&#125;: &#123;&#125;'</span></div><div class="line">            print(msg.format(cc, future))  <span class="comment"># &lt;6&gt;</span></div><div class="line"></div><div class="line">        results = []</div><div class="line">        <span class="keyword">for</span> future <span class="keyword">in</span> futures.as_completed(to_do):  <span class="comment"># &lt;7&gt;</span></div><div class="line">            res = future.result()  <span class="comment"># &lt;8&gt;</span></div><div class="line">            msg = <span class="string">'&#123;&#125; result: &#123;!r&#125;'</span></div><div class="line">            print(msg.format(future, res)) <span class="comment"># &lt;9&gt;</span></div><div class="line">            results.append(res)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> len(results)</div></pre></td></tr></table></figure></p>
+<p>其实ThreadPoolExecutor并不是并行计算（各cpu都在跑）因为有GIL（全局解释器锁，一次只允许使用一个线程）的存在之所以变快是因为IO密集，标准库中所有执行阻塞型IO操作的函数，在等着操作系统返回结果时都会释放GIL，另外一个线程可以运行了，所以省去了等IO的时间。如果要实现CPU密集型的并行计算，只需要把ThreadPoolExecutor改成ProcessPoolExecutor</p>
+<p><code>小插曲，使用TQDM包可以显示进度条。</code></p>
+<p>futures.as_completed惯用法：构建一个字典，把各个期物映射到其他数据上，例如国家名，这样即使返回的结果顺序是乱的，也便于后续处理。</p>
+<h3 id="2-不适用concurrent-futures的情况"><a href="#2-不适用concurrent-futures的情况" class="headerlink" title="2. 不适用concurrent.futures的情况"></a>2. 不适用concurrent.futures的情况</h3><p>如果ThreadPoolExecutor处理某个作业不够灵活，可能要用treading模块中的某个组件自行定制方案。<br>同样，ProcessPoolExecutor不够灵活的时候，要用mutiprocessing模块。</p>
+<h1 id="第18章-使用asyncio包处理并发"><a href="#第18章-使用asyncio包处理并发" class="headerlink" title="第18章 使用asyncio包处理并发"></a>第18章 使用asyncio包处理并发</h1><p><code>显示文本式动画的诀窍：使用退格符（\x088)把光标移回来。</code></p>
+<h3 id="1-线程与协程对比"><a href="#1-线程与协程对比" class="headerlink" title="1.线程与协程对比"></a>1.线程与协程对比</h3><p>线程要用threading.Thread声明线程要跑的job(target=xx, args=(xx,xx)),用start()开始，用join()等待结束。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">supervisor</span><span class="params">()</span>:</span>  <span class="comment"># &lt;9&gt;</span></div><div class="line">    done = threading.Event()</div><div class="line">    spinner = threading.Thread(target=spin,</div><div class="line">                               args=(<span class="string">'thinking!'</span>, done))</div><div class="line">    print(<span class="string">'spinner object:'</span>, spinner)  <span class="comment"># &lt;10&gt;</span></div><div class="line">    spinner.start()  <span class="comment"># &lt;11&gt;</span></div><div class="line">    result = slow_function()  <span class="comment"># &lt;12&gt;</span></div><div class="line">    done.set()  <span class="comment"># &lt;13&gt;</span></div><div class="line">    spinner.join()  <span class="comment"># &lt;14&gt;</span></div><div class="line">    <span class="keyword">return</span> result</div></pre></td></tr></table></figure></p>
+<p>其中done是一个信号，控制Thread的结束。<br>协程要用asyncio.async()排定spin协程的运行时间，不需要start，在要结束的时候，用cancel()结束，目标job catch asyncio.CancelledError来break。主函数里，要用loop=asyncio.get_event_loop()得到事件loop, 然后run_until_complete()来跑协程排好的job。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@asyncio.coroutine</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">supervisor</span><span class="params">()</span>:</span>  <span class="comment"># &lt;7&gt;</span></div><div class="line">    spinner = asyncio.<span class="keyword">async</span>(spin(<span class="string">'thinking!'</span>))  <span class="comment"># &lt;8&gt;</span></div><div class="line">    print(<span class="string">'spinner object:'</span>, spinner)  <span class="comment"># &lt;9&gt;</span></div><div class="line">    result = <span class="keyword">yield</span> <span class="keyword">from</span> slow_function()  <span class="comment"># &lt;10&gt;</span></div><div class="line">    spinner.cancel()  <span class="comment"># &lt;11&gt;</span></div><div class="line">    <span class="keyword">return</span> result</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    loop = asyncio.get_event_loop()  <span class="comment"># &lt;12&gt;</span></div><div class="line">    result = loop.run_until_complete(supervisor())  <span class="comment"># &lt;13&gt;</span></div><div class="line">    loop.close()</div><div class="line">    print(<span class="string">'Answer:'</span>, result)</div></pre></td></tr></table></figure></p>
+<p>以上可以演示异步程序的运行，即spinner 和slow_function是并行的。这样的效果，可以用threading多线程来实现，也可以用asyncio异步协程来实验，并且后者是更优雅的实现。<br>yield from asyncio.sleep(DELAY)不会阻塞主线程<br>asyncio.async统一了协程和期物。<br>通过res = yield from foo()从协程获得结果。</p>
+<h3 id="2-使用asyncio和aiohttp实现异步请求"><a href="#2-使用asyncio和aiohttp实现异步请求" class="headerlink" title="2. 使用asyncio和aiohttp实现异步请求"></a>2. 使用asyncio和aiohttp实现异步请求</h3><p>实现http的异步请求，aiohttp是常用的包。<br>get_flag不能直接用request包的那个request()了，因为这个不是异步的，会阻塞线程，要用aiohttp.request().主循环直接看代码吧：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_many</span><span class="params">(cc_list)</span>:</span></div><div class="line">    loop = asyncio.get_event_loop()  <span class="comment"># &lt;8&gt;</span></div><div class="line">    to_do = [download_one(cc) <span class="keyword">for</span> cc <span class="keyword">in</span> sorted(cc_list)]  <span class="comment"># &lt;9&gt;</span></div><div class="line">    wait_coro = asyncio.wait(to_do)  <span class="comment"># &lt;10&gt;</span></div><div class="line">    res, _ = loop.run_until_complete(wait_coro)  <span class="comment"># &lt;11&gt;</span></div><div class="line">    loop.close() <span class="comment"># &lt;12&gt;</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> len(res)</div></pre></td></tr></table></figure></p>
+<p>wait会把协程列表包成Task，变成了Future类实例，然后loop.run_until_complete(…)会去驱动这些实例。</p>
+<p>非常需要注意的是：</p>
+<blockquote>
+<p>使用asyncio包时，我们编写的异步代码中包含由asyncio本身驱动的协程（即委派生成器），而生成器最终把职责委托给asyncio包或第三方库（如aiohttp)中的协程。</p>
+</blockquote>
+<p><code>没有明白asyncio.wait()跟asyncio.async()的区别，好像是，后者是用来跑类似loop循环这样的task，像那个spinner。</code></p>
+<h3 id="3-比run-until-complete-更精细的控制"><a href="#3-比run-until-complete-更精细的控制" class="headerlink" title="3. 比run_until_complete()更精细的控制"></a>3. 比run_until_complete()更精细的控制</h3><p>loop.run_until_complete()会等所有协程跑完，返回结果。<br>如果要做更精细的控制，比如每跑完一个协程，就更新一下进度条，那么要用asyncio.as_completed()函数。（跟futures.as_completed()对应的）<br>而ThreadPoolExecutor里的max_workers在asyncio里也有对应的版本，即asyncio.Semaphore，它内部维护了一个计数器，表示可用的协程数，根据正在跑的协程动态改变，计数器为0时，会阻塞新的协程。<br>主线程的循环跟futures是类似的：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@asyncio.coroutine</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">downloader_coro</span><span class="params">(cc_list, base_url, verbose, concur_req)</span>:</span>  <span class="comment"># &lt;1&gt;</span></div><div class="line">    counter = collections.Counter()</div><div class="line">    semaphore = asyncio.Semaphore(concur_req)  <span class="comment"># &lt;2&gt;</span></div><div class="line">    to_do = [download_one(cc, base_url, semaphore, verbose)</div><div class="line">             <span class="keyword">for</span> cc <span class="keyword">in</span> sorted(cc_list)]  <span class="comment"># &lt;3&gt;</span></div><div class="line"></div><div class="line">    to_do_iter = asyncio.as_completed(to_do)  <span class="comment"># &lt;4&gt;</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> verbose:</div><div class="line">        to_do_iter = tqdm.tqdm(to_do_iter, total=len(cc_list))  <span class="comment"># &lt;5&gt;</span></div><div class="line">    <span class="keyword">for</span> future <span class="keyword">in</span> to_do_iter:  <span class="comment"># &lt;6&gt;</span></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            res = <span class="keyword">yield</span> <span class="keyword">from</span> future  <span class="comment"># &lt;7&gt;</span></div><div class="line">        <span class="keyword">except</span> FetchError <span class="keyword">as</span> exc:  <span class="comment"># &lt;8&gt;</span></div><div class="line">            country_code = exc.country_code  <span class="comment"># &lt;9&gt;</span></div><div class="line">            <span class="keyword">try</span>:</div><div class="line">                error_msg = exc.__cause__.args[<span class="number">0</span>]  <span class="comment"># &lt;10&gt;</span></div><div class="line">            <span class="keyword">except</span> IndexError:</div><div class="line">                error_msg = exc.__cause__.__class__.__name__  <span class="comment"># &lt;11&gt;</span></div><div class="line">            <span class="keyword">if</span> verbose <span class="keyword">and</span> error_msg:</div><div class="line">                msg = <span class="string">'*** Error for &#123;&#125;: &#123;&#125;'</span></div><div class="line">                print(msg.format(country_code, error_msg))</div><div class="line">            status = HTTPStatus.error</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            status = res.status</div><div class="line"></div><div class="line">        counter[status] += <span class="number">1</span>  <span class="comment"># &lt;12&gt;</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> counter  <span class="comment"># &lt;13&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_many</span><span class="params">(cc_list, base_url, verbose, concur_req)</span>:</span></div><div class="line">    loop = asyncio.get_event_loop()</div><div class="line">    coro = downloader_coro(cc_list, base_url, verbose, concur_req)</div><div class="line">    counts = loop.run_until_complete(coro)  <span class="comment"># &lt;14&gt;</span></div><div class="line">    loop.close()  <span class="comment"># &lt;15&gt;</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> counts</div></pre></td></tr></table></figure></p>
+<p>  由于asyncio没有本地文件IO对应的api，所以用run_in_executor方法实现异步，防止save文件到本地时会阻塞主线程。<br>  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@asyncio.coroutine</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_one</span><span class="params">(cc, base_url, semaphore, verbose)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">with</span> (<span class="keyword">yield</span> <span class="keyword">from</span> semaphore):</div><div class="line">            image = <span class="keyword">yield</span> <span class="keyword">from</span> get_flag(base_url, cc)</div><div class="line">    <span class="keyword">except</span> web.HTTPNotFound:</div><div class="line">        status = HTTPStatus.not_found</div><div class="line">        msg = <span class="string">'not found'</span></div><div class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> exc:</div><div class="line">        <span class="keyword">raise</span> FetchError(cc) <span class="keyword">from</span> exc</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        loop = asyncio.get_event_loop()  <span class="comment"># &lt;1&gt;</span></div><div class="line">        loop.run_in_executor(<span class="keyword">None</span>,  <span class="comment"># &lt;2&gt;</span></div><div class="line">                save_flag, image, cc.lower() + <span class="string">'.gif'</span>)  <span class="comment"># &lt;3&gt;</span></div><div class="line">        status = HTTPStatus.ok</div><div class="line">        msg = <span class="string">'OK'</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> verbose <span class="keyword">and</span> msg:</div><div class="line">        print(cc, msg)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> Result(status, cc)</div><div class="line">  ```  </div><div class="line"></div><div class="line"><span class="comment">### 4.避免回调</span></div><div class="line">使用异步协程能避免回调地狱。特别是在异步结构中，不用把变量啊，状态啊传来传去的，也不依赖闭包。</div><div class="line">举一个每次下载发起多次请求的例子：</div><div class="line">```python</div><div class="line"><span class="meta">@asyncio.coroutine</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_one</span><span class="params">(cc, base_url, semaphore, verbose)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">with</span> (<span class="keyword">yield</span> <span class="keyword">from</span> semaphore): <span class="comment"># &lt;5&gt;</span></div><div class="line">            image = <span class="keyword">yield</span> <span class="keyword">from</span> get_flag(base_url, cc)</div><div class="line">        <span class="keyword">with</span> (<span class="keyword">yield</span> <span class="keyword">from</span> semaphore):</div><div class="line">            country = <span class="keyword">yield</span> <span class="keyword">from</span> get_country(base_url, cc)</div><div class="line">    <span class="keyword">except</span> web.HTTPNotFound:</div><div class="line">        status = HTTPStatus.not_found</div><div class="line">        msg = <span class="string">'not found'</span></div><div class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> exc:</div><div class="line">        <span class="keyword">raise</span> FetchError(cc) <span class="keyword">from</span> exc</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        country = country.replace(<span class="string">' '</span>, <span class="string">'_'</span>)</div><div class="line">        filename = <span class="string">'&#123;&#125;-&#123;&#125;.gif'</span>.format(country, cc)</div><div class="line">        loop = asyncio.get_event_loop()</div><div class="line">        loop.run_in_executor(<span class="keyword">None</span>, save_flag, image, filename)</div><div class="line">        status = HTTPStatus.ok</div><div class="line">        msg = <span class="string">'OK'</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> verbose <span class="keyword">and</span> msg:</div><div class="line">        print(cc, msg)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> Result(status, cc)</div></pre></td></tr></table></figure></p>
+<p>  <code>本章后面还解释了用asyncio包编写服务器，那个我就不再介绍了。</code></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/03/《流畅的python》读书笔记（十四）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1579,152 +1744,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/18/numpy常用函数/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ApostlePaul">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Paul's Gardon">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/18/numpy常用函数/" itemprop="url">numpy常用函数</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-18T23:19:10+08:00">
-                2017-09-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/tech-notes/" itemprop="url" rel="index">
-                    <span itemprop="name">tech notes</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>python之所以强大，不就是因为有各种各样的库？所以不要傻乎乎地重复造轮子。以后再进行一些数据上的统计的时候，就用numpy嘛。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/18/numpy常用函数/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1777,7 +1796,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
