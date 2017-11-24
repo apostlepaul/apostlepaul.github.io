@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Paul&#39;s Gardon">
 <meta property="og:description" content="用pandas做少量数据分析还是比较方便的。但是pandas用的不熟练，所以记录一些常用的tip作为积累。持续更新。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-24T09:00:56.000Z">
+<meta property="og:updated_time" content="2017-11-24T09:05:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tips for pandas">
 <meta name="twitter:description" content="用pandas做少量数据分析还是比较方便的。但是pandas用的不熟练，所以记录一些常用的tip作为积累。持续更新。">
@@ -379,12 +379,7 @@
 <li>按某个条件选择数据<br><code>data = data[(data.c1 == &quot;1&quot;) | (data.c1 == &quot;2&quot;)]</code></li>
 <li>查看某些列<br><code>res[col_names]</code></li>
 <li>保存文件<br><code>data.to_csv(&#39;data.csv&#39;)</code></li>
-<li><p>数据合并，连接可以用merge, join, concat,函数原型分布是,<a href="http://blog.csdn.net/zutsoft/article/details/51498026" target="_blank" rel="external">这个博客</a>讲的比较好。<br>`merge(left, right, how=’inner’, on=None, left_on=None, right_on=None,  </p>
-<pre><code>left_index=False, right_index=False, sort=True,  
-suffixes=(&#39;_x&#39;, &#39;_y&#39;), copy=True, indicator=False)  `
-</code></pre><p>只能呢merge DataFrame。<br><code>join(self, other, on=None, how=&#39;left&#39;, lsuffix=&#39;&#39;, rsuffix=&#39;&#39;,sort=False)</code><br>`concat(objs, axis=0, join=’outer’, join_axes=None, ignore_index=False,  </p>
-<pre><code>    keys=None, levels=None, names=None, verify_integrity=False, copy=True)`
-</code></pre><p>可以concat Series。</p>
+<li><p>数据合并，连接可以用merge, join, concat,函数原型分布是,<a href="http://blog.csdn.net/zutsoft/article/details/51498026" target="_blank" rel="external">这个博客</a>讲的比较好。<br><code>merge(left, right, how=&#39;inner&#39;, on=None, left_on=None, right_on=None, left_index=False, right_index=False, sort=True, suffixes=(&#39;_x&#39;, &#39;_y&#39;), copy=True, indicator=False)</code><br>只能呢merge DataFrame。<br><code>join(self, other, on=None, how=&#39;left&#39;, lsuffix=&#39;&#39;, rsuffix=&#39;&#39;,sort=False)</code><br><code>concat(objs, axis=0, join=&#39;outer&#39;, join_axes=None, ignore_index=False, keys=None, levels=None, names=None, verify_integrity=False, copy=True)</code><br>可以concat Series。</p>
 </li>
 <li><p>调整显示出来的行<br><code>with pd.option_context(&#39;display.max_rows&#39;, None, &#39;display.max_columns&#39;, 3):
   print(sort1[:50])</code></p>
@@ -395,17 +390,15 @@ suffixes=(&#39;_x&#39;, &#39;_y&#39;), copy=True, indicator=False)  `
 <li>设置grid<br><code>ax.grid(True)</code></li>
 <li>标签选择90度<br><code>ax.set_xticklabels(tmp.date,rotation=90)</code></li>
 <li>设置轴范围<br><code>plt.xlim(0,0.3)
-plt.ylim(0,0.3)</code><h4 id="画qqplot图"><a href="#画qqplot图" class="headerlink" title="画qqplot图"></a>画qqplot图</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">##输入数据为两列，第一列是q值，第二列是label</span></div><div class="line">q_label = res[res[:,<span class="number">1</span>] != <span class="string">"2"</span>].astype(float)</div><div class="line"><span class="comment">## 设置分桶，用hstack做水平拼接。</span></div><div class="line">b = np.hstack(([<span class="number">0</span>,<span class="number">0.01</span>],np.linspace(<span class="number">0.02</span>,<span class="number">0.1</span>,<span class="number">9</span>),[<span class="number">0.2</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">2.1</span>]))</div><div class="line"><span class="comment">## 获取正例在每个桶里的总量</span></div><div class="line">w1 = a[:,<span class="number">1</span>]==<span class="number">1</span></div><div class="line">w1=w1.astype(int)</div><div class="line">q1, _ = np.histogram(a[:,<span class="number">0</span>], bins=b, weights=w1)</div><div class="line"><span class="comment">## 获取样本在每个桶里的总量</span></div><div class="line">q, _ = np.histogram(a[:,<span class="number">0</span>], bins=b)</div><div class="line"><span class="comment">## 计算每个桶里的cvr</span></div><div class="line">cvr = q1/q</div><div class="line">x = np.arange(q.size)</div><div class="line"><span class="comment">## 画柱状图</span></div><div class="line">plt.bar(x,cvr)</div><div class="line">ax=plt.gca()</div><div class="line">ax.set_xticks(x)</div><div class="line"><span class="comment">## 标签对上分桶</span></div><div class="line">ax.set_xticklabels(b[:<span class="number">-1</span>])</div><div class="line">plt.show()</div></pre></td></tr></table></figure>
-</li>
+plt.ylim(0,0.3)</code></li>
 </ul>
+<h4 id="画qqplot图"><a href="#画qqplot图" class="headerlink" title="画qqplot图"></a>画qqplot图</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">##输入数据为两列，第一列是q值，第二列是label</span></div><div class="line">q_label = res[res[:,<span class="number">1</span>] != <span class="string">"2"</span>].astype(float)</div><div class="line"><span class="comment">## 设置分桶，用hstack做水平拼接。</span></div><div class="line">b = np.hstack(([<span class="number">0</span>,<span class="number">0.01</span>],np.linspace(<span class="number">0.02</span>,<span class="number">0.1</span>,<span class="number">9</span>),[<span class="number">0.2</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">2.1</span>]))</div><div class="line"><span class="comment">## 获取正例在每个桶里的总量</span></div><div class="line">w1 = a[:,<span class="number">1</span>]==<span class="number">1</span></div><div class="line">w1=w1.astype(int)</div><div class="line">q1, _ = np.histogram(a[:,<span class="number">0</span>], bins=b, weights=w1)</div><div class="line"><span class="comment">## 获取样本在每个桶里的总量</span></div><div class="line">q, _ = np.histogram(a[:,<span class="number">0</span>], bins=b)</div><div class="line"><span class="comment">## 计算每个桶里的cvr</span></div><div class="line">cvr = q1/q</div><div class="line">x = np.arange(q.size)</div><div class="line"><span class="comment">## 画柱状图</span></div><div class="line">plt.bar(x,cvr)</div><div class="line">ax=plt.gca()</div><div class="line">ax.set_xticks(x)</div><div class="line"><span class="comment">## 标签对上分桶</span></div><div class="line">ax.set_xticklabels(b[:<span class="number">-1</span>])</div><div class="line">plt.show()</div></pre></td></tr></table></figure>
 <h2 id="处理数据"><a href="#处理数据" class="headerlink" title="处理数据"></a>处理数据</h2><ul>
 <li>对某一列进行map处理<br><code>data[&#39;c1&#39;] = data.c1.apply(lambda x: x.split(&#39;%&#39;)[0])</code></li>
 <li>转化成数值<br><code>data[cols[3:]] = data[cols[3:]].apply(pd.to_numeric)</code></li>
 <li>行增拼接数据<br><code>new_res = pd.concat([new_res,tmp], ignore_index=True)</code></li>
 <li>按index join两个DataFrame<br><code>a.join(b)</code></li>
-<li>排序<br><code>data.sort_values(by=col_names, ascending=False)</code></li>
-</ul>
-<h2 id="pivot-table"><a href="#pivot-table" class="headerlink" title="pivot table"></a>pivot table</h2><ul>
+<li>排序<br><code>data.sort_values(by=col_names, ascending=False)</code><br>``<h2 id="pivot-table"><a href="#pivot-table" class="headerlink" title="pivot table"></a>pivot table</h2></li>
 <li><p>构造pivot table<br><code>t = pd.pivot_table(data, index=index_names, values=value_names, aggfunc=&#39;sum&#39;)</code></p>
 </li>
 <li><p>拼接两个table<br><code>all_table = pd.merge(exp_table, dz_table, how=&quot;outer&quot;, left_index=True, right_index=True,suffixes= [&#39;_exp&#39;,&#39;_dz&#39;])</code></p>
