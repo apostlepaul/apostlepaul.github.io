@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Paul&#39;s Gardon">
 <meta property="og:description" content="第六部分介绍元编程。第19章主要讲怎么动态地去添加删除类的属性和特性。第20章介绍描述符这个概念，对我来说是新概念。第21章介绍类元编程，编写元类，这个就太深了。我没读太仔细。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-25T05:20:52.000Z">
+<meta property="og:updated_time" content="2017-11-25T06:01:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《流畅的python》读书笔记（十六）">
 <meta name="twitter:description" content="第六部分介绍元编程。第19章主要讲怎么动态地去添加删除类的属性和特性。第20章介绍描述符这个概念，对我来说是新概念。第21章介绍类元编程，编写元类，这个就太深了。我没读太仔细。">
@@ -374,7 +374,7 @@
 
       
         <p>第六部分介绍元编程。第19章主要讲怎么动态地去添加删除类的属性和特性。第20章介绍描述符这个概念，对我来说是新概念。第21章介绍类元编程，编写元类，这个就太深了。我没读太仔细。<br><a id="more"></a></p>
-<h1 id="第19章-动态属性和特性"><a href="#第19章-动态属性和特性" class="headerlink" title="第19章 动态属性和特性"></a>第19章 动态属性和特性</h1><p>这里不应该从中文的字面意思来理解“特性”，这里并不是指特殊的性质（例如，dnn的特性就是表达能力强），而是指一种特别的属性，对应英文是property.</p>
+<h2 id="第19章-动态属性和特性"><a href="#第19章-动态属性和特性" class="headerlink" title="第19章 动态属性和特性"></a>第19章 动态属性和特性</h2><p>这里不应该从中文的字面意思来理解“特性”，这里并不是指特殊的性质（例如，dnn的特性就是表达能力强），而是指一种特别的属性，对应英文是property.</p>
 <blockquote>
 <p>python里数据的属性和处理数据的方法统称属性（attribute),方法只是可调用的属性。<br>使用点号访问属性时，python解释器会调用特殊的方法，（如__getattr__和__setattr__)计算属性。</p>
 </blockquote>
@@ -420,7 +420,7 @@
 <li>__dir__(self)</li>
 <li>Class.__setattr__(self, name, val)</li>
 </ul>
-<h1 id="第20章-属性描述符"><a href="#第20章-属性描述符" class="headerlink" title="第20章 属性描述符"></a>第20章 属性描述符</h1><p>描述符是对多个属性运用相同存取逻辑的一种方式。描述符是实现了特定协议的类。包括__get__ 、__set__和__delete__。</p>
+<h2 id="第20章-属性描述符"><a href="#第20章-属性描述符" class="headerlink" title="第20章 属性描述符"></a>第20章 属性描述符</h2><p>描述符是对多个属性运用相同存取逻辑的一种方式。描述符是实现了特定协议的类。包括__get__ 、__set__和__delete__。</p>
 <blockquote>
 <p>理解描述符是精通python的关键。</p>
 <p>实现了__get__ 、__set__或__delete__方法的类是描述符。描述符的用法是，创建一个实例，作为另一个类的类属性。</p>
@@ -443,7 +443,7 @@
 <li>仅有__get__方法的描述符可以实现高效缓存。</li>
 <li>非特殊的方法可以被实例属性遮盖</li>
 </ul>
-<h1 id="第21章-类元编程"><a href="#第21章-类元编程" class="headerlink" title="第21章 类元编程"></a>第21章 类元编程</h1><p>元类不准备看了，所以这一章只看了两个内容，一个是类工厂函数，一个是类装饰器。</p>
+<h2 id="第21章-类元编程"><a href="#第21章-类元编程" class="headerlink" title="第21章 类元编程"></a>第21章 类元编程</h2><p>元类不准备看了，所以这一章只看了两个内容，一个是类工厂函数，一个是类装饰器。</p>
 <h3 id="1-类工厂函数"><a href="#1-类工厂函数" class="headerlink" title="1. 类工厂函数"></a>1. 类工厂函数</h3><p>collections.namedtuple就是一个类工厂函数，返回的是用户定义的tuple的子类。<br>构造工厂函数的主要过程：</p>
 <ol>
 <li>定义构造类需要的特殊方法及内置属性，__slot__, __init__, __iter__等。</li>
@@ -468,7 +468,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># BEGIN MODEL_V6</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">entity</span><span class="params">(cls)</span>:</span>  <span class="comment"># &lt;1&gt;</span></div><div class="line">    <span class="keyword">for</span> key, attr <span class="keyword">in</span> cls.__dict__.items():  <span class="comment"># &lt;2&gt;</span></div><div class="line">        <span class="keyword">if</span> isinstance(attr, Validated):  <span class="comment"># &lt;3&gt;</span></div><div class="line">            type_name = type(attr).__name__</div><div class="line">            attr.storage_name = <span class="string">'_&#123;&#125;#&#123;&#125;'</span>.format(type_name, key)  <span class="comment"># &lt;4&gt;</span></div><div class="line">    <span class="keyword">return</span> cls  <span class="comment"># &lt;5&gt;</span></div><div class="line"><span class="comment"># END MODEL_V6</span></div></pre></td></tr></table></figure>
 <p>注意，<3>很关键，因为20章例子中的weight已经是Validated类型了，所以可以这样判断。</3></p>
 <p>类装饰器的一个问题是，只对直接依附的类生效，对其子类生效不生效不确定，依改动情况而定。</p>
-<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>读完了。<br>从九月份到现在，三个多月。<br>这本书写的实在是太棒了，建议使用python的同学，都认真读一读。<br>这本书对于我来说的另一重意义是，坚持写技术博客（虽然读书笔记并不等同于技术博客）。我非计算机科班出身，需要通过写技术博客来进行技术沉淀。<br>还没读完。<br>书中的一些章节没有理解透彻，或者当时理解了，后来又忘了。有些内容离我的工作需求实在是远，而碰巧这三个月中有些时候没有那么多时间和精力去研习那些内容。先mark，遇到了再回头看吧。毕竟现在自己还挣扎在温饱线上。<br>由于昨天写这个东西到太晚，今天小天真负气离家出走了。<br>我想了想，大概生活并不是只对于我，对于我们，对于这个城市的人，对于我们这一代人来说是艰难的，生活向来如此。你只能去面对，没有力气面对了，就逃避一会，再回来面对。<br>就像看这本书，遇到看不懂的，停一停，或者往后翻一翻，再回过头来接着看。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>读完了。<br>从九月份到现在，三个多月。<br>这本书写的实在是太棒了，建议使用python的同学，都认真读一读。<br>这本书对于我来说的另一重意义是，坚持写技术博客（虽然读书笔记并不等同于技术博客）。我非计算机科班出身，需要通过写技术博客来进行技术沉淀。<br>还没读完。<br>书中的一些章节没有理解透彻，或者当时理解了，后来又忘了。有些内容离我的工作需求实在是远，而碰巧这三个月中有些时候没有那么多时间和精力去研习那些内容。先mark，遇到了再回头看吧。毕竟现在自己还挣扎在温饱线上。<br>由于昨天写这个东西到太晚，今天小天真负气离家出走了。<br>我想了想，大概生活并不是只对于我，对于我们，对于这个城市的人，对于我们这一代人来说是艰难的，生活向来如此。你只能去面对，没有力气面对了，就逃避一会，再回来面对。<br>就像看这本书，遇到看不懂的，停一停，或者往后翻一翻，再回过头来接着看。</p>
 
       
     </div>
@@ -654,7 +654,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第19章-动态属性和特性"><span class="nav-text">第19章 动态属性和特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-使用动态属性转化数据"><span class="nav-text">1. 使用动态属性转化数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-使用特性验证属性"><span class="nav-text">2. 使用特性验证属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-特性工厂函数"><span class="nav-text">3. 特性工厂函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-处理属性的重要属性和函数"><span class="nav-text">4. 处理属性的重要属性和函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第20章-属性描述符"><span class="nav-text">第20章 属性描述符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第21章-类元编程"><span class="nav-text">第21章 类元编程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-类工厂函数"><span class="nav-text">1. 类工厂函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-类装饰器"><span class="nav-text">2. 类装饰器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结语"><span class="nav-text">结语</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第19章-动态属性和特性"><span class="nav-text">第19章 动态属性和特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-使用动态属性转化数据"><span class="nav-text">1. 使用动态属性转化数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-使用特性验证属性"><span class="nav-text">2. 使用特性验证属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-特性工厂函数"><span class="nav-text">3. 特性工厂函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-处理属性的重要属性和函数"><span class="nav-text">4. 处理属性的重要属性和函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第20章-属性描述符"><span class="nav-text">第20章 属性描述符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第21章-类元编程"><span class="nav-text">第21章 类元编程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-类工厂函数"><span class="nav-text">1. 类工厂函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-类装饰器"><span class="nav-text">2. 类装饰器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-text">结语</span></a></li></ol></div>
             
 
           </div>
