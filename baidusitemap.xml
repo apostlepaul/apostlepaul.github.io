@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://yoursite.com/2017/12/17/my-usage-of-protobuf/</loc>
+    <lastmod>2017-12-17T13:55:54.000Z</lastmod>
+    <data>
+        <display>
+        <title>my usage of protobuf</title>
+        <pubTime>2017-12-17T12:21:55.000Z</pubTime>
+        
+        <tag>C++</tag>
+         
+         
+           
+             
+              <breadCrumb title="tech notes" url="http://yoursite.com/categories/tech-notes/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2017/11/24/tips-for-pandas/</loc>
     <lastmod>2017-11-25T06:04:00.000Z</lastmod>
     <data>
