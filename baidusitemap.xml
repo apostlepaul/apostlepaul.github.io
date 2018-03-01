@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://yoursite.com/2018/02/11/flower-book-deep-feedforward-networks/</loc>
+    <lastmod>2018-03-01T06:36:01.000Z</lastmod>
+    <data>
+        <display>
+        <title>flower book: deep feedforward networks</title>
+        <pubTime>2018-02-11T06:38:09.000Z</pubTime>
+        
+        <tag>deep learning</tag>
+         
+         
+           
+             
+              <breadCrumb title="reading notes" url="http://yoursite.com/categories/reading-notes/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2018/02/28/ML-treasures/</loc>
     <lastmod>2018-02-28T09:19:19.000Z</lastmod>
     <data>
@@ -17,26 +37,6 @@
            
              
               <breadCrumb title="tech notes" url="http://yoursite.com/categories/tech-notes/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2018/02/11/flower-book-deep-feedforward-networks/</loc>
-    <lastmod>2018-02-27T15:53:40.000Z</lastmod>
-    <data>
-        <display>
-        <title>flower book: deep feedforward networks</title>
-        <pubTime>2018-02-11T06:38:09.000Z</pubTime>
-        
-        <tag>deep learning</tag>
-         
-         
-           
-             
-              <breadCrumb title="reading notes" url="http://yoursite.com/categories/reading-notes/"/>
           
         </display>
     </data>
