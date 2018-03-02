@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Paul&#39;s Gardon">
 <meta property="og:description" content="本章内容：  前向网络的基本概念 学习XOR的例子 基于梯度下降的学习 隐藏节点 网络结构设计 BP及其他微分算法">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-01T06:36:01.000Z">
+<meta property="og:updated_time" content="2018-03-02T11:25:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flower book: deep feedforward networks">
 <meta name="twitter:description" content="本章内容：  前向网络的基本概念 学习XOR的例子 基于梯度下降的学习 隐藏节点 网络结构设计 BP及其他微分算法">
@@ -408,7 +408,16 @@ f(x, \Omega, c, \omega, b) = \omega^T max{0, \Omega^T x + c} + b</script><p>对�
 <h4 id="2-1-cost-functions"><a href="#2-1-cost-functions" class="headerlink" title="2.1 cost functions"></a>2.1 cost functions</h4><p>通常，参数模型会定义一个分布$p(y;x,\theta)$，然后运用最大似然的原则，即，用的是训练数据和模型预估结果直接的交叉熵cross-entropy。<br>神经网络和这个很相似，并且有时候也会只预估y的一些统计量而非整个分布，以及也会加正则项。</p>
 <h5 id="2-1-1-用最大似然学条件概率分布"><a href="#2-1-1-用最大似然学条件概率分布" class="headerlink" title="2.1.1 用最大似然学条件概率分布"></a>2.1.1 用最大似然学条件概率分布</h5><p>大部分的神经网络都会用最大似然来训练，也就是说，cost function是负对数似然函数。一方面，负对数似然函数跟交叉熵是等价的，另一方面，负对数似然可以防止saturate。</p>
 <script type="math/tex; mode=display">
-J(\theta) = -E_{x,y ~ \hat{p}_data}log p_model(y|x)</script><p>负对数似然有一个特性需要注意是它没有一个最小值，如果输出是离散值，那么其输出不了0或1，只能无限接近。所以可能会导致cross-entroy趋近于负无穷。正则技术可以用来解决这个问题。</p>
+J(\theta) = -E_{x,y ~ \hat{p}_{data}}log p_{model}(y|x)</script><p>其中$log p<em>{model}$的形式决定了代价函数的形式。例如$p</em>{model}(y|x)$是高斯分布的话，代价函数跟均方误差（MSE）是等价的。<br>使用最大似然的优点：</p>
+<ol>
+<li>明确了$p(y|x)$，则代价函数也随之确定了。</li>
+<li>防止饱和。例如很多输出单元都会包含一个指数函数，这是这些单元的变量取绝对值非常大的负数时，会饱和。负对数似然函数会消除掉这些指数效果。</li>
+</ol>
+<p>缺点是：</p>
+<ol>
+<li>负对数似然没有一个最小值，如果输出是离散值，那么其输出不了0或1，只能无限接近。</li>
+<li>对于实值的输出变量，如果模型控制输出分布的概率密度，那么对于正确的训练集可能赋予极高的概率密度，导致交叉熵(-logp)趋近于负无穷。正则技术可以用来解决这个问题。</li>
+</ol>
 <h5 id="2-1-2-学习条件统计量"><a href="#2-1-2-学习条件统计量" class="headerlink" title="2.1.2 学习条件统计量"></a>2.1.2 学习条件统计量</h5><p>given x, 我们经常只需要学习y的统计量。例如只预估y的均值。<br>这时，我们可以把神经网络看做是一类函数f的集合，这类函数只受特征连续性及各种bound的限制，而非一组特定参数。也既，从泛函的角度来看，我们可以设计cost functional在某些我们想要的特点函数上有最小值。解泛函需要用到变分，后面在详细讨论，现在只需要知道两个结果。</p>
 <ol>
 <li>如果我们可以从真实分布中获取无穷多的样本，那么最小化MSE，我们可以得到这样的函数：given x, 输出y的平均值。</li>
