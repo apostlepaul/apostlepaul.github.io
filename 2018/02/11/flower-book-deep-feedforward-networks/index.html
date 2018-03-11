@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Paul&#39;s Gardon">
 <meta property="og:description" content="本章内容：  前向网络的基本概念 学习XOR的例子 基于梯度下降的学习 隐藏节点 网络结构设计 BP及其他微分算法">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-11T10:55:56.000Z">
+<meta property="og:updated_time" content="2018-03-11T11:17:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flower book: deep feedforward networks">
 <meta name="twitter:description" content="本章内容：  前向网络的基本概念 学习XOR的例子 基于梯度下降的学习 隐藏节点 网络结构设计 BP及其他微分算法">
@@ -470,19 +470,33 @@ g(z) = tanh(z)</script><p>这两个很像，因为$tanh(z) = 2\sigmoid(2z) - 1$�
 <h4 id="5-2-General-Back-Propagation"><a href="#5-2-General-Back-Propagation" class="headerlink" title="5.2 General Back-Propagation"></a>5.2 General Back-Propagation</h4><hr>
 <p>Algorithm 1. The outermost skeleton of the bp algorithm。This portion does simple setup and cleanup work. Most of the important work happens in the build_grad subroutine of algorithm 2</p>
 <hr>
-<p>Require: T, the target set of variables whose gradients must be computed.<br>Require: G, the computational graph<br>Require: z, the variable to be differentiated<br>  Let $G^’$ be G pruned to contain only nodes that are ancestors of z and descendents of nodes in T.<br>  Initialize grad_table, a data structure associating tensors to their gradients</p>
+<p>Require: T, the target set of variables whose gradients must be computed.<br>Require: G, the computational graph<br>Require: z, the variable to be differentiated</p>
 <script type="math/tex; mode=display">
+  Let $G^'$ be G pruned to contain only nodes that are ancestors of z and descendents of nodes in T.
+  Initialize grad_table, a data structure associating tensors to their gradients
   grad_table[z] \leftarrow 1$
   for V in T do
     build_grad(V,G,G^',grad_table)
-  end for</script><p>  return grad_table restricted to T.</p>
-<hr>
+  end for
+  return grad_table restricted to T.</script><hr>
 <hr>
 <p>Algorithm 2. The inner loop subroutine build_grad(V,${\rm G}$, ${\rm G}’$,grad_table) of bp, called by algorithm 1.</p>
 <hr>
-<p>if V is in grad_table then<br>  return grad_table[V]<br>end if</p>
-<p>$$<br>i \leftarrow 1<br>for C in get_consumers(V, {\rm G}’) do<br>  op \leftarrow get_operation(C)<br>  D \leftarrow build_grad(C, {\rm G}, {\rm G}’, grad_table)<br>  G^{(i)} \leftarrow op.bprop(get_inputs(C, {rm G}’), V, D)<br>  i \leftarrow i + 1<br>end for<br>G \leftarrow \Sigma_iG^{(i)}<br>grad_table[V] = G<br>insert G and the operations creating it into {\rm G}<br>return G</p>
-<hr>
+<script type="math/tex; mode=display">
+  if V is in grad_table then
+    return grad_table[V]
+  end if
+  i \leftarrow 1
+    for C in get_consumers(V, {\rm G}') do
+      op \leftarrow get_operation(C)
+      D \leftarrow build_grad(C, {\rm G}, {\rm G}', grad_table)
+      G^{(i)} \leftarrow op.bprop(get_inputs(C, \{rm G}'), V, D)
+      i \leftarrow i + 1
+    end for
+  G \leftarrow \Sigma_iG^{(i)}
+  grad_table[V] = G
+  insert G and the operations creating it into {\rm G}
+  return G</script><hr>
 <h4 id="5-3-Differentiation-outside-the-Deep-Learning-Community"><a href="#5-3-Differentiation-outside-the-Deep-Learning-Community" class="headerlink" title="5.3 Differentiation outside the Deep Learning Community"></a>5.3 Differentiation outside the Deep Learning Community</h4><p>反向传播只是自动微分的一种方法，它是一种称为反向累加模式（reverse mode accumlation）的特例。</p>
 
       
