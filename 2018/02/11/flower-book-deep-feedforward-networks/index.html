@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Paul&#39;s Gardon">
 <meta property="og:description" content="本章内容：  前向网络的基本概念 学习XOR的例子 基于梯度下降的学习 隐藏节点 网络结构设计 BP及其他微分算法">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-11T11:17:27.000Z">
+<meta property="og:updated_time" content="2018-03-12T12:43:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flower book: deep feedforward networks">
 <meta name="twitter:description" content="本章内容：  前向网络的基本概念 学习XOR的例子 基于梯度下降的学习 隐藏节点 网络结构设计 BP及其他微分算法">
@@ -448,8 +448,8 @@ g(z) = max\{0, z\}.</script><p>ReLU易于优化，因为其处于激活状态时
 g(z)_{i} = max_{j \in G^{(i)}} z_j</script><p>Maxout单元可以学习具有多达k段的分段线性的凸函数。maxout单元因此可以视为学习激活函数本身而不仅仅是单元之间的关系。如果k足够大，那么maxout单元可以以任意的精度来近似任何凸函数。如果是两段的，那么maxout可以学出来跟传统的ReLU(leaky ReLU，PReLU, AReLU)一样的函数（怎么实现的？）。不过学习的机理是不一样的。<br>每个Maxout单元由k维权重向量来参数化，因此maxout需要更多的正则化。<br>另外Maxout可以使下一层减少k倍的权重，对抗灾难遗忘（catastrophic forgetting）。<br>ReLU及其泛化的一个原则是：如果他们的行为更接近线性，那么模型更容易优化。这一原则不仅在深度线性网络上适用。</p>
 <h4 id="3-2-Logistic-Sigmoid-and-Hyperbolic-Tangent"><a href="#3-2-Logistic-Sigmoid-and-Hyperbolic-Tangent" class="headerlink" title="3.2 Logistic Sigmoid and Hyperbolic Tangent"></a>3.2 Logistic Sigmoid and Hyperbolic Tangent</h4><p>在ReLU之前，用的比较多的激活函数是sigmoid函数和双曲正切函数：</p>
 <script type="math/tex; mode=display">
-g(z) = \sigma(z)
-g(z) = tanh(z)</script><p>这两个很像，因为$tanh(z) = 2\sigmoid(2z) - 1$。<br>sigmoid函数在高值和低值的时候都会饱和，只有在0附近才对梯度很敏感。这不利于基于梯度的学习。而他们被用着输出单元是因为最大似然的log会抵消掉exp。<br>如果一定要用sigmoid函数，那么双曲正切函数会更好一点，因为它在0附近更像单位函数。<br>sigmoid函数在非前向网络用的更多，像RNN，概率模型，和一些自编码器有一些额外的需求使得分段线性激活函数不能用，这时候sigmoid函数更有吸引力。</p>
+g(z) = \sigma(z)</script><script type="math/tex; mode=display">
+g(z) = tanh(z)</script><p>这两个很像，因为$tanh(z) = 2\sigma(2z) - 1$。<br>sigmoid函数在高值和低值的时候都会饱和，只有在0附近才对梯度很敏感。这不利于基于梯度的学习。而他们被用着输出单元是因为最大似然的log会抵消掉exp。<br>如果一定要用sigmoid函数，那么双曲正切函数会更好一点，因为它在0附近更像单位函数。<br>sigmoid函数在非前向网络用的更多，像RNN，概率模型，和一些自编码器有一些额外的需求使得分段线性激活函数不能用，这时候sigmoid函数更有吸引力。</p>
 <h4 id="3-3-Other-Hidden-Units"><a href="#3-3-Other-Hidden-Units" class="headerlink" title="3.3 Other Hidden Units"></a>3.3 Other Hidden Units</h4><p>一般来说，许多可微方程都可以表现的挺好，不过跟现在的也都差不多，所以只有比较大的提升的激活函数才会引起兴趣。<br>需要特别注意的有以下几种。</p>
 <ol>
 <li>不要激活函数，也即用单位函数作为激活函数。例如，对于变换$h = g(W^Tx + b)$，如果可以接收W是低秩的，那么可以通过把一层线性层分解层两个单位函数层，来实现$W^T = V^TU^T$的分解，从而减少参数。</li>
@@ -467,36 +467,8 @@ g(z) = tanh(z)</script><p>这两个很像，因为$tanh(z) = 2\sigmoid(2z) - 1$�
 <h4 id="4-2-Other-Architecture-Considerations"><a href="#4-2-Other-Architecture-Considerations" class="headerlink" title="4.2 Other Architecture Considerations"></a>4.2 Other Architecture Considerations</h4><p>在实践当中，神经网络显示出相当的多样性。<br>许多神经网络已被开发用于特定的任务。计算机视觉使用CNN，涉及到序列处理的使用RNN。<br>另外还有层与层之间进行跳跃链接。</p>
 <h3 id="5-Back-Propagation-and-Other-Diﬀerentiation-Algorithms"><a href="#5-Back-Propagation-and-Other-Diﬀerentiation-Algorithms" class="headerlink" title="5. Back-Propagation and Other Diﬀerentiation Algorithms"></a>5. Back-Propagation and Other Diﬀerentiation Algorithms</h3><p>前向网络，从输入$x$开始，向前进行信息传播，得到网络的输出$\hat{y}$。反向传播，从代价函数$J(\theta)$开始，向后传播误差信息，用于计算网络参数的梯度。<br>注意BP(反向传播)是描述梯度计算的方法，而不是整个NN的学习算法，SGD这样的才是。并且BP也不仅仅适用于多层神经网络。<br>计算图及链式法则在此不再介绍。<br>前向传播及反向传播的过程，网上已有很多文章介绍，并且我可以手推，在此不再介绍。</p>
 <h4 id="5-1-Symbol-to-Symbol-Derivatives"><a href="#5-1-Symbol-to-Symbol-Derivatives" class="headerlink" title="5.1 Symbol-to-Symbol Derivatives"></a>5.1 Symbol-to-Symbol Derivatives</h4><p>计算图是符号描述，当我们使用或者训练NN时，需要给这些符号赋上具体的值。<br>一些BP的方法，输入的是计算图和输入数值，直接返回参数在这些输入数值处梯度的具体值。这种方法叫符号到数值的微分（symbol-to-number differentiation）。Torch和Caffe用的就是这种方法。<br>另外一种方法，输入计算图，程序会给计算图增加一些节点，这些节点是需要计算的导数的符号描述。Theano和TensorFlow用的就是这样的方法。这种方法的优点是导数可以使用与原始表达式相同的语言来描述。因为导数计算只是另外一张计算图。如果需要计算更高阶的导数，我们只需要再次运行计算图。</p>
-<h4 id="5-2-General-Back-Propagation"><a href="#5-2-General-Back-Propagation" class="headerlink" title="5.2 General Back-Propagation"></a>5.2 General Back-Propagation</h4><hr>
-<p>Algorithm 1. The outermost skeleton of the bp algorithm。This portion does simple setup and cleanup work. Most of the important work happens in the build_grad subroutine of algorithm 2</p>
-<hr>
-<p>Require: T, the target set of variables whose gradients must be computed.<br>Require: G, the computational graph<br>Require: z, the variable to be differentiated</p>
-<script type="math/tex; mode=display">
-  Let $G^'$ be G pruned to contain only nodes that are ancestors of z and descendents of nodes in T.
-  Initialize grad_table, a data structure associating tensors to their gradients
-  grad_table[z] \leftarrow 1$
-  for V in T do
-    build_grad(V,G,G^',grad_table)
-  end for
-  return grad_table restricted to T.</script><hr>
-<hr>
-<p>Algorithm 2. The inner loop subroutine build_grad(V,${\rm G}$, ${\rm G}’$,grad_table) of bp, called by algorithm 1.</p>
-<hr>
-<script type="math/tex; mode=display">
-  if V is in grad_table then
-    return grad_table[V]
-  end if
-  i \leftarrow 1
-    for C in get_consumers(V, {\rm G}') do
-      op \leftarrow get_operation(C)
-      D \leftarrow build_grad(C, {\rm G}, {\rm G}', grad_table)
-      G^{(i)} \leftarrow op.bprop(get_inputs(C, \{rm G}'), V, D)
-      i \leftarrow i + 1
-    end for
-  G \leftarrow \Sigma_iG^{(i)}
-  grad_table[V] = G
-  insert G and the operations creating it into {\rm G}
-  return G</script><hr>
+<h4 id="5-2-General-Back-Propagation"><a href="#5-2-General-Back-Propagation" class="headerlink" title="5.2 General Back-Propagation"></a>5.2 General Back-Propagation</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">Algorithm 1. The outermost skeleton of the bp algorithm。This portion does simple setup and cleanup work. Most of the important work happens in the build_grad subroutine of algorithm 2</div><div class="line"></div><div class="line">---</div><div class="line">Require: T, the target set of variables whose gradients must be computed.</div><div class="line">Require: G, the computational graph</div><div class="line">Require: z, the variable to be differentiated</div><div class="line">  Let $&#123;\mathcal G&#125;&apos;$ be G pruned to contain only nodes that are ancestors of z and descendents of nodes in T.</div><div class="line">  Initialize grad_table, a data structure associating tensors to their gradients</div><div class="line">  grad_table[z] \leftarrow 1$</div><div class="line">  for V in T do</div><div class="line">    build_grad(V,G,G^&apos;,grad_table)</div><div class="line">  end for</div><div class="line">  return grad_table restricted to T.</div><div class="line">$$</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Algorithm 2. The inner loop subroutine build_grad(V,$&#123;\rm G&#125;$, $&#123;\rm G&#125;&apos;$,grad_table) of bp, called by algorithm 1.</div><div class="line"></div><div class="line">---</div><div class="line"></div><div class="line">$$</div><div class="line">  if V is in grad_table then</div><div class="line">    return grad_table[V]</div><div class="line">  end if</div><div class="line">  i \leftarrow 1</div><div class="line">    for C in get_consumers(V, &#123;\rm G&#125;&apos;) do</div><div class="line">      op \leftarrow get_operation(C)</div><div class="line">      D \leftarrow build_grad(C, &#123;\rm G&#125;, &#123;\rm G&#125;&apos;, grad_table)</div><div class="line">      G^&#123;(i)&#125; \leftarrow op.bprop(get_inputs(C, \&#123;rm G&#125;&apos;), V, D)</div><div class="line">      i \leftarrow i + 1</div><div class="line">    end for</div><div class="line">  G \leftarrow \Sigma_iG^&#123;(i)&#125;</div><div class="line">  grad_table[V] = G</div><div class="line">  insert G and the operations creating it into &#123;\rm G&#125;</div><div class="line">  return G</div><div class="line">$$</div></pre></td></tr></table></figure>
 <h4 id="5-3-Differentiation-outside-the-Deep-Learning-Community"><a href="#5-3-Differentiation-outside-the-Deep-Learning-Community" class="headerlink" title="5.3 Differentiation outside the Deep Learning Community"></a>5.3 Differentiation outside the Deep Learning Community</h4><p>反向传播只是自动微分的一种方法，它是一种称为反向累加模式（reverse mode accumlation）的特例。</p>
 
       
@@ -626,7 +598,7 @@ g(z) = tanh(z)</script><p>这两个很像，因为$tanh(z) = 2\sigmoid(2z) - 1$�
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
