@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Paul&#39;s Gardon">
 <meta property="og:description" content="本章内容：  范数惩罚 数据增强 稀疏表示 集成方法 Dropout 对抗训练">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-18T14:48:16.000Z">
+<meta property="og:updated_time" content="2018-03-18T15:26:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flower book: Regularization for Deep Learning">
 <meta name="twitter:description" content="本章内容：  范数惩罚 数据增强 稀疏表示 集成方法 Dropout 对抗训练">
@@ -381,37 +381,31 @@
 <li>集成方法</li>
 <li>Dropout</li>
 <li>对抗训练<a id="more"></a>
-机器学习的一个核心问题是怎么让算法不只在训练数据集上表现得好，要在新的输入上（测试集）上也表现得好。<br>很多策略为了降低测试集上的误差，会以增加训练集上的误差为代价，这种策略叫做正则（Regularization）。<br>在深度学习的背景下，大多数正则化策略都会对估计进行正则化。估计的正则化以偏差的增加换取方差的减少。主要是为了解决过拟合问题。<br>在实际问题中，我们不能知道数据生成过程是否被包含在我们的复杂模型里。有时候我们甚至可以确信真实的数据生成过程是在我们的模型之外的。这就像是我们要把方的钉子（数据生成过程）放到圆的洞里（我们的模型族），所以通常，控制模型的复杂度并不是找到模型正取的大小和合适的参数那么简单，而是要对一个大的模型进行合适的正则。<h3 id="1-Parameter-Norm-Penalties"><a href="#1-Parameter-Norm-Penalties" class="headerlink" title="1. Parameter Norm Penalties"></a>1. Parameter Norm Penalties</h3>许多正则化方法通过给目标函数添加参数范数惩罚来限制模型的容量。<script type="math/tex; mode=display">
-\widetilde{J}(\theta;X,y) = J(\theta;X,y) + \alpha\Omega(\theta),</script>不同的范数惩罚$\Omega$会带来不同的效果。<br>需要说明的是，通常不对神经网络中每一层的偏置项（每一层的仿射变换参数包括权重和偏置）进行正则，因为：</li>
+</li>
 </ul>
+<p>机器学习的一个核心问题是怎么让算法不只在训练数据集上表现得好，要在新的输入上（测试集）上也表现得好。<br>很多策略为了降低测试集上的误差，会以增加训练集上的误差为代价，这种策略叫做正则（Regularization）。<br>在深度学习的背景下，大多数正则化策略都会对估计进行正则化。估计的正则化以偏差的增加换取方差的减少。主要是为了解决过拟合问题。<br>在实际问题中，我们不能知道数据生成过程是否被包含在我们的复杂模型里。有时候我们甚至可以确信真实的数据生成过程是在我们的模型之外的。这就像是我们要把方的钉子（数据生成过程）放到圆的洞里（我们的模型族），所以通常，控制模型的复杂度并不是找到模型正取的大小和合适的参数那么简单，而是要对一个大的模型进行合适的正则。</p>
+<h3 id="1-Parameter-Norm-Penalties"><a href="#1-Parameter-Norm-Penalties" class="headerlink" title="1. Parameter Norm Penalties"></a>1. Parameter Norm Penalties</h3><p>许多正则化方法通过给目标函数添加参数范数惩罚来限制模型的容量。<br>效果就是只有在显著减小目标函数方向上的参数会保留得相对完好。在无助于目标函数减小的方向(对应 Hessian 矩阵较小的特征值)上改变参数不会显著增加梯度。这种不重要方向对应的分量会在训练过程中因正则化而衰减掉。我们可以看到，L2正则化能让学习算法“感知”到具有较高方差的输入，因此与输出目标的协方差较小(相对增加方差)的特征的权重将会收缩。</p>
+<script type="math/tex; mode=display">
+\widetilde{J}(\theta;X,y) = J(\theta;X,y) + \alpha\Omega(\theta),</script><p>不同的范数惩罚$\Omega$会带来不同的效果。<br>需要说明的是，通常不对神经网络中每一层的偏置项（每一层的仿射变换参数包括权重和偏置）进行正则，因为：</p>
 <ol>
 <li>不对偏置正则不会带来太大的方差；</li>
-<li>对其正则可能会带来较大的欠拟合。<br>后续使用$\omege$表示需要接受范数惩罚的权重，$\theta$表示所有的参数。</li>
+<li>对其正则可能会带来较大的欠拟合。</li>
 </ol>
+<p>后续使用$\omega$表示需要接受范数惩罚的权重，$\theta$表示所有的参数。</p>
 <h4 id="1-1-L-2-Parameter-Regularization"><a href="#1-1-L-2-Parameter-Regularization" class="headerlink" title="1.1 $L^2$ Parameter Regularization"></a>1.1 $L^2$ Parameter Regularization</h4><p>L2正则就是权重衰减，正则项$\Omega(\theta)=\frac{1}{2}||\omega||^2_2$，也叫岭回归或Tikhonov正则。<br>L2正则会带来什么样的影响呢？</p>
 <ol>
-<li><p>从单步梯度下降的角度来看：<br>（简单起见，我们假设没有偏置项）<br>目标函数为：</p>
-<script type="math/tex; mode=display">
-\widetilde{J}(\omega;X,y) = \fra{\alpha}{2}\omega^T\omega + J(\omega;X,y)</script><p>对应的梯度为：</p>
-<script type="math/tex; mode=display">
-\bigtriangledown_\omega\widetilde{J}(\omega;X,y) = \alpha\omega + \bigtriangledown_\omegaJ(\omega;X,y)</script><p>使用单步梯度下降更新权重：</p>
-<script type="math/tex; mode=display">
-\omega \leftarrow \omega - \epsilon(\alpha\omega + \bigtriangledown_\omegaJ(\omega;X,y))</script><script type="math/tex; mode=display">
-\omega \leftarrow (1-\epsilon\alpha)\omega - \epsilon\bigtriangledown_\omegaJ(\omega;X,y)</script><p>可以看到加了正则之后，每次梯度下降，权重$\omega$会以$(1-\epsilon\alpha)$衰减。这就是为什么L2正则也叫权重衰减。</p>
-</li>
-<li><p>从全局训练的角度来看：<br>假设代价函数的极小值点是$\omega^* = argmin_\omegaJ(\omega)$。根据泰勒展开，</p>
-<script type="math/tex; mode=display">
-\hat{J}(\theta) = J(\omega^* )+\bigtriangledown_\omegaJ(\omega^* )(\omega - \omega^* ) + \frac{1}{2}(\omega - \omega^* )^{T}H(\omega - \omega^* )
-= J(\omega^* ) + \frac{1}{2}(\omega - \omega^* )^{T}H(\omega - \omega^* )</script><p>第二个等号成立是因为$\bigtriangledown_\omegaJ(\omega^<em> ) = 0$。<br>其中$H$是J在$\omega^</em> $处关于$\omega$的Hessian矩阵。<br>对$\hat{J}$求梯度，有</p>
-<script type="math/tex; mode=display">
-\bigtriangledown_\omega\hat{J}(\omega) = H(\omega - \omega^* )</script><p>在最小值点，梯度为0。<br>如果加了正则之后的最小值点为$\tilde{\omega}$，那么有：</p>
-<script type="math/tex; mode=display">
-\alpha\tilde{\omega} + H(\tilde{\omega}-\omega^* ) = 0</script><p>解得：</p>
-<script type="math/tex; mode=display">
-\tilde{\omega} = (H + \alphaI)^{-1}H\omega^*</script><p>H是实对称的，可以分解为一个对角矩阵$Lambda$和一组特征向量的标准正交基$Q$。$H=Q\LambdaQ^T$，将其带入上式有：</p>
-<script type="math/tex; mode=display">
-\tilde{\omega} = Q(\Lambda + \alphaI)^{-1}\lambdaQ^T\omega^*</script><p>对比$\tilde{\omega$和$\omega^<em> $, 正则的效果是沿着H的特征向量所定义的轴对$\omega^</em> $进行缩放，具体来讲，$\omega^* $中与H第i个特征向量所对齐的分量，其缩放系数是$\frac{\lambda_i}{\lambda_i+\alpha}$。<br>根据这个缩放系数，我们可以知道，沿着H特征值较大的方向（如$\lambda_i&gt;&gt;\alpha$），正则化的影响较小，而特征值较小的方向(如\lambda_i&lt;&lt;\alpha$)，分量降收缩为0。<br>其效果就是只有在显著减小目标函数方向上的参数会保留得相对完好。在无助于目标函数减小的方向(对应 Hessian 矩阵较小的特征值)上改变参数不会显著增加梯度。这种不重要方向对应的分量会在训练过程中因正则化而衰减掉。我们可以看到，L2正则化能让学习算法“感知”到具有较高方差的输入，因此与输出目标的协方差较小(相对增加方差)的特征的权重将会收缩。</p>
-<h3 id="2-Norm-Penalties-as-Constrained-Optimization"><a href="#2-Norm-Penalties-as-Constrained-Optimization" class="headerlink" title="2. Norm Penalties as Constrained Optimization"></a>2. Norm Penalties as Constrained Optimization</h3></li>
+<li>从单步梯度下降的角度来看：<br>（简单起见，我们假设没有偏置项）<br>目标函数为：<script type="math/tex; mode=display">
+\widetilde{J}(\omega;X,y) = \frac{\alpha}{2}{\omega}^{T}{\omega} + J(\omega;X,y)</script>对应的梯度为：<script type="math/tex; mode=display">
+{\nabla}_{\omega}\widetilde{J}(\omega;X,y) = \alpha\omega + {\nabla}_{\omega}J(\omega;X,y)</script>使用单步梯度下降更新权重：<script type="math/tex; mode=display">
+\omega \leftarrow \omega - \epsilon(\alpha\omega + \nabla_{\omega}J(\omega;X,y))</script><script type="math/tex; mode=display">
+\omega \leftarrow (1-\epsilon\alpha)\omega - \epsilon\nabla_{\omega}J(\omega;X,y)</script>可以看到加了正则之后，每次梯度下降，权重$\omega$会以$(1-\epsilon\alpha)$衰减。这就是为什么L2正则也叫权重衰减。</li>
+<li>从全局训练的角度来看：<br>假设代价函数的极小值点是$\omega^* = argmin_{\omega}J(\omega)$。根据泰勒展开，<script type="math/tex; mode=display">
+\hat{J}(\theta) = J(\omega^* )+\nabla_{\omega}J(\omega^* )(\omega - \omega^* ) + \frac{1}{2}(\omega - \omega^* )^{T}H(\omega - \omega^* )\\\\
+= J(\omega^* ) + \frac{1}{2}(\omega - \omega^* )^{T}H(\omega - \omega^* )</script>第二个等号成立是因为$\nabla_{\omega}J(\omega^*) = 0$。<br>其中$H$是J在$\omega^*$处关于$\omega$的Hessian矩阵。<br>对$\hat{J}$求梯度，有<script type="math/tex; mode=display">
+\nabla_{\omega}\hat{J}(\omega) = H(\omega - \omega^* )</script>在最小值点，梯度为0。<br>如果加了正则之后的最小值点为$\tilde{\omega}$，那么有：<script type="math/tex; mode=display">
+\alpha\tilde{\omega} + H(\tilde{\omega}-\omega^* ) = 0</script>解得：<script type="math/tex; mode=display">
+\tilde{\omega} = (H + {\alpha}I)^{-1}H\omega^*</script>H是实对称的，可以分解为一个对角矩阵$Lambda$和一组特征向量的标准正交基$Q$。$H=Q{\Lambda}Q^T$，将其带入上式有：<script type="math/tex; mode=display">
+\tilde{\omega} = Q(\Lambda + {\alpha}I)^{-1}{\lambda}Q^T{\omega}^*</script>对比$\tilde{\omega}$和${\omega}^*$, 正则的效果是沿着H的特征向量所定义的轴对${\omega}^*$进行缩放，具体来讲，${\omega}^*$中与H第i个特征向量所对齐的分量，其缩放系数是$\frac{\lambda_i}{\lambda_i+\alpha}$。<br>根据这个缩放系数，我们可以知道，沿着H特征值较大的方向（如${\lambda_i}{\gg}{\alpha}$），正则化的影响较小，而特征值较小的方向(如${\lambda_i}{\ll}{\alpha}$)，分量降收缩为0。<br>其效果就是只有在显著减小目标函数方向上的参数会保留得相对完好。在无助于目标函数减小的方向(对应 Hessian 矩阵较小的特征值)上改变参数不会显著增加梯度。这种不重要方向对应的分量会在训练过程中因正则化而衰减掉。我们可以看到，L2正则化能让学习算法“感知”到具有较高方差的输入，因此与输出目标的协方差较小(相对增加方差)的特征的权重将会收缩。<h3 id="2-Norm-Penalties-as-Constrained-Optimization"><a href="#2-Norm-Penalties-as-Constrained-Optimization" class="headerlink" title="2. Norm Penalties as Constrained Optimization"></a>2. Norm Penalties as Constrained Optimization</h3></li>
 </ol>
 <h3 id="3-Regularization-and-Under-Constrained-Problems"><a href="#3-Regularization-and-Under-Constrained-Problems" class="headerlink" title="3. Regularization and Under-Constrained Problems"></a>3. Regularization and Under-Constrained Problems</h3><h3 id="4-Dataset-Augmentation"><a href="#4-Dataset-Augmentation" class="headerlink" title="4. Dataset Augmentation"></a>4. Dataset Augmentation</h3><h3 id="5-Noise-Robustness"><a href="#5-Noise-Robustness" class="headerlink" title="5. Noise Robustness"></a>5. Noise Robustness</h3><h3 id="6-Semi-Supervised-Learning"><a href="#6-Semi-Supervised-Learning" class="headerlink" title="6. Semi-Supervised Learning"></a>6. Semi-Supervised Learning</h3><h3 id="7-Multitask-Learning"><a href="#7-Multitask-Learning" class="headerlink" title="7. Multitask Learning"></a>7. Multitask Learning</h3><h3 id="8-Early-Stopping"><a href="#8-Early-Stopping" class="headerlink" title="8. Early Stopping"></a>8. Early Stopping</h3><h3 id="9-Parameter-Tying-and-Parameter-Sharing"><a href="#9-Parameter-Tying-and-Parameter-Sharing" class="headerlink" title="9. Parameter Tying and Parameter Sharing"></a>9. Parameter Tying and Parameter Sharing</h3><h3 id="10-Sparse-Representations"><a href="#10-Sparse-Representations" class="headerlink" title="10. Sparse Representations"></a>10. Sparse Representations</h3><h3 id="11-Bagging-and-Other-Ensemble-Methods"><a href="#11-Bagging-and-Other-Ensemble-Methods" class="headerlink" title="11. Bagging and Other Ensemble Methods"></a>11. Bagging and Other Ensemble Methods</h3><h3 id="12-Dropout"><a href="#12-Dropout" class="headerlink" title="12. Dropout"></a>12. Dropout</h3><h3 id="13-Adversarial-Training"><a href="#13-Adversarial-Training" class="headerlink" title="13. Adversarial Training"></a>13. Adversarial Training</h3><h3 id="14-Tangent-Distance-Tangent-Prop-and-ManifoldTangent-Classiﬁer"><a href="#14-Tangent-Distance-Tangent-Prop-and-ManifoldTangent-Classiﬁer" class="headerlink" title="14. Tangent Distance, Tangent Prop and ManifoldTangent Classiﬁer"></a>14. Tangent Distance, Tangent Prop and ManifoldTangent Classiﬁer</h3>
       
