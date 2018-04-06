@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Paul&#39;s Gardon">
 <meta property="og:description" content="本章内容：  范数惩罚 数据增强 稀疏表示 集成方法 Dropout 对抗训练">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-19T06:06:24.000Z">
+<meta property="og:updated_time" content="2018-04-06T17:33:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flower book: Regularization for Deep Learning">
 <meta name="twitter:description" content="本章内容：  范数惩罚 数据增强 稀疏表示 集成方法 Dropout 对抗训练">
@@ -421,7 +421,86 @@ H =diag([H_{1,1},...,H_{n,n}])</script><p>其中$H_{i,i}&gt;0$。<br>在此情�
 <script type="math/tex; mode=display">
 {\omega}_i = sign({\omega}_{i}^* )max\{|{\omega}_{i}^* | -\frac{\alpha}{H_{i,i}}, 0 \},</script><p>从这个解我们可以看出，相比于L2, L1会产出更稀疏的解。$\alpha$越大越稀疏。这种稀疏性被广泛用于特征选择。<br>在第 5.6.1 节，我们看到许多正则化策略可以被解释为 MAP 贝叶斯推断，L2正则化相当于有高斯权重的MAP贝叶斯推断。L1正则对应于有各向同性的拉普拉斯分布的对数先验的MAP贝叶斯推断。</p>
 <script type="math/tex; mode=display">
-log p(\omega) = {\Sigma}_{i}log Laplace({\omega}_{i};0,\frac{1}{\alpha}) = -\alpha\Vert\omega\Vert_1 + n log \alpha - n log2.</script><h3 id="2-Norm-Penalties-as-Constrained-Optimization"><a href="#2-Norm-Penalties-as-Constrained-Optimization" class="headerlink" title="2. Norm Penalties as Constrained Optimization"></a>2. Norm Penalties as Constrained Optimization</h3><h3 id="3-Regularization-and-Under-Constrained-Problems"><a href="#3-Regularization-and-Under-Constrained-Problems" class="headerlink" title="3. Regularization and Under-Constrained Problems"></a>3. Regularization and Under-Constrained Problems</h3><h3 id="4-Dataset-Augmentation"><a href="#4-Dataset-Augmentation" class="headerlink" title="4. Dataset Augmentation"></a>4. Dataset Augmentation</h3><h3 id="5-Noise-Robustness"><a href="#5-Noise-Robustness" class="headerlink" title="5. Noise Robustness"></a>5. Noise Robustness</h3><h3 id="6-Semi-Supervised-Learning"><a href="#6-Semi-Supervised-Learning" class="headerlink" title="6. Semi-Supervised Learning"></a>6. Semi-Supervised Learning</h3><h3 id="7-Multitask-Learning"><a href="#7-Multitask-Learning" class="headerlink" title="7. Multitask Learning"></a>7. Multitask Learning</h3><h3 id="8-Early-Stopping"><a href="#8-Early-Stopping" class="headerlink" title="8. Early Stopping"></a>8. Early Stopping</h3><h3 id="9-Parameter-Tying-and-Parameter-Sharing"><a href="#9-Parameter-Tying-and-Parameter-Sharing" class="headerlink" title="9. Parameter Tying and Parameter Sharing"></a>9. Parameter Tying and Parameter Sharing</h3><h3 id="10-Sparse-Representations"><a href="#10-Sparse-Representations" class="headerlink" title="10. Sparse Representations"></a>10. Sparse Representations</h3><h3 id="11-Bagging-and-Other-Ensemble-Methods"><a href="#11-Bagging-and-Other-Ensemble-Methods" class="headerlink" title="11. Bagging and Other Ensemble Methods"></a>11. Bagging and Other Ensemble Methods</h3><h3 id="12-Dropout"><a href="#12-Dropout" class="headerlink" title="12. Dropout"></a>12. Dropout</h3><h3 id="13-Adversarial-Training"><a href="#13-Adversarial-Training" class="headerlink" title="13. Adversarial Training"></a>13. Adversarial Training</h3><h3 id="14-Tangent-Distance-Tangent-Prop-and-ManifoldTangent-Classiﬁer"><a href="#14-Tangent-Distance-Tangent-Prop-and-ManifoldTangent-Classiﬁer" class="headerlink" title="14. Tangent Distance, Tangent Prop and ManifoldTangent Classiﬁer"></a>14. Tangent Distance, Tangent Prop and ManifoldTangent Classiﬁer</h3>
+log p(\omega) = {\Sigma}_{i}log Laplace({\omega}_{i};0,\frac{1}{\alpha}) = -\alpha\Vert\omega\Vert_1 + n log \alpha - n log2.</script><h3 id="2-Norm-Penalties-as-Constrained-Optimization"><a href="#2-Norm-Penalties-as-Constrained-Optimization" class="headerlink" title="2. Norm Penalties as Constrained Optimization"></a>2. Norm Penalties as Constrained Optimization</h3><p>范数惩罚可以被看做是受约束的优化问题。因为范数惩罚跟广义拉格朗日乘子法很像。<br>经过参数范数正则化的代价函数：</p>
+<script type="math/tex; mode=display">
+\hat{J}(\theta; X,y)= J(\theta;X,y)+\alpha\Omega(\theta)</script><p>其中$\Omega(\theta)$可以认为是KKT乘子与约束条件函数的乘积。</p>
+<p>但是有时候，我们希望使用显式的约束条件，而不是把约束条件作为惩罚项加入到优化目标函数当中，原因有：</p>
+<ol>
+<li>如果知道了k（惩罚项的约束范围），那么不不需要计算$\alpha$了。</li>
+<li>可能会使目标函数变得非凸从而使算法陷入局部极小值点。这通常表现为训练带有几个“死亡单元”（进入或离开此单元的权重都很小）的神经网络。</li>
+<li>防止溢出从而使训练更加稳定。</li>
+</ol>
+<p>一个更好的策略是，约束每一层的范数，而不是整个权重矩阵的范数。<br><code>在实践中，列范数的限制总是通过重投影的显式约束来实现。</code></p>
+<h3 id="3-Regularization-and-Under-Constrained-Problems"><a href="#3-Regularization-and-Under-Constrained-Problems" class="headerlink" title="3. Regularization and Under-Constrained Problems"></a>3. Regularization and Under-Constrained Problems</h3><p>许多线性模型，包括线性回归和PCA，都依赖于对矩阵$X^TX$求逆，但是如果$X^TX$是奇异的，那么这些方法就会失效。比如，样本（数据生成分布）在一些维度上确实没有区分度，或样本相对于特征太少（权重矩阵的行小于列）。这是，加入正则化项，求$x^TX$的逆就变换成求$X^TX+{alpha}I$的逆，后者可以保证是可逆的。</p>
+<p>从另外一个角度来看，对于线性可分的逻辑回归问题，如果权重$\omega$可以做到完美分类，那么$2\omega$会以更高的似然实现分类，这样算法会不断增加$\omega$，理论上是不会停的，最终会导致超级大的$\omega$直到溢出，而正则化项可以防止这一现象的出现。</p>
+<p>总之，大多数形式的正则化能够保证应用于欠定问题的迭代方法收敛。</p>
+<h3 id="4-Dataset-Augmentation"><a href="#4-Dataset-Augmentation" class="headerlink" title="4. Dataset Augmentation"></a>4. Dataset Augmentation</h3><p>让机器学习模型泛化得更好的最好办法是使用更多的数据进行训练。<br>对分类来说这种方法是最简单的。<br>数据集增强对一个具体的分类问题来说是特别有效的方法:对象识别。<br>数据集增强对语音识别任务也是有效的。<br>在神经网络的输入层注入噪声 (Sietsma and Dow, 1991) 也可以被看作是数据增 强的一种方式。<br>。然而，神经网络被证明对噪声不是非常健壮 (Tang and Eliasmith, 2010)</p>
+<h3 id="5-Noise-Robustness"><a href="#5-Noise-Robustness" class="headerlink" title="5. Noise Robustness"></a>5. Noise Robustness</h3><p>增加噪声，可以分为</p>
+<ol>
+<li>给输入增加噪声</li>
+<li>给节点增加噪声（dropout）</li>
+<li>给权重增加噪声</li>
+<li>给输出目标增加噪声</li>
+</ol>
+<p>于某些模型而言， 向输入添加方差极小的噪声等价于对权重施加范数惩罚 (Bishop, 1995a,b)。在一般情 况下，注入噪声远比简单地收缩参数强大注入噪声。<br>Dropout后续介绍。</p>
+<p>给权重增加噪声主要用在RNN。这可以被解释为关于权重的贝叶斯推断的 随机实现。在某些假设下，施加于权重的噪声可以被解释为与更传统的正则化形式等同， 鼓励要学习的函数保持稳定。</p>
+<p>给输出目标增加噪声，其实是在建模时，考虑预测为y的概率是$1-\epsilon$，而不是1，这样就不用显式地把噪声样本单独抽出来。例如标签平滑，标签平滑的优势是能够防止模型追求确切概率而不影响模型学习正确分类。</p>
+<h3 id="6-Semi-Supervised-Learning"><a href="#6-Semi-Supervised-Learning" class="headerlink" title="6. Semi-Supervised Learning"></a>6. Semi-Supervised Learning</h3><p>在半监督的范式下，从$P(X)$得到的无标注的样本和从$P(X,y)$得到的有标注的样本，都被用来估计$P(y|X)$。</p>
+<p>在深度学习的场景下，半监督学习通常是指要学习一个样本的表示$h=f(x)$，通过这一个表示的学习对样本进行聚类，把样本映射到新的空间，从而得到更好的泛化。PCA中的预处理就是这一方法的<br>很好范例。</p>
+<h3 id="7-Multitask-Learning"><a href="#7-Multitask-Learning" class="headerlink" title="7. Multitask Learning"></a>7. Multitask Learning</h3><p>多任务学习 (Caruana, 1993) 是通过合并几个任务中的样例(可以视为对参数 施加的软约束)来提高泛化的一种方式。正如额外训练样本能够将模型参数推向具有更好泛化能力的值一样，当模型的一部分被多个额外的任务共享时，这部分将被约束为良好的值(如果共享合理)，通常会带来更好的泛化能力。</p>
+<p>从深度学习的观点看，潜在的先验知识如下:能解释数据变化(在与之相关联 的不同任务中观察到)的因素中，某些因素是跨两个或更多任务共享的。</p>
+<h3 id="8-Early-Stopping"><a href="#8-Early-Stopping" class="headerlink" title="8. Early Stopping"></a>8. Early Stopping</h3><p>如果把训练步数（epoch）看着是一个超参数，那么early stopping也可以被认为是一种正则化的方法，并且简单有效。</p>
+<p>early stopping需要一个validation set来监控泛化误差，一个trick的问题是，得到了最优的epoch之后，如何把validation set 重新纳入训练集，因为数据很珍贵。有两种策略：</p>
+<ol>
+<li>直接把validation set merge进来，重头开始训练，到了最佳步数之后停止，这其实是有一些误差的。</li>
+<li>把validation set merge进来之后，接着stop时候的模型接着训，并监控validation set上的平均损失函数，直到它低于提前终止过程终止时的目标值。但表现并不一定好。</li>
+</ol>
+<p>从另一个角度理解为什么early stopping也是一种正则：可以将优化过程的参数空间限制在初始参数值$\theta_0$的小邻域内。</p>
+<h3 id="9-Parameter-Tying-and-Parameter-Sharing"><a href="#9-Parameter-Tying-and-Parameter-Sharing" class="headerlink" title="9. Parameter Tying and Parameter Sharing"></a>9. Parameter Tying and Parameter Sharing</h3><p>以上讨论的对参数进行约束或惩罚，都是相对于固定的区域或点。但有时候，但我们根据相关领域和模型结构方面的知识得知模型参数之间应该存在一些相关性。就是一个模型的参数应该跟另外一个模型的参数接近。<br>例如两个模型，要学习相同的任务，但是输入稍有不同，</p>
+<script type="math/tex; mode=display">
+\hat{y}^A = f(\omega^A, x)
+\hat{y}^B = f(\omega^B, x)</script><p>为了使这两个模型的参数彼此接近，我们可以添加正则化项$\Omeag(\omega^A, \omega^B) = ||\omega^A-\omega^B||^2$</p>
+<p>另外，更流行的一种方法是强迫某些参数相等，即参数共享。这种方法的一个有点是，减少了参数数量。CNN中就使用了这种方法。自然图像有许多统计属性是对转换不变的。例如，猫的照片即使向右边移了一 个像素，仍保持猫的照片。CNN通过在图像多个位置共享参数来考虑这个特性。</p>
+<h3 id="10-Sparse-Representations"><a href="#10-Sparse-Representations" class="headerlink" title="10. Sparse Representations"></a>10. Sparse Representations</h3><p>以上讨论的都是通过给模型的参数添加惩罚项来进行权重衰减，另外一种策略是惩罚神经网络中的激活单元，估计激活单元变稀疏。</p>
+<p>表示的稀疏描述的是这样一种表示：表示中很多元素都是0。</p>
+<p>对表示进行正则很对参数进行正则的机制一样。如果h是输入x的一种表示（可以认为h是x的一个函数），那么我们在代价函数上对h添加相应的惩罚项：</p>
+<script type="math/tex; mode=display">
+\tilde{J}(\theta;X,y)=J(\theta;X,y)+\alpha\Omega(h)</script><p>这个正则项可以是：</p>
+<ol>
+<li>L1</li>
+<li>从student t先验导出的惩罚</li>
+<li>KL散度惩罚</li>
+</ol>
+<p>还有其他方法来获得表示稀疏，如正交匹配追踪，通过优化以下问题来获得输入x的表示稀疏h：</p>
+<script type="math/tex; mode=display">
+\arg \min_{h,\Vert h \Vert_0<k} \Vert x-Wh \Vert^2</script><p>当W是正交的时候，这一问题可以被有效地求解，表示稀疏中的非零元素被限制在k个之内，叫OMP-k。OMP-1被证明是深度架构中有效的特征提取器。</p>
+<h3 id="11-Bagging-and-Other-Ensemble-Methods"><a href="#11-Bagging-and-Other-Ensemble-Methods" class="headerlink" title="11. Bagging and Other Ensemble Methods"></a>11. Bagging and Other Ensemble Methods</h3><p>bagging就是进行模型平均。<br>模型平均(model averaging)奏效的原因是不同的模型通常不会在测试集上产生完全相同的误差。</p>
+<p>一种常见的准备bagging模型的数据方法是进行有放回的抽样。即，如果原始训练数据集的样本个数为n的话，从中有放回地抽样n次，得到某一个模型的训练数据，这个数据集大约包含原始数据集中2/3的不同样本（周志华的《机器学习》中有推导）。这样每一个模型的训练数据集各不相同，能减少模型直接误差的相关性（协方差）。</p>
+<p>对于神经网络来说，即使不同模型的训练数据集一样，模型也能从模型平均中受益，因为神经网络有足够多的不同的解。神经网络中随机初始化的差异、小批量的随机选择、 超参数的差异或不同输出的非确定性实现往往足以使得集成中的不同成员具有部分独立的误差。</p>
+<p>不过并不是所有的集成技术都是为了对单个模型进行正则。boosting就是构建比单个模型容量更高的集成。boosting会把不同的神经网络模型加载一起，或向一个神经网络中逐步加节点。</p>
+<h3 id="12-Dropout"><a href="#12-Dropout" class="headerlink" title="12. Dropout"></a>12. Dropout</h3><p>可以认为Dropout是一种近似的ensemble方法。<br>其具体做法不再赘述。<br>书中有对权重比例推断规则(weight scalling inference rule，在用dropout训练得出的模型进行推断时，在权重上直接乘以节点保留概率，然后进行前向传播)的一些推导，即论证这种做法的正确性。公式太复杂，懒得打了。</p>
+<p>Dropout的优点：</p>
+<ol>
+<li>在不增加时间和空间复杂度的情况下，实现指数级模型数据的ensemble。</li>
+<li>适用于各种模型和训练过程，如DNN，概率模型，RBM， RNN。</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>减少了模型的有效容量，所以要增加模型的规模。对于非常大的数据集，正则化带来的泛化误差减少的很小，所以其收益可能不足以抵消计算代价增加。</li>
+<li>只有极少的训练样本时，dropout不会很有效。</li>
+</ol>
+<p>对于dropout的一些观点：</p>
+<ol>
+<li>在线性回归上进行dropout，相当于每个特征上有不同权重系数的L2正则，这一系数由各特征的方差决定。但是对于深度模型来说，dropout跟权重衰减是不等同的。</li>
+<li>dropout unit还启发了dropout connect, 随机池化等。</li>
+<li>除了丢掉与保留，还可以引入其他类型的随机化，如一个随机实数权重值，来实现这种参数共享的bagging。</li>
+<li>Dropout强大的大部分原因来自施加到隐藏单元的掩码噪声，这可以看作是对输入内容的信息高度智能化、自适应破坏的一种形式，而不是对输入原始值的破坏。</li>
+<li>Dropout的另一个重要的点是其噪声是乘性的。</li>
+</ol>
+<h3 id="13-Adversarial-Training"><a href="#13-Adversarial-Training" class="headerlink" title="13. Adversarial Training"></a>13. Adversarial Training</h3><p>人为地在x的附近构造一个新的样本x’（对抗样本）,对于人类来说可能分辨不出来两者的区别，但是模型可能会对这两者推断出不同的结果。<br>之所以对抗样本上模型会做错，是因为模型过度线性。假如扰动大小是$\epsilon$，那么权重为$\omega$的函数，可以改变$\epsilon \Vert \omega \Vert_1$之多。如果$\omega$是高维的，那么这变化会是一个很大的数。</p>
+<p>对抗训练通过鼓励网络在训练数据附近的局部区域恒定来限制这一高度敏感的局部线性行为。这可以被看作是一种明确地向监督神经网络引入局部恒定先验的方法。</p>
+<p>基于对抗样本实现的一种半监督的学习方法是：如果模型在$x$处标记的label是$\hat{y}$，如果模型是高品质的，那么这个$\hat{y}$很可能是对的，我们在$x’$附近搜索一个标记为$y’， y’ \neq \hat{y}$的对抗样本，再给$x’$赋予标签$\hat{y}$，并进行训练，从而鼓励分类器给$x$和$x’$赋予相同的标签。</p>
+<h3 id="14-Tangent-Distance-Tangent-Prop-and-ManifoldTangent-Classiﬁer"><a href="#14-Tangent-Distance-Tangent-Prop-and-ManifoldTangent-Classiﬁer" class="headerlink" title="14. Tangent Distance, Tangent Prop and ManifoldTangent Classiﬁer"></a>14. Tangent Distance, Tangent Prop and ManifoldTangent Classiﬁer</h3>
       
     </div>
     
