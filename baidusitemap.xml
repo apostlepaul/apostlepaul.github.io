@@ -4,8 +4,28 @@
 
     
   <url>
+    <loc>http://yoursite.com/2018/04/07/flower-book-Optimization-for-Training-DeepModels/</loc>
+    <lastmod>2018-05-08T13:47:16.000Z</lastmod>
+    <data>
+        <display>
+        <title>flower book: Optimization for Training DeepModels</title>
+        <pubTime>2018-04-07T05:19:01.000Z</pubTime>
+        
+        <tag>deep learning</tag>
+         
+         
+           
+             
+              <breadCrumb title="reading notes" url="http://yoursite.com/categories/reading-notes/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2018/03/18/flower-book-Regularization-for-Deep-Learning/</loc>
-    <lastmod>2018-04-06T17:33:27.000Z</lastmod>
+    <lastmod>2018-04-07T05:20:35.000Z</lastmod>
     <data>
         <display>
         <title>flower book: Regularization for Deep Learning</title>
@@ -414,9 +434,9 @@
         <title>Tips for 背包问题</title>
         <pubTime>2017-09-09T06:37:22.000Z</pubTime>
         
-        <tag>DP</tag>
-         
         <tag>tips</tag>
+         
+        <tag>DP</tag>
          
          
            

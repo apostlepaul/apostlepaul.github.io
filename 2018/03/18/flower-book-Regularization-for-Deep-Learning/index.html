@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Paul&#39;s Gardon">
 <meta property="og:description" content="本章内容：  范数惩罚 数据增强 稀疏表示 集成方法 Dropout 对抗训练">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-06T17:33:27.000Z">
+<meta property="og:updated_time" content="2018-04-07T05:20:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flower book: Regularization for Deep Learning">
 <meta name="twitter:description" content="本章内容：  范数惩罚 数据增强 稀疏表示 集成方法 Dropout 对抗训练">
@@ -459,7 +459,7 @@ log p(\omega) = {\Sigma}_{i}log Laplace({\omega}_{i};0,\frac{1}{\alpha}) = -\alp
 <h3 id="9-Parameter-Tying-and-Parameter-Sharing"><a href="#9-Parameter-Tying-and-Parameter-Sharing" class="headerlink" title="9. Parameter Tying and Parameter Sharing"></a>9. Parameter Tying and Parameter Sharing</h3><p>以上讨论的对参数进行约束或惩罚，都是相对于固定的区域或点。但有时候，但我们根据相关领域和模型结构方面的知识得知模型参数之间应该存在一些相关性。就是一个模型的参数应该跟另外一个模型的参数接近。<br>例如两个模型，要学习相同的任务，但是输入稍有不同，</p>
 <script type="math/tex; mode=display">
 \hat{y}^A = f(\omega^A, x)
-\hat{y}^B = f(\omega^B, x)</script><p>为了使这两个模型的参数彼此接近，我们可以添加正则化项$\Omeag(\omega^A, \omega^B) = ||\omega^A-\omega^B||^2$</p>
+\hat{y}^B = f(\omega^B, x)</script><p>为了使这两个模型的参数彼此接近，我们可以添加正则化项$\Omega(\omega^A, \omega^B) = ||\omega^A-\omega^B||^2$</p>
 <p>另外，更流行的一种方法是强迫某些参数相等，即参数共享。这种方法的一个有点是，减少了参数数量。CNN中就使用了这种方法。自然图像有许多统计属性是对转换不变的。例如，猫的照片即使向右边移了一 个像素，仍保持猫的照片。CNN通过在图像多个位置共享参数来考虑这个特性。</p>
 <h3 id="10-Sparse-Representations"><a href="#10-Sparse-Representations" class="headerlink" title="10. Sparse Representations"></a>10. Sparse Representations</h3><p>以上讨论的都是通过给模型的参数添加惩罚项来进行权重衰减，另外一种策略是惩罚神经网络中的激活单元，估计激活单元变稀疏。</p>
 <p>表示的稀疏描述的是这样一种表示：表示中很多元素都是0。</p>
@@ -539,6 +539,10 @@ log p(\omega) = {\Sigma}_{i}log Laplace({\omega}_{i};0,\frac{1}{\alpha}) = -\alp
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/07/flower-book-Optimization-for-Training-DeepModels/" rel="prev" title="flower book: Optimization for Training DeepModels">
+                flower book: Optimization for Training DeepModels <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -624,7 +628,7 @@ log p(\omega) = {\Sigma}_{i}log Laplace({\omega}_{i};0,\frac{1}{\alpha}) = -\alp
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

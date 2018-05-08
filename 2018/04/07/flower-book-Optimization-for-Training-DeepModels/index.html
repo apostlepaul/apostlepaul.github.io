@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="python," />
+  <meta name="keywords" content="deep learning," />
 
 
 
@@ -95,18 +95,18 @@
 
 
 
-<meta name="description" content="开始学习第三部分，把函数视作对象。第五章一等函数。">
-<meta name="keywords" content="python">
+<meta name="description" content="本章内容：  学习和优化的区别 神经网络优化中的挑战 基本算法 参数初始化策略 自适应学习率算法 二阶近似方法 优化策略和元算法">
+<meta name="keywords" content="deep learning">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《流畅的python》读书笔记（五）">
-<meta property="og:url" content="http://yoursite.com/2017/09/22/《流畅的python》读书笔记（五）/index.html">
+<meta property="og:title" content="flower book: Optimization for Training DeepModels">
+<meta property="og:url" content="http://yoursite.com/2018/04/07/flower-book-Optimization-for-Training-DeepModels/index.html">
 <meta property="og:site_name" content="Paul&#39;s Gardon">
-<meta property="og:description" content="开始学习第三部分，把函数视作对象。第五章一等函数。">
+<meta property="og:description" content="本章内容：  学习和优化的区别 神经网络优化中的挑战 基本算法 参数初始化策略 自适应学习率算法 二阶近似方法 优化策略和元算法">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-22T02:45:20.000Z">
+<meta property="og:updated_time" content="2018-05-08T13:47:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《流畅的python》读书笔记（五）">
-<meta name="twitter:description" content="开始学习第三部分，把函数视作对象。第五章一等函数。">
+<meta name="twitter:title" content="flower book: Optimization for Training DeepModels">
+<meta name="twitter:description" content="本章内容：  学习和优化的区别 神经网络优化中的挑战 基本算法 参数初始化策略 自适应学习率算法 二阶近似方法 优化策略和元算法">
 
 
 
@@ -136,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/22/《流畅的python》读书笔记（五）/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/07/flower-book-Optimization-for-Training-DeepModels/"/>
 
 
 
 
 
-  <title>《流畅的python》读书笔记（五） | Paul's Gardon</title>
+  <title>flower book: Optimization for Training DeepModels | Paul's Gardon</title>
   
 
 
@@ -279,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/22/《流畅的python》读书笔记（五）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/07/flower-book-Optimization-for-Training-DeepModels/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ApostlePaul">
@@ -296,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">《流畅的python》读书笔记（五）</h1>
+          <h1 class="post-title" itemprop="name headline">flower book: Optimization for Training DeepModels</h1>
         
 
         <div class="post-meta">
@@ -308,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-22T10:45:20+08:00">
-                2017-09-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-07T13:19:01+08:00">
+                2018-04-07
               </time>
             
 
@@ -373,54 +373,48 @@
       
 
       
-        <p>开始学习第三部分，把函数视作对象。第五章一等函数。</p>
-<a id="more"></a>
-<h2 id="第5章-一等函数"><a href="#第5章-一等函数" class="headerlink" title="第5章 一等函数"></a>第5章 一等函数</h2><p>一定对象的定义：</p>
-<ul>
-<li>在运行时创建</li>
-<li>能赋值给变量或数据结构中的元素</li>
-<li>能作为参数传给函数</li>
-<li>能作为函数的返回结果<br>python中的函数就是一等对象，也叫“一等函数”。</li>
-</ul>
-<h4 id="1-把函数视作对象"><a href="#1-把函数视作对象" class="headerlink" title="1.把函数视作对象"></a>1.把函数视作对象</h4><p>__doc___属性用于生成对象的帮助文博。可用help(func)来查看。<br>python中函数是可以作为一个参数传给另外一个函数的。</p>
-<h4 id="2-高阶函数"><a href="#2-高阶函数" class="headerlink" title="2.高阶函数"></a>2.高阶函数</h4><p>接收函数为参数，或者吧函数作为结果返回的函数，叫高阶函数。例如map函数就是高阶函数。</p>
-<p>map/filter/reduce/apply是最常见的高阶函数。不过它们都有更好的替代品。</p>
-<p>map和filter可以用生成器表达式来代替。</p>
-<p>书上说reduce可以用sum代替，但是我觉得reduce的功能不局限于sum。</p>
-<p>all()和any()也是归约函数，用来判断真值的。</p>
-<h4 id="3-匿名函数"><a href="#3-匿名函数" class="headerlink" title="3. 匿名函数"></a>3. 匿名函数</h4><h4 id="4-可调用对象"><a href="#4-可调用对象" class="headerlink" title="4. 可调用对象"></a>4. 可调用对象</h4><p>判断对象是否可调用，就是说，对象后面能否加括号，用callable(obj)。<br>可调用的对象包括：</p>
-<ul>
-<li>用户定义的函数</li>
-<li>内置函数</li>
-<li>内置方法</li>
-<li>方法</li>
-<li>类</li>
-<li>类的实例</li>
-<li>生成器函数</li>
-</ul>
-<h4 id="5-用户定义的可调用类型"><a href="#5-用户定义的可调用类型" class="headerlink" title="5. 用户定义的可调用类型"></a>5. 用户定义的可调用类型</h4><p>在对象中实现__call___，对象就是可调用的，所谓创建了函数类对象。</p>
-<h4 id="6-函数内省"><a href="#6-函数内省" class="headerlink" title="6. 函数内省"></a>6. 函数内省</h4><p>函数专有而用户定义的对象没有的属性包括：</p>
-<ul>
-<li>annotations</li>
-<li>call</li>
-<li>closure</li>
-<li>code</li>
-<li>defaults</li>
-<li>get</li>
-<li>globals</li>
-<li>kwdefaults</li>
-<li>name</li>
-<li>qualname</li>
-</ul>
-<h4 id="7-从定位参数到仅限关键字参数"><a href="#7-从定位参数到仅限关键字参数" class="headerlink" title="7. 从定位参数到仅限关键字参数"></a>7. 从定位参数到仅限关键字参数</h4><p>仅限关键字参数是python3的新特性。</p>
-<h4 id="8-获取关于参数的信息"><a href="#8-获取关于参数的信息" class="headerlink" title="8. 获取关于参数的信息"></a>8. 获取关于参数的信息</h4><p>如果要获取参数信息，可以用inspect模块。inspect模块的signature函数。</p>
-<h4 id="9-函数注解"><a href="#9-函数注解" class="headerlink" title="9. 函数注解"></a>9. 函数注解</h4><p>python3才有函数注解。</p>
-<h4 id="10-支持函数式编程的包"><a href="#10-支持函数式编程的包" class="headerlink" title="10. 支持函数式编程的包"></a>10. 支持函数式编程的包</h4><h5 id="10-1-operator模块"><a href="#10-1-operator模块" class="headerlink" title="10.1 operator模块"></a>10.1 operator模块</h5><p>operator中有很多算术运算函数，如mul表示乘法。operator.mul = lambda a,b a*b<br>operator中还有一类是从序列中取出元素或读取对象属性。operator.itemgetter = lambda fields: fields[1]<br>attrgetter这个东西，配合namedtuple，很有用啊。<br>想要看看operator中有哪些函数？<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>[name <span class="keyword">for</span> name <span class="keyword">in</span> dir(operator <span class="keyword">if</span> <span class="keyword">not</span> name.startswith(<span class="string">'_'</span>))]</div><div class="line">[<span class="string">'abs'</span>, <span class="string">'add'</span>, <span class="string">'and_'</span>, <span class="string">'attrgetter'</span>, <span class="string">'concat'</span>, <span class="string">'contains'</span>, <span class="string">'countOf'</span>, <span class="string">'delitem'</span>, <span class="string">'eq'</span>, <span class="string">'floordiv'</span>, <span class="string">'ge'</span>, <span class="string">'getitem'</span>, <span class="string">'gt'</span>, <span class="string">'iadd'</span>, <span class="string">'iand'</span>, <span class="string">'iconcat'</span>, <span class="string">'ifloordiv'</span>, <span class="string">'ilshift'</span>, <span class="string">'imatmul'</span>, <span class="string">'imod'</span>, <span class="string">'imul'</span>, <span class="string">'index'</span>, <span class="string">'indexOf'</span>, <span class="string">'inv'</span>, <span class="string">'invert'</span>, <span class="string">'ior'</span>, <span class="string">'ipow'</span>, <span class="string">'irshift'</span>, <span class="string">'is_'</span>, <span class="string">'is_not'</span>, <span class="string">'isub'</span>, <span class="string">'itemgetter'</span>, <span class="string">'itruediv'</span>, <span class="string">'ixor'</span>, <span class="string">'le'</span>, <span class="string">'length_hint'</span>, <span class="string">'lshift'</span>, <span class="string">'lt'</span>, <span class="string">'matmul'</span>, <span class="string">'methodcaller'</span>, <span class="string">'mod'</span>, <span class="string">'mul'</span>, <span class="string">'ne'</span>, <span class="string">'neg'</span>, <span class="string">'not_'</span>, <span class="string">'or_'</span>, <span class="string">'pos'</span>, <span class="string">'pow'</span>, <span class="string">'rshift'</span>, <span class="string">'setitem'</span>, <span class="string">'sub'</span>, <span class="string">'truediv'</span>, <span class="string">'truth'</span>, <span class="string">'xor'</span>]</div></pre></td></tr></table></figure></p>
-<p>一些基本的操作都在这里了，不用自己写了。<br>例如，countOf就很有用啊。<br>operator模块里还有methodcaller这个方法，跟itemgetter的用法类似。可以把函数名作为一个字符串传给它，它返回这个函数。例如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> operator <span class="keyword">import</span> methodcaller</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>upcase = methodcaller(<span class="string">'upper'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>s = <span class="string">'The time has come'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>upcase(s)</div><div class="line"><span class="string">'THE TIME HAS COME'</span></div></pre></td></tr></table></figure></p>
-<p>简直吊炸天，我可以把一堆函数预先写好，然后用哪个函数处理数据，把这个函数名当做参数传进去就行了。</p>
-<h5 id="10-2-functools-partial冻结参数"><a href="#10-2-functools-partial冻结参数" class="headerlink" title="10.2 functools.partial冻结参数"></a>10.2 functools.partial冻结参数</h5><p>partial可以冻结一部分参数，就是把一个函数的一部分参数弄个默认值，形成一个新的api。<br>最简单的例子。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> operator <span class="keyword">import</span> mul</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> functools <span class="keyword">import</span> partial</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>triple = partial(mul, <span class="number">3</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>triple(<span class="number">7</span>)</div><div class="line"><span class="number">21</span></div></pre></td></tr></table></figure></p>
-<p>遇到函数参数需要固定的情况，就不用重复造轮子了。</p>
-
+        <p>本章内容：</p>
+<ol>
+<li>学习和优化的区别</li>
+<li>神经网络优化中的挑战</li>
+<li>基本算法</li>
+<li>参数初始化策略</li>
+<li>自适应学习率算法</li>
+<li>二阶近似方法</li>
+<li>优化策略和元算法<a id="more"></a>
+</li>
+</ol>
+<h3 id="1-How-Learning-Diﬀers-from-Pure-Optimization"><a href="#1-How-Learning-Diﬀers-from-Pure-Optimization" class="headerlink" title="1. How Learning Diﬀers from Pure Optimization"></a>1. How Learning Diﬀers from Pure Optimization</h3><p>深度模型训练的优化算法跟传统的优化算法不一样，主要体现在前者通常不是直接进行的。<br>具体来讲：我们关心的可能是测试集上某个难解的度量P，但是却需要通过降低一个代价函数$J(\theta)$来间接地优化P。<br>典型的，我们会去优化训练集上的代价函数，即：</p>
+<script type="math/tex; mode=display">
+J(\theta) = \mathbb{E}_{(x,y)~\hat{p}_{data}}L(f(x;\theta),y), \tag{1}\label{1}</script><p>但其实，我们更期望优化的是数据生成分布$p_{data}$上的代价函数：</p>
+<script type="math/tex; mode=display">
+J(\theta) = \mathbb{E}_{(x,y)~p_{data}}L(f(x;\theta),y). \tag{1}\label{1}</script><h4 id="1-1-Empirical-Risk-Minimization"><a href="#1-1-Empirical-Risk-Minimization" class="headerlink" title="1.1 Empirical Risk Minimization"></a>1.1 Empirical Risk Minimization</h4><p>机器学习算法的目标是降低公式(\ref{2})所表达的泛化误差期望。这个量也叫做风险。<br>需要注意的是，假如我们知道真实的分布$p_{data}(x,y)$，那么最小化风险将会是一个优化算法问题。如果我们不知道这个真实的分布，而只有一个训练集，那么我们面对的是一个机器学习问题。<br>把机器学习问题转变为优化问题的最简单的办法就是最小化训练集上的期望损失。用训练集上的经验分布代替真实的分布：</p>
+<script type="math/tex; mode=display">
+ \mathbb{E}_{(x,y)~\hat{p}_{data}}L(f(x;\theta),y) = \frac{1}{m}\Sigma_{i=1}^{m}L(f(x^{(i)});\theta),y^{(i)}，</script><p>已经有一些理论证明，在满足一定的条件的时候，经验风险的降低会使风险降低。<br>但是，使用最小化经验风险的方法有两个问题：</p>
+<ol>
+<li>但是经验风险最小化容易导致过拟合，高容量的模型很容易就记住训练集了，</li>
+<li>一些有用的代价函数没有有用的微分，例如0-1loss，而大多有效的现代优化算法都是基于梯度下降的。</li>
+</ol>
+<p>所以在深度学习的场景中，我们很少直接用经验风险最小化的方法，反之，我们会使用一个稍有不同的方法，我们真正优化的目标会更加不同于我们希望优化的目标。</p>
+<h4 id="1-2-Surrogate-Loss-Functions-and-Early-Stopping"><a href="#1-2-Surrogate-Loss-Functions-and-Early-Stopping" class="headerlink" title="1.2 Surrogate Loss Functions and Early Stopping"></a>1.2 Surrogate Loss Functions and Early Stopping</h4><p>我们经常会使用到代理损失函数，原因是：</p>
+<ol>
+<li>有时候真正的目标损失函数是不可解的，例如最简单的0-1分类，如果直接用0-1损失，那么这个优化算法将是输入维度的指数级；</li>
+<li>代理损失函数能学到更多，如训练集上的0-1损失已经为0的时候，代理损失函数的继续训练会提供测试集上的效果，会增强鲁棒性。</li>
+</ol>
+<p>纯优化算法经常会在一个局部极小值点停止迭代，但是机器学习优化算法不会，机器学习优化算法满足了提前停止的条件（如在测试集上的真实损失函数已经ok）就会停止，而不care当前的代理损失函数的在停止时的梯度是大是小。</p>
+<h4 id="1-3-Batch-and-Minibatch-Algorithms"><a href="#1-3-Batch-and-Minibatch-Algorithms" class="headerlink" title="1.3 Batch and Minibatch Algorithms"></a>1.3 Batch and Minibatch Algorithms</h4><p>机器学习算法跟一般优化算法的一个区别是其目标函数同城可以分解为训练样本上的求和。<br>在实践中，通常用一部分样本来估计整个代价函数的期望，然后对参数进行更新。原因在于：</p>
+<ol>
+<li>增加样本数，计算代价增大，获得的收益却低于线性的。例如样本均值标准差为$\delta/\sqrt(n)$，其中$\delta$是样本真实标准差。分母表明了，样本数从100增加到100000，计算代价增加了100倍，收益却只有10倍。</li>
+<li>实际的训练集中有冗余，大量的样本对梯度的贡献是相似的。</li>
+</ol>
+<p>有些算法对采样误差很敏感，可能有两个原因：</p>
+<ol>
+<li>算法使用的信息很难在小数据集上准确估计；</li>
+<li>使用了会放大采用误差的信息。</li>
+</ol>
+<p>要保证minibatch是随机抽取的，因为现实中很多样本采集在顺序上是相关的。</p>
+<p>从online learning我们可以看到SGD会减小泛化误差的原因：模型看到的每一个样本，都是从数据生成分布$p_{data}(x,y)$中得来的，没有重复。所以我们可以从mini batch中计算出泛化误差梯度的无偏估计。<br>分minibatch常用的做法是，讲数据打乱，分成相应的minibatch并存储，在模型训练的时候，用数据训练多遍模型。<br>需要注意的是只有在第一遍的时候，得到的是无偏估计，因为数据没有被重用，以后得到的都是有偏估计。但依然要训练多遍的原因是：多遍训练给训练误差带来的降低，与增加训练误差和评估误差的gap相比，还是有收益的。</p>
+<h3 id="2-Challenges-in-Neural-Network-Optimization"><a href="#2-Challenges-in-Neural-Network-Optimization" class="headerlink" title="2. Challenges in Neural Network Optimization"></a>2. Challenges in Neural Network Optimization</h3><h3 id="3-Basic-Algorithms"><a href="#3-Basic-Algorithms" class="headerlink" title="3. Basic Algorithms"></a>3. Basic Algorithms</h3><h3 id="4-Parameter-Initialization-Strategies"><a href="#4-Parameter-Initialization-Strategies" class="headerlink" title="4. Parameter Initialization Strategies"></a>4. Parameter Initialization Strategies</h3><h3 id="5-Algorithms-with-Adaptive-Learning-Rates"><a href="#5-Algorithms-with-Adaptive-Learning-Rates" class="headerlink" title="5. Algorithms with Adaptive Learning Rates"></a>5. Algorithms with Adaptive Learning Rates</h3><h3 id="6-Approximate-Second-Order-Methods"><a href="#6-Approximate-Second-Order-Methods" class="headerlink" title="6. Approximate Second-Order Methods"></a>6. Approximate Second-Order Methods</h3><h3 id="7-Optimization-Strategies-and-Meta-Algorithms"><a href="#7-Optimization-Strategies-and-Meta-Algorithms" class="headerlink" title="7. Optimization Strategies and Meta-Algorithms"></a>7. Optimization Strategies and Meta-Algorithms</h3>
       
     </div>
     
@@ -437,7 +431,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python/" rel="tag"># python</a>
+            <a href="/tags/deep-learning/" rel="tag"># deep learning</a>
           
         </div>
       
@@ -450,8 +444,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/18/numpy常用函数/" rel="next" title="numpy常用函数">
-                <i class="fa fa-chevron-left"></i> numpy常用函数
+              <a href="/2018/03/18/flower-book-Regularization-for-Deep-Learning/" rel="next" title="flower book: Regularization for Deep Learning">
+                <i class="fa fa-chevron-left"></i> flower book: Regularization for Deep Learning
               </a>
             
           </div>
@@ -459,10 +453,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/06/《流畅的python》读书笔记（七）/" rel="prev" title="《流畅的python》读书笔记（七）">
-                《流畅的python》读书笔记（七） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -605,7 +595,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第5章-一等函数"><span class="nav-text">第5章 一等函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-把函数视作对象"><span class="nav-text">1.把函数视作对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-高阶函数"><span class="nav-text">2.高阶函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-匿名函数"><span class="nav-text">3. 匿名函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-可调用对象"><span class="nav-text">4. 可调用对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-用户定义的可调用类型"><span class="nav-text">5. 用户定义的可调用类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-函数内省"><span class="nav-text">6. 函数内省</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-从定位参数到仅限关键字参数"><span class="nav-text">7. 从定位参数到仅限关键字参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-获取关于参数的信息"><span class="nav-text">8. 获取关于参数的信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-函数注解"><span class="nav-text">9. 函数注解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-支持函数式编程的包"><span class="nav-text">10. 支持函数式编程的包</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#10-1-operator模块"><span class="nav-text">10.1 operator模块</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-2-functools-partial冻结参数"><span class="nav-text">10.2 functools.partial冻结参数</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-How-Learning-Diﬀers-from-Pure-Optimization"><span class="nav-text">1. How Learning Diﬀers from Pure Optimization</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-Empirical-Risk-Minimization"><span class="nav-text">1.1 Empirical Risk Minimization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Surrogate-Loss-Functions-and-Early-Stopping"><span class="nav-text">1.2 Surrogate Loss Functions and Early Stopping</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-Batch-and-Minibatch-Algorithms"><span class="nav-text">1.3 Batch and Minibatch Algorithms</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Challenges-in-Neural-Network-Optimization"><span class="nav-text">2. Challenges in Neural Network Optimization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Basic-Algorithms"><span class="nav-text">3. Basic Algorithms</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Parameter-Initialization-Strategies"><span class="nav-text">4. Parameter Initialization Strategies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Algorithms-with-Adaptive-Learning-Rates"><span class="nav-text">5. Algorithms with Adaptive Learning Rates</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Approximate-Second-Order-Methods"><span class="nav-text">6. Approximate Second-Order Methods</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Optimization-Strategies-and-Meta-Algorithms"><span class="nav-text">7. Optimization Strategies and Meta-Algorithms</span></a></li></ol></div>
             
 
           </div>
@@ -781,9 +771,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/09/22/《流畅的python》读书笔记（五）/';
-          this.page.identifier = '2017/09/22/《流畅的python》读书笔记（五）/';
-          this.page.title = '《流畅的python》读书笔记（五）';
+          this.page.url = 'http://yoursite.com/2018/04/07/flower-book-Optimization-for-Training-DeepModels/';
+          this.page.identifier = '2018/04/07/flower-book-Optimization-for-Training-DeepModels/';
+          this.page.title = 'flower book: Optimization for Training DeepModels';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://paul.disqus.com/embed.js';
@@ -827,6 +817,26 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 
