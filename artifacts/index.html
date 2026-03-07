@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <title>Artifacts 代码演示</title>
+  <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"/>
+  <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css"/>
+  <style>
+    /* ===== Artifacts Page Styles ===== */
+    .artifacts-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+      font-family: "Lato", sans-serif;
+    }
+
+    .artifacts-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .artifacts-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .artifacts-header p {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    /* Tab bar */
+    .artifact-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .artifact-tab {
+      padding: 6px 16px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #555;
+      transition: all 0.2s;
+    }
+
+    .artifact-tab:hover {
+      border-color: #222;
+      color: #222;
+    }
+
+    .artifact-tab.active {
+      background: #222;
+      color: #fff;
+      border-color: #222;
+    }
+
+    /* Editor / Preview split */
+    .artifact-workspace {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    @media (max-width: 768px) {
+      .artifact-workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Editor panel */
+    .editor-panel {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #ddd;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: #f7f7f7;
+      border-bottom: 1px solid #ddd;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .panel-header .dot-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-red   { background: #ff5f57; }
+    .dot-yellow{ background: #febc2e; }
+    .dot-green { background: #28c840; }
+
+    #code-editor {
+      flex: 1;
+      min-height: 380px;
+      padding: 16px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      border: none;
+      resize: vertical;
+      outline: none;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      tab-size: 2;
+    }
+
+    /* Preview panel */
+    .preview-panel {
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+
+    #preview-frame {
+      flex: 1;
+      border: none;
+      width: 100%;
+      min-height: 420px;
+      background: #fff;
+    }
+
+    /* Run button */
+    .run-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      background: #28c840;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .run-btn:hover { background: #1fa832; }
+
+    /* Gallery of example artifacts */
+    .gallery-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #333;
+      margin: 48px 0 20px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .gallery-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      transform: translateY(-2px);
+    }
+
+    .gallery-card iframe {
+      width: 100%;
+      height: 180px;
+      border: none;
+      pointer-events: none;
+    }
+
+    .gallery-card-info {
+      padding: 12px 14px;
+      border-top: 1px solid #eee;
+    }
+
+    .gallery-card-info h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin: 0 0 4px;
+      color: #333;
+    }
+
+    .gallery-card-info p {
+      font-size: 0.78rem;
+      color: #777;
+      margin: 0;
+    }
+
+    .load-badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 8px;
+      background: #f0f0f0;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      color: #555;
+    }
+
+    /* Hint text */
+    .hint {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.82rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="artifacts-container">
+
+  <div class="artifacts-header">
+    <h1>⚡ Artifacts 代码演示</h1>
+    <p>在左侧编写 HTML / CSS / JS，点击运行即可在右侧实时预览</p>
+  </div>
+
+  <!-- Preset tabs -->
+  <div class="artifact-tabs" id="preset-tabs">
+    <button class="artifact-tab active" data-preset="clock">时钟</button>
+    <button class="artifact-tab" data-preset="chart">柱状图</button>
+    <button class="artifact-tab" data-preset="particle">粒子动画</button>
+    <button class="artifact-tab" data-preset="todo">Todo App</button>
+    <button class="artifact-tab" data-preset="blank">空白</button>
+  </div>
+
+  <!-- Workspace -->
+  <div class="artifact-workspace">
+    <!-- Editor -->
+    <div class="editor-panel">
+      <div class="panel-header">
+        <div class="dot-group">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+        <span>代码编辑器</span>
+        <button class="run-btn" id="run-btn">
+          <i class="fa fa-play"></i> 运行
+        </button>
+      </div>
+      <textarea id="code-editor" spellcheck="false"></textarea>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-panel">
+      <div class="panel-header">
+        <span>预览</span>
+        <span id="preview-status" style="color:#28c840;font-weight:normal;">就绪</span>
+      </div>
+      <iframe id="preview-frame" sandbox="allow-scripts"></iframe>
+    </div>
+  </div>
+
+  <p class="hint">提示：按 Ctrl+Enter 快速运行 &nbsp;|&nbsp; 点击下方示例可加载到编辑器</p>
+
+  <!-- Gallery -->
+  <div class="gallery-title">示例 Artifacts</div>
+  <div class="gallery" id="gallery"></div>
+
+</div>
+
+<script>
+// ===== Preset code snippets =====
+const PRESETS = {
+  clock: `<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { margin:0; display:flex; justify-content:center; align-items:center;
+         height:100vh; background:#1a1a2e; font-family:monospace; }
+  .clock { font-size:3.5rem; color:#e94560; letter-spacing:.1em;
+           text-shadow:0 0 20px #e94560; }
+  .date  { text-align:center; color:#aaa; font-size:.9rem; margin-top:8px; }
+</style>
+</head>
+<body>
+<div>
+  <div class="clock" id="clock"></div>
+  <div class="date"  id="date"></div>
+</div>
+<script>
+  function tick() {
+    var now = new Date();
+    document.getElementById('clock').textContent =
+      now.toLocaleTimeString('zh-CN', {hour12:false});
+    document.getElementById('date').textContent =
+      now.toLocaleDateString('zh-CN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  }
+  tick();
+  setInterval(tick, 1000);
+<\/script>
+</body>
+</html>`,
+
+  chart: `<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { margin:0; padding:20px; background:#fff; font-family:sans-serif; }
+  h3 { text-align:center; color:#333; margin-bottom:20px; }
+  .chart { display:flex; align-items:flex-end; gap:12px;
+           height:200px; padding:0 10px; border-bottom:2px solid #eee; }
+  .bar-wrap { display:flex; flex-direction:column; align-items:center; flex:1; height:100%; justify-content:flex-end; }
+  .bar { width:100%; border-radius:4px 4px 0 0; transition:height .6s ease; }
+  .label { font-size:.75rem; color:#555; margin-top:6px; }
+  .value { font-size:.75rem; color:#fff; font-weight:700;
+           position:absolute; bottom:4px; width:100%; text-align:center; }
+  .bar-wrap { position:relative; }
+</style>
+</head>
+<body>
+<h3>📊 月度学习时长 (小时)</h3>
+<div class="chart" id="chart"></div>
+<script>
+  var data = [
+    {label:'一月', val:28, color:'#4e79a7'},
+    {label:'二月', val:35, color:'#f28e2b'},
+    {label:'三月', val:42, color:'#e15759'},
+    {label:'四月', val:31, color:'#76b7b2'},
+    {label:'五月', val:55, color:'#59a14f'},
+    {label:'六月', val:47, color:'#edc948'},
+  ];
+  var max = Math.max.apply(null, data.map(function(d){return d.val;}));
+  var chart = document.getElementById('chart');
+  data.forEach(function(d) {
+    var h = (d.val / max * 85) + '%';
+    chart.innerHTML += '<div class="bar-wrap"><div class="bar" style="height:'+h+';background:'+d.color+'"><span class="value">'+d.val+'</span></div><div class="label">'+d.label+'</div></div>';
+  });
+<\/script>
+</body>
+</html>`,
+
+  particle: `<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body,canvas { margin:0; display:block; background:#000; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+  var c = document.getElementById('c');
+  var ctx = c.getContext('2d');
+  c.width = window.innerWidth; c.height = window.innerHeight;
+  var particles = [];
+  for(var i=0;i<80;i++){
+    particles.push({
+      x: Math.random()*c.width, y: Math.random()*c.height,
+      r: Math.random()*3+1,
+      dx: (Math.random()-.5)*1.5, dy: (Math.random()-.5)*1.5,
+      hue: Math.random()*360
+    });
+  }
+  function draw(){
+    ctx.fillStyle='rgba(0,0,0,0.15)';
+    ctx.fillRect(0,0,c.width,c.height);
+    particles.forEach(function(p){
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='hsl('+p.hue+',100%,65%)';
+      ctx.fill();
+      p.x+=p.dx; p.y+=p.dy;
+      if(p.x<0||p.x>c.width) p.dx*=-1;
+      if(p.y<0||p.y>c.height) p.dy*=-1;
+      p.hue+=0.5;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+<\/script>
+</body>
+</html>`,
+
+  todo: `<!DOCTYPE html>
+<html>
+<head>
+<style>
+  *{box-sizing:border-box;} body{margin:0;padding:20px;font-family:sans-serif;background:#f9f9f9;}
+  h2{text-align:center;color:#333;}
+  .input-row{display:flex;gap:8px;margin-bottom:16px;}
+  input{flex:1;padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:.9rem;outline:none;}
+  input:focus{border-color:#4e79a7;}
+  button.add{padding:8px 16px;background:#4e79a7;color:#fff;border:none;border-radius:6px;cursor:pointer;}
+  button.add:hover{background:#3a5f85;}
+  ul{list-style:none;padding:0;margin:0;}
+  li{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;
+     border:1px solid #eee;border-radius:6px;margin-bottom:8px;}
+  li.done span{text-decoration:line-through;color:#aaa;}
+  li span{flex:1;font-size:.9rem;}
+  button.del{background:none;border:none;color:#e15759;cursor:pointer;font-size:1rem;}
+  .empty{text-align:center;color:#aaa;padding:20px;}
+</style>
+</head>
+<body>
+<h2>✅ Todo List</h2>
+<div class="input-row">
+  <input id="inp" placeholder="添加新任务…" onkeydown="if(event.key==='Enter')add()"/>
+  <button class="add" onclick="add()">添加</button>
+</div>
+<ul id="list"></ul>
+<div class="empty" id="empty">暂无任务，添加一个试试！</div>
+<script>
+  var todos=[];
+  function render(){
+    var list=document.getElementById('list');
+    var empty=document.getElementById('empty');
+    list.innerHTML='';
+    todos.forEach(function(t,i){
+      var li=document.createElement('li');
+      if(t.done) li.className='done';
+      li.innerHTML='<input type="checkbox"'+(t.done?' checked':'')+' onchange="toggle('+i+')">'
+        +'<span>'+t.text+'</span>'
+        +'<button class="del" onclick="del('+i+')">✕</button>';
+      list.appendChild(li);
+    });
+    empty.style.display=todos.length?'none':'block';
+  }
+  function add(){
+    var v=document.getElementById('inp').value.trim();
+    if(!v) return;
+    todos.push({text:v,done:false});
+    document.getElementById('inp').value='';
+    render();
+  }
+  function toggle(i){ todos[i].done=!todos[i].done; render(); }
+  function del(i){ todos.splice(i,1); render(); }
+  render();
+<\/script>
+</body>
+</html>`,
+
+  blank: `<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { margin: 20px; font-family: sans-serif; color: #333; }
+</style>
+</head>
+<body>
+  <h1>你好，世界！</h1>
+  <p>在左侧编辑代码，点击「运行」查看效果。</p>
+</body>
+</html>`
+};
+
+// ===== Gallery examples (subset, rendered inline) =====
+var GALLERY = [
+  { preset:'clock',    title:'数字时钟',  desc:'实时时钟 + 日期显示' },
+  { preset:'chart',    title:'柱状图',    desc:'月度学习时长可视化' },
+  { preset:'particle', title:'粒子动画',  desc:'Canvas 彩色粒子效果' },
+  { preset:'todo',     title:'Todo App',  desc:'增删勾选的任务清单' },
+];
+
+// ===== Init =====
+var editor   = document.getElementById('code-editor');
+var frame    = document.getElementById('preview-frame');
+var status   = document.getElementById('preview-status');
+
+function runCode() {
+  var code = editor.value;
+  frame.srcdoc = code;
+  status.textContent = '已更新 ' + new Date().toLocaleTimeString();
+}
+
+function loadPreset(name) {
+  editor.value = PRESETS[name] || PRESETS.blank;
+  runCode();
+}
+
+// Tab click
+document.getElementById('preset-tabs').addEventListener('click', function(e){
+  if (e.target.classList.contains('artifact-tab')) {
+    document.querySelectorAll('.artifact-tab').forEach(function(t){ t.classList.remove('active'); });
+    e.target.classList.add('active');
+    loadPreset(e.target.dataset.preset);
+  }
+});
+
+// Run button
+document.getElementById('run-btn').addEventListener('click', runCode);
+
+// Ctrl+Enter shortcut
+editor.addEventListener('keydown', function(e){
+  if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runCode(); }
+});
+
+// Build gallery
+var galleryEl = document.getElementById('gallery');
+GALLERY.forEach(function(item) {
+  var card = document.createElement('div');
+  card.className = 'gallery-card';
+  card.title = '点击加载到编辑器';
+
+  var f = document.createElement('iframe');
+  f.sandbox = 'allow-scripts';
+  f.srcdoc  = PRESETS[item.preset];
+
+  var info = document.createElement('div');
+  info.className = 'gallery-card-info';
+  info.innerHTML = '<h3>' + item.title + '</h3>'
+    + '<p>' + item.desc + '</p>'
+    + '<span class="load-badge">点击加载</span>';
+
+  card.appendChild(f);
+  card.appendChild(info);
+
+  card.addEventListener('click', function() {
+    document.querySelectorAll('.artifact-tab').forEach(function(t){
+      t.classList.toggle('active', t.dataset.preset === item.preset);
+    });
+    loadPreset(item.preset);
+    window.scrollTo({top: 0, behavior:'smooth'});
+  });
+
+  galleryEl.appendChild(card);
+});
+
+// Load default
+loadPreset('clock');
+</script>
+
+</body>
+</html>
