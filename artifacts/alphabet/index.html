@@ -117,7 +117,10 @@
       const [quizOptions, setQuizOptions] = useState([]);
       const [quizAnswer, setQuizAnswer] = useState(null);
       const [correct, setCorrect] = useState(null);
-      const [score, setScore] = useState(0);
+      const [roundQueue, setRoundQueue] = useState([]);
+      const [attempts, setAttempts] = useState(0);
+      const [roundDone, setRoundDone] = useState(false);
+      const [roundCount, setRoundCount] = useState(0);
 
       useEffect(() => {
         const s = Array.from({ length: 6 }, (_, i) => ({
@@ -136,34 +139,63 @@
         speak(`${data.letter}! ${data.word}`);
       };
 
-      const startQuiz = () => {
-        setMode("quiz");
-        setScore(0);
-        generateQuiz();
+      const loadQuestion = (queue) => {
+        const target = queue[0];
+        const others = letters.filter(l => l.letter !== target.letter)
+          .sort(() => Math.random() - 0.5).slice(0, 3);
+        const options = [...others, target].sort(() => Math.random() - 0.5);
+        setSelected(target);
+        setQuizOptions(options);
+        setQuizAnswer(target);
+        setCorrect(null);
+        speak(`Which letter is... ${target.letter}?`);
       };
 
-      const generateQuiz = () => {
-        const correct = letters[Math.floor(Math.random() * letters.length)];
-        const others = letters.filter(l => l.letter !== correct.letter);
-        const shuffled = others.sort(() => Math.random() - 0.5).slice(0, 3);
-        const options = [...shuffled, correct].sort(() => Math.random() - 0.5);
-        setSelected(correct);
-        setQuizOptions(options);
-        setQuizAnswer(correct);
-        setCorrect(null);
-        speak(`Which letter is... ${correct.letter}?`);
+      const startRound = (isNewRound = false) => {
+        const shuffled = [...letters].sort(() => Math.random() - 0.5);
+        setRoundQueue(shuffled);
+        setAttempts(0);
+        setRoundDone(false);
+        if (isNewRound) setRoundCount(c => c + 1);
+        loadQuestion(shuffled);
+      };
+
+      const startQuiz = () => {
+        setMode("quiz");
+        setRoundCount(1);
+        const shuffled = [...letters].sort(() => Math.random() - 0.5);
+        setRoundQueue(shuffled);
+        setAttempts(0);
+        setRoundDone(false);
+        loadQuestion(shuffled);
       };
 
       const handleQuizAnswer = (option) => {
         const isCorrect = option.letter === quizAnswer.letter;
         setCorrect(isCorrect);
+        setAttempts(a => a + 1);
         if (isCorrect) {
-          setScore(s => s + 1);
           speak("Great job! Correct!");
+          const newQueue = roundQueue.slice(1);
+          setRoundQueue(newQueue);
+          if (newQueue.length === 0) {
+            setRoundDone(true);
+            speak("Amazing! You finished the round!");
+          } else {
+            setTimeout(() => loadQuestion(newQueue), 1500);
+          }
         } else {
           speak(`Oops! That is ${option.letter}. The answer is ${quizAnswer.letter}!`);
+          const remaining = roundQueue.slice(1);
+          const insertAt = 1 + Math.floor(Math.random() * Math.max(remaining.length, 1));
+          const newQueue = [
+            ...remaining.slice(0, insertAt),
+            roundQueue[0],
+            ...remaining.slice(insertAt),
+          ];
+          setRoundQueue(newQueue);
+          setTimeout(() => loadQuestion(newQueue), 1800);
         }
-        setTimeout(() => generateQuiz(), 2000);
       };
 
       return (
@@ -316,8 +348,39 @@
                     </button>
                   </div>
                 </>
+              ) : roundDone ? (
+                <div style={{ textAlign: "center", animation: "pop 0.4s ease" }}>
+                  <div style={{ fontSize: "60px", marginBottom: "8px" }}>🎊</div>
+                  <div style={{ fontSize: "28px", color: "#FF6B6B", marginBottom: "8px" }}>
+                    第 {roundCount} 轮完成！
+                  </div>
+                  <div style={{ fontSize: "20px", color: "#555", marginBottom: "4px" }}>
+                    用了 <strong style={{ color: "#FF9F43" }}>{attempts}</strong> 次答完了所有 26 个字母
+                  </div>
+                  <div style={{ fontSize: "15px", color: "#aaa", marginBottom: "24px" }}>
+                    {attempts === 26 ? "🌟 完美！一次全对！" : attempts <= 30 ? "👍 非常棒！" : "💪 继续加油！"}
+                  </div>
+                  <button onClick={() => startRound(true)}
+                    style={{
+                      padding: "14px 36px",
+                      borderRadius: "50px",
+                      border: "none",
+                      background: "#FF6B6B",
+                      color: "#fff",
+                      fontSize: "22px",
+                      fontFamily: "'Fredoka One', cursive",
+                      cursor: "pointer",
+                      boxShadow: "0 6px 20px #FF6B6B55",
+                      outline: "none",
+                    }}>
+                    再来一轮 🔄
+                  </button>
+                </div>
               ) : (
                 <>
+                  <div style={{ fontSize: "14px", color: "#aaa", marginBottom: "4px" }}>
+                    第 {roundCount} 轮 · 进度 {26 - roundQueue.length} / 26
+                  </div>
                   <p style={{ fontSize: "22px", color: "#888", margin: "0 0 8px" }}>Which letter is...</p>
                   <div style={{ fontSize: "80px", marginBottom: "8px" }}>{selected.emoji}</div>
                   <div style={{ fontSize: "28px", color: "#555", marginBottom: "20px" }}>{selected.word}</div>
@@ -337,7 +400,7 @@
                           border: `3px solid ${
                             correct !== null
                               ? opt.letter === quizAnswer.letter ? "#1DD1A1"
-                              : correct === false && opt.letter === selected.letter ? "#FF6B6B"
+                              : correct === false && opt.letter === quizAnswer?.letter ? "#FF6B6B"
                               : "#eee"
                               : opt.color
                           }`,
@@ -345,7 +408,7 @@
                           fontSize: "28px",
                           fontFamily: "'Fredoka One', cursive",
                           color: opt.color,
-                          cursor: "pointer",
+                          cursor: correct === null ? "pointer" : "default",
                           transition: "all 0.2s",
                           outline: "none",
                           lineHeight: 1.2,
@@ -357,12 +420,12 @@
 
                   {correct !== null && (
                     <div style={{ marginTop: "16px", fontSize: "28px", animation: "pop 0.3s ease" }}>
-                      {correct ? "🎉 Correct!" : "😊 Keep trying!"}
+                      {correct ? "🎉 Correct!" : "😊 再试一次！"}
                     </div>
                   )}
 
-                  <div style={{ marginTop: "12px", fontSize: "20px", color: "#888" }}>
-                    Score: ⭐ {score}
+                  <div style={{ marginTop: "12px", fontSize: "16px", color: "#bbb" }}>
+                    已答 {attempts} 次
                   </div>
                 </>
               )}
