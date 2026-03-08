@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ABC 字母屋</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #FFF8E7; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const letters = [
+      { letter: "A", word: "Apple",     emoji: "🍎", color: "#FF6B6B", bg: "#FFF0F0" },
+      { letter: "B", word: "Ball",      emoji: "⚽", color: "#FF9F43", bg: "#FFF5E6" },
+      { letter: "C", word: "Cat",       emoji: "🐱", color: "#FECA57", bg: "#FFFBE6" },
+      { letter: "D", word: "Dog",       emoji: "🐶", color: "#48DBFB", bg: "#E6FAFE" },
+      { letter: "E", word: "Elephant",  emoji: "🐘", color: "#FF6B6B", bg: "#FFF0F0" },
+      { letter: "F", word: "Fish",      emoji: "🐠", color: "#1DD1A1", bg: "#E6FAF5" },
+      { letter: "G", word: "Grape",     emoji: "🍇", color: "#A29BFE", bg: "#F0EFFE" },
+      { letter: "H", word: "House",     emoji: "🏠", color: "#FD79A8", bg: "#FEF0F5" },
+      { letter: "I", word: "Ice Cream", emoji: "🍦", color: "#FDCB6E", bg: "#FFFAE6" },
+      { letter: "J", word: "Jellyfish", emoji: "🪼", color: "#74B9FF", bg: "#EBF5FF" },
+      { letter: "K", word: "Kite",      emoji: "🪁", color: "#FF7675", bg: "#FFF0F0" },
+      { letter: "L", word: "Lion",      emoji: "🦁", color: "#FDCB6E", bg: "#FFFAE6" },
+      { letter: "M", word: "Moon",      emoji: "🌙", color: "#A29BFE", bg: "#F0EFFE" },
+      { letter: "N", word: "Nest",      emoji: "🪺", color: "#55EFC4", bg: "#E6FAF4" },
+      { letter: "O", word: "Orange",    emoji: "🍊", color: "#FF9F43", bg: "#FFF5E6" },
+      { letter: "P", word: "Panda",     emoji: "🐼", color: "#636E72", bg: "#F0F0F0" },
+      { letter: "Q", word: "Queen",     emoji: "👸", color: "#FD79A8", bg: "#FEF0F5" },
+      { letter: "R", word: "Rainbow",   emoji: "🌈", color: "#FF6B6B", bg: "#FFF0F0" },
+      { letter: "S", word: "Star",      emoji: "⭐", color: "#FECA57", bg: "#FFFBE6" },
+      { letter: "T", word: "Tiger",     emoji: "🐯", color: "#FF9F43", bg: "#FFF5E6" },
+      { letter: "U", word: "Umbrella",  emoji: "☂️", color: "#74B9FF", bg: "#EBF5FF" },
+      { letter: "V", word: "Violin",    emoji: "🎻", color: "#A29BFE", bg: "#F0EFFE" },
+      { letter: "W", word: "Whale",     emoji: "🐳", color: "#48DBFB", bg: "#E6FAFE" },
+      { letter: "X", word: "Xylophone", emoji: "🎵", color: "#FD79A8", bg: "#FEF0F5" },
+      { letter: "Y", word: "Yarn",      emoji: "🧶", color: "#FF7675", bg: "#FFF0F0" },
+      { letter: "Z", word: "Zebra",     emoji: "🦓", color: "#636E72", bg: "#F0F0F0" },
+    ];
+
+    const speak = (text) => {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "en-US";
+        utter.rate = 0.8;
+        utter.pitch = 1.2;
+        window.speechSynthesis.speak(utter);
+      }
+    };
+
+    function Star({ style }) {
+      return (
+        <div style={{
+          position: "absolute",
+          fontSize: "20px",
+          animation: "twinkle 2s infinite",
+          animationDelay: style.delay,
+          ...style,
+        }}>⭐</div>
+      );
+    }
+
+    function LetterCard({ data, isSelected, onClick }) {
+      const [bounce, setBounce] = useState(false);
+
+      const handleClick = () => {
+        setBounce(true);
+        setTimeout(() => setBounce(false), 400);
+        onClick(data);
+      };
+
+      return (
+        <button
+          onClick={handleClick}
+          style={{
+            background: isSelected ? data.color : data.bg,
+            border: `3px solid ${data.color}`,
+            borderRadius: "20px",
+            padding: "12px 8px",
+            cursor: "pointer",
+            transform: bounce ? "scale(1.2) rotate(5deg)" : isSelected ? "scale(1.05)" : "scale(1)",
+            transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s",
+            boxShadow: isSelected ? `0 8px 20px ${data.color}66` : "0 3px 8px rgba(0,0,0,0.1)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "4px",
+            minWidth: "60px",
+            outline: "none",
+          }}
+        >
+          <span style={{
+            fontSize: "18px",
+            fontFamily: "'Fredoka One', cursive",
+            color: isSelected ? "#fff" : data.color,
+            lineHeight: 1,
+          }}>{data.letter} <span style={{ opacity: 0.7 }}>{data.letter.toLowerCase()}</span></span>
+          <span style={{ fontSize: "18px" }}>{data.emoji}</span>
+        </button>
+      );
+    }
+
+    function AlphabetApp() {
+      const [selected, setSelected] = useState(letters[0]);
+      const [showBurst, setShowBurst] = useState(false);
+      const [stars, setStars] = useState([]);
+      const [mode, setMode] = useState("explore");
+      const [quizOptions, setQuizOptions] = useState([]);
+      const [quizAnswer, setQuizAnswer] = useState(null);
+      const [correct, setCorrect] = useState(null);
+      const [score, setScore] = useState(0);
+
+      useEffect(() => {
+        const s = Array.from({ length: 6 }, (_, i) => ({
+          top: `${Math.random() * 80}%`,
+          left: `${Math.random() * 90}%`,
+          delay: `${i * 0.4}s`,
+          opacity: 0.4,
+        }));
+        setStars(s);
+      }, []);
+
+      const handleSelect = (data) => {
+        setSelected(data);
+        setShowBurst(true);
+        setTimeout(() => setShowBurst(false), 600);
+        speak(`${data.letter}! ${data.word}`);
+      };
+
+      const startQuiz = () => {
+        setMode("quiz");
+        setScore(0);
+        generateQuiz();
+      };
+
+      const generateQuiz = () => {
+        const correct = letters[Math.floor(Math.random() * letters.length)];
+        const others = letters.filter(l => l.letter !== correct.letter);
+        const shuffled = others.sort(() => Math.random() - 0.5).slice(0, 3);
+        const options = [...shuffled, correct].sort(() => Math.random() - 0.5);
+        setSelected(correct);
+        setQuizOptions(options);
+        setQuizAnswer(correct);
+        setCorrect(null);
+        speak(`Which letter is... ${correct.letter}?`);
+      };
+
+      const handleQuizAnswer = (option) => {
+        const isCorrect = option.letter === quizAnswer.letter;
+        setCorrect(isCorrect);
+        if (isCorrect) {
+          setScore(s => s + 1);
+          speak("Great job! Correct!");
+        } else {
+          speak(`Oops! That is ${option.letter}. The answer is ${quizAnswer.letter}!`);
+        }
+        setTimeout(() => generateQuiz(), 2000);
+      };
+
+      return (
+        <div style={{
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #FFF8E7 0%, #E8F4FD 50%, #F9E8FF 100%)",
+          fontFamily: "'Fredoka One', cursive",
+          padding: "0",
+          position: "relative",
+          overflow: "hidden",
+        }}>
+          <style>{`
+            @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+            @keyframes twinkle { 0%,100%{opacity:0.2;transform:scale(1)} 50%{opacity:0.8;transform:scale(1.3)} }
+            @keyframes burst { 0%{transform:scale(0.5);opacity:1} 100%{transform:scale(2.5);opacity:0} }
+            @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+            @keyframes wiggle { 0%,100%{transform:rotate(-3deg)} 50%{transform:rotate(3deg)} }
+            @keyframes pop { 0%{transform:scale(0)} 60%{transform:scale(1.15)} 100%{transform:scale(1)} }
+          `}</style>
+
+          {stars.map((s, i) => <Star key={i} style={s} />)}
+
+          <div style={{ maxWidth: "700px", margin: "0 auto", padding: "20px 16px" }}>
+            {/* Header */}
+            <div style={{ textAlign: "center", marginBottom: "16px" }}>
+              <h1 style={{
+                fontSize: "clamp(32px, 8vw, 52px)",
+                color: "#FF6B6B",
+                margin: 0,
+                textShadow: "3px 3px 0 #FFD93D",
+                letterSpacing: "2px",
+              }}>ABC 字母屋 🏠</h1>
+              <p style={{ color: "#888", fontSize: "16px", margin: "4px 0 0" }}>
+                Tap a letter to learn!
+              </p>
+            </div>
+
+            {/* Mode Switch */}
+            <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginBottom: "20px" }}>
+              {["explore", "quiz"].map(m => (
+                <button key={m} onClick={() => m === "quiz" ? startQuiz() : setMode("explore")}
+                  style={{
+                    padding: "10px 28px",
+                    borderRadius: "50px",
+                    border: "none",
+                    background: mode === m ? "#FF6B6B" : "#fff",
+                    color: mode === m ? "#fff" : "#FF6B6B",
+                    fontSize: "18px",
+                    fontFamily: "'Fredoka One', cursive",
+                    cursor: "pointer",
+                    boxShadow: mode === m ? "0 4px 15px #FF6B6B55" : "0 2px 8px rgba(0,0,0,0.1)",
+                    transition: "all 0.2s",
+                    outline: "none",
+                  }}>
+                  {m === "explore" ? "🔍 探索" : "🎮 测验"}
+                </button>
+              ))}
+            </div>
+
+            {/* Big Display Card */}
+            <div style={{
+              background: "#fff",
+              borderRadius: "32px",
+              padding: "32px 24px",
+              marginBottom: "20px",
+              boxShadow: `0 12px 40px ${selected.color}33`,
+              border: `4px solid ${selected.color}`,
+              position: "relative",
+              overflow: "hidden",
+              animation: "pop 0.3s ease",
+              textAlign: "center",
+            }}>
+              {showBurst && (
+                <div style={{
+                  position: "absolute", top: "50%", left: "50%",
+                  transform: "translate(-50%,-50%)",
+                  width: "100px", height: "100px",
+                  borderRadius: "50%",
+                  background: `${selected.color}44`,
+                  animation: "burst 0.6s ease-out forwards",
+                  pointerEvents: "none",
+                }} />
+              )}
+
+              {mode === "explore" ? (
+                <>
+                  <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", gap: "16px", lineHeight: 1 }}>
+                    <div style={{
+                      fontSize: "clamp(80px, 20vw, 130px)",
+                      color: selected.color,
+                      textShadow: `4px 4px 0 ${selected.color}44`,
+                      animation: "float 3s ease-in-out infinite",
+                      display: "inline-block",
+                    }}>{selected.letter}</div>
+                    <div style={{
+                      fontSize: "clamp(60px, 15vw, 100px)",
+                      color: `${selected.color}BB`,
+                      textShadow: `3px 3px 0 ${selected.color}33`,
+                      animation: "float 3s ease-in-out infinite",
+                      animationDelay: "0.3s",
+                      display: "inline-block",
+                    }}>{selected.letter.toLowerCase()}</div>
+                  </div>
+
+                  <div style={{ fontSize: "clamp(50px, 12vw, 80px)", margin: "8px 0" }}>
+                    {selected.emoji}
+                  </div>
+
+                  <div style={{
+                    fontSize: "clamp(22px, 6vw, 34px)",
+                    color: "#555",
+                    letterSpacing: "2px",
+                  }}>{selected.word}</div>
+
+                  <div style={{ display: "flex", gap: "12px", justifyContent: "center", marginTop: "16px", flexWrap: "wrap" }}>
+                    <button onClick={() => speak(`${selected.letter}! ${selected.word}`)}
+                      style={{
+                        padding: "12px 28px",
+                        borderRadius: "50px",
+                        border: "none",
+                        background: selected.color,
+                        color: "#fff",
+                        fontSize: "20px",
+                        fontFamily: "'Fredoka One', cursive",
+                        cursor: "pointer",
+                        boxShadow: `0 6px 20px ${selected.color}66`,
+                        outline: "none",
+                        animation: "wiggle 2s ease-in-out infinite",
+                      }}>
+                      🔊 Read it!
+                    </button>
+                    <button onClick={() => {
+                      const others = letters.filter(l => l.letter !== selected.letter);
+                      const next = others[Math.floor(Math.random() * others.length)];
+                      handleSelect(next);
+                    }}
+                      style={{
+                        padding: "12px 28px",
+                        borderRadius: "50px",
+                        border: `3px solid ${selected.color}`,
+                        background: "#fff",
+                        color: selected.color,
+                        fontSize: "20px",
+                        fontFamily: "'Fredoka One', cursive",
+                        cursor: "pointer",
+                        boxShadow: `0 6px 20px ${selected.color}33`,
+                        outline: "none",
+                      }}>
+                      🎲 Random!
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p style={{ fontSize: "22px", color: "#888", margin: "0 0 8px" }}>Which letter is...</p>
+                  <div style={{ fontSize: "80px", marginBottom: "8px" }}>{selected.emoji}</div>
+                  <div style={{ fontSize: "28px", color: "#555", marginBottom: "20px" }}>{selected.word}</div>
+
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "12px",
+                    maxWidth: "340px",
+                    margin: "0 auto",
+                  }}>
+                    {quizOptions.map(opt => (
+                      <button key={opt.letter} onClick={() => correct === null && handleQuizAnswer(opt)}
+                        style={{
+                          padding: "18px",
+                          borderRadius: "20px",
+                          border: `3px solid ${
+                            correct !== null
+                              ? opt.letter === quizAnswer.letter ? "#1DD1A1"
+                              : correct === false && opt.letter === selected.letter ? "#FF6B6B"
+                              : "#eee"
+                              : opt.color
+                          }`,
+                          background: correct !== null && opt.letter === quizAnswer.letter ? "#E6FAF5" : opt.bg,
+                          fontSize: "28px",
+                          fontFamily: "'Fredoka One', cursive",
+                          color: opt.color,
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                          outline: "none",
+                          lineHeight: 1.2,
+                        }}>
+                        {opt.letter} <span style={{ opacity: 0.65 }}>{opt.letter.toLowerCase()}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {correct !== null && (
+                    <div style={{ marginTop: "16px", fontSize: "28px", animation: "pop 0.3s ease" }}>
+                      {correct ? "🎉 Correct!" : "😊 Keep trying!"}
+                    </div>
+                  )}
+
+                  <div style={{ marginTop: "12px", fontSize: "20px", color: "#888" }}>
+                    Score: ⭐ {score}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Letter Grid */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(62px, 1fr))",
+              gap: "8px",
+            }}>
+              {letters.map(l => (
+                <LetterCard
+                  key={l.letter}
+                  data={l}
+                  isSelected={selected.letter === l.letter}
+                  onClick={mode === "explore" ? handleSelect : () => {}}
+                />
+              ))}
+            </div>
+
+            <p style={{ textAlign: "center", color: "#bbb", fontSize: "13px", marginTop: "20px" }}>
+              点击字母卡片开始学习 🌟
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<AlphabetApp />);
+  </script>
+</body>
+</html>
